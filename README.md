@@ -24,6 +24,12 @@ if you want to use pgAdmin at browser:
 docker-compose up -d db pgadmin
 ```
 
+To seed DB:
+
+```shellscript
+npm run seed
+```
+
 ## Deployment
 
 First, build your app for production:
