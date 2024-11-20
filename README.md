@@ -10,6 +10,20 @@ Run the dev server:
 npm run dev
 ```
 
+For running docker container only for database
+
+if you use pgAdmin app:
+
+```shellscript
+docker-compose up -d --build db
+```
+
+if you want to use pgAdmin at browser:
+
+```shellscript
+docker-compose up -d db pgadmin
+```
+
 ## Deployment
 
 First, build your app for production:
@@ -28,7 +42,8 @@ Now you'll need to pick a host to deploy it to.
 
 ### DIY
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+If you're familiar with deploying Node applications, the built-in Remix app
+server is production-ready.
 
 Make sure to deploy the output of `npm run build`
 
@@ -37,4 +52,8 @@ Make sure to deploy the output of `npm run build`
 
 ## Styling
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already
+configured for a simple default starting experience. You can use whatever css
+framework you prefer. See the
+[Vite docs on css](https://vitejs.dev/guide/features.html#css) for more
+information.

@@ -1,0 +1,61 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling, testing and building your project before committing'
+
+# Check Prettier standards
+npm run check-format ||
+(
+    echo '
+    
+    🧐🕝🥱 Prettier Check Failed. Now prettier formatting... 🧐🕝🥱';
+    npm run format;
+)
+
+npm run check-format ||
+(
+    echo '
+    
+    😫😭😢 Prettier Check Failed. The command "npm run format" did not help. Please format your code manually 😫😭😢';
+    false;
+)
+
+
+# Check ESLint Standards
+npm run lint ||
+(
+    echo '
+        
+    😤🏀👋😤 ESLint Check Failed. Make the required changes listed above, add changes and try to commit again. 😤🏀👋😤 '
+    false;
+)
+
+# Check TS Standards
+npm run check-types ||
+(
+    echo '
+        
+    😳😕😢 TS Check Failed. Make the required changes listed above, add changes and try to commit again. 😳😕😢 '
+    false;
+)
+
+# If everything passes... Now we can commit
+echo '🤔🤔🤔🤔... Alright... Code looks good to me... Trying to build now. 🤔🤔🤔🤔'
+
+npm run build ||
+(
+    echo '
+    
+    ❌👷🔨❌ Better call Bob... Because your build failed ❌👷🔨❌
+            Next build failed: View the errors above to see why. 
+    '
+    false;
+)
+
+git add .
+
+# If everything passes... Now we can commit
+echo '✅✅✅✅ You win this time... I am committing this now. ✅✅✅✅'
