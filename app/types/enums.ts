@@ -5,3 +5,11 @@ export const ROUTES = {
   TAGS: '/tags',
   REPORTS: '/reports',
 };
+
+export const NAVLINKS = {
+  HOME: 'Home',
+  LOGIN: 'Log In',
+  USERS: 'Employees',
+  TAGS: 'Employee Tags',
+  REPORTS: 'Reports',
+};

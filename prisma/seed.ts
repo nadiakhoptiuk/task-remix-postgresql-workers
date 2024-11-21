@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import { passwordHash } from '~/utils/passwordHash';
+import { Prisma } from '@prisma/client';
+import { passwordHash } from '~/utils/passwordUtils';
 
-const prisma = new PrismaClient();
+import prisma from './prismaClient';
 
 async function seed() {
   const password = 'admin1234';
@@ -31,7 +31,7 @@ async function seed() {
 }
 
 seed()
-  .catch(async e => {
+  .catch(e => {
     console.error(e);
     process.exit(1);
   })

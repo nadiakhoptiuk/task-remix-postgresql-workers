@@ -1,7 +1,11 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 export default {
-  content: ['./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}',
+    './app/**/**/**/*.css',
+  ],
   theme: {
     screens: {
       sm: '480px',
@@ -37,10 +41,15 @@ export default {
         ui_light: '#F1F1F1',
         ui_dark: '#020202',
         ui_accent: '#3E69AD',
+        ui_accent_dark: '#2C528F',
         ui_red: '#F80909',
         ui_overlay: 'rgba(2, 2, 2, 0.8)',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addVariant }) {
+      addVariant('hocus', ['&:hover', '&:focus']);
+    }),
+  ],
 } satisfies Config;
