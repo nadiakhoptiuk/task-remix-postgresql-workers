@@ -20,10 +20,7 @@ export type ROLES = 'ADMIN' | 'MANAGER' | 'USER';
 
 export interface SerializedUserType {
   id: number;
-  email: string;
-  name: string;
   role: ROLES;
-  createdAt: Date;
 }
 
 export type GetCurrentUserOptions = {

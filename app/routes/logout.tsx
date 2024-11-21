@@ -8,7 +8,7 @@ import { authenticator, getAuthUserOrRedirect } from '~/services/auth.server';
 import { ROUTES } from '~/types/enums';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  return await getAuthUserOrRedirect(request);
+  return await getAuthUserOrRedirect(request, ROUTES.HOME);
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {

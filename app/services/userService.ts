@@ -2,8 +2,9 @@ import type { User } from '@prisma/client';
 import prisma from 'prisma/prismaClient';
 
 import { checkPassword } from '~/utils/passwordUtils';
+import { serializedUser } from '~/utils/serializeUser';
 
-export type { User } from '@prisma/client';
+import { SerializedUserType } from '~/types/common.types';
 
 export const findUserByEmail = async (
   email: User['email'],
@@ -33,17 +34,19 @@ export const findUserByEmail = async (
 export const verifyPassword = async (
   user: User,
   enteredPassword: string,
-): Promise<number | null> => {
+): Promise<SerializedUserType | null> => {
   const isPasswordValid = await checkPassword(enteredPassword, user.password);
 
   if (!isPasswordValid) {
     return null;
   }
 
-  return user.id;
+  return { id: user.id, role: user.role };
 };
 
-export const findUserById = async (id: User['id']) => {
+export const findUserByIdAndSerialize = async (
+  id: User['id'],
+): Promise<SerializedUserType | null> => {
   if (!id) return null;
 
   const existedUser = await prisma.user.findUnique({
@@ -62,5 +65,5 @@ export const findUserById = async (id: User['id']) => {
     return null;
   }
 
-  return existedUser;
+  return serializedUser(existedUser);
 };

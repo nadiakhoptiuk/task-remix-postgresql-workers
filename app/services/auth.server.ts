@@ -5,16 +5,20 @@ import invariant from 'tiny-invariant';
 import { destroySession, getSession, sessionStorage } from './session.server';
 import {
   findUserByEmail,
-  findUserById,
+  findUserByIdAndSerialize,
   verifyPassword,
 } from '~/services/userService';
 
-import { GetCurrentUserOptions } from '~/types/common.types';
+import {
+  GetCurrentUserOptions,
+  SerializedUserType,
+} from '~/types/common.types';
 import { SESSION_ERROR_KEY } from '~/constants/constants';
 import { ROUTES } from '~/types/enums';
 import { redirect } from '@remix-run/react';
+import { isResponse } from '@remix-run/react/dist/data';
 
-export const authenticator = new Authenticator<number | Response>(
+export const authenticator = new Authenticator<SerializedUserType | Response>(
   sessionStorage,
   {
     sessionErrorKey: SESSION_ERROR_KEY,
@@ -45,19 +49,19 @@ authenticator.use(
       });
     }
 
-    const sessionUserId: number | null = await verifyPassword(
+    const sessionUser: SerializedUserType | null = await verifyPassword(
       existedUser,
       password as string,
     );
 
-    if (!sessionUserId) {
+    if (!sessionUser) {
       throw new AuthorizationError('invalid username or password', {
         name: 'invalidCredentials',
         message: 'invalid username or password',
       });
     }
 
-    return sessionUserId;
+    return sessionUser;
   }),
   'user-verify',
 );
@@ -65,13 +69,14 @@ authenticator.use(
 export const getAuthUser = async (
   request: Request,
   options?: GetCurrentUserOptions,
-): Promise<number> => {
+): Promise<SerializedUserType> => {
   const { failureRedirect, successRedirect } = options || {};
 
-  const sessionUserId = await authenticator.isAuthenticated(request);
+  const sessionUser = await authenticator.isAuthenticated(request);
 
-  if (sessionUserId === null) {
+  if (!sessionUser) {
     if (failureRedirect) {
+      // authenticator.logout has 2 required parameters, but here we have optional redirects (to avoid cycles of redirects at Home Page)
       const session = await getSession(request.headers.get('Cookie'));
       throw redirect(failureRedirect, {
         headers: {
@@ -82,7 +87,9 @@ export const getAuthUser = async (
   }
 
   const existedUser =
-    typeof sessionUserId === 'number' && (await findUserById(sessionUserId));
+    !isResponse(sessionUser) &&
+    typeof sessionUser?.id === 'number' &&
+    (await findUserByIdAndSerialize(sessionUser?.id));
 
   if (!existedUser) {
     if (failureRedirect) {
@@ -97,11 +104,12 @@ export const getAuthUser = async (
     throw redirect(successRedirect);
   }
 
-  return existedUser.id;
+  return existedUser;
 };
 
 export const getAuthUserOrRedirect = async (
   request: Request,
-): Promise<number> => {
-  return await getAuthUser(request, { failureRedirect: ROUTES.LOGIN });
+  route: (typeof ROUTES)[keyof typeof ROUTES],
+): Promise<SerializedUserType> => {
+  return await getAuthUser(request, { failureRedirect: route });
 };

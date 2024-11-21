@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
-import { useEffect } from 'react';
+import { AuthorizationError } from 'remix-auth';
 
 import { LoginForm } from '~/components/forms/LogInForm';
 import { Container } from '~/components/ui-kit/Container/Container';
@@ -38,6 +39,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   } catch (error) {
     if (error instanceof Response) return error;
+    if (error instanceof AuthorizationError) {
+      return Response.json({ error: error.message });
+    }
     return error;
   }
 };
