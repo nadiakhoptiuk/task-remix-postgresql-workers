@@ -70,11 +70,11 @@ export const getAuthUser = async (
 
   const sessionUserId = await authenticator.isAuthenticated(request);
 
-  if (sessionUserId === null) {
-    throw await authenticator.logout(request, {
-      redirectTo: ROUTES.HOME,
-    });
-  }
+  // if (sessionUserId === null) {
+  //   throw await authenticator.logout(request, {
+  //     redirectTo: ROUTES.HOME,
+  //   });
+  // } //TODO
 
   const existedUser =
     typeof sessionUserId === 'number' && (await findUserById(sessionUserId));

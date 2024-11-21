@@ -9,7 +9,12 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  return await getAuthUser(request);
+  try {
+    return await getAuthUser(request);
+  } catch (error) {
+    if (error instanceof Response) return error;
+    return error;
+  }
 }
 
 export default function Index() {
