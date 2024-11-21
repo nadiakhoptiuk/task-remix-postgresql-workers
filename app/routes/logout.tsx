@@ -1,11 +1,10 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, redirect } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 
 import { Button } from '~/components/ui-kit/Button';
 import { Container } from '~/components/ui-kit/Container/Container';
-import { getAuthUserOrRedirect } from '~/services/auth.server';
+import { authenticator, getAuthUserOrRedirect } from '~/services/auth.server';
 
-import { destroySession, getSession } from '~/services/session.server';
 import { ROUTES } from '~/types/enums';
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -13,12 +12,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-
-  return redirect(ROUTES.LOGIN, {
-    headers: {
-      'Set-Cookie': await destroySession(session),
-    },
+  return await authenticator.logout(request, {
+    redirectTo: ROUTES.HOME,
   });
 };
 

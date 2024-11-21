@@ -2,7 +2,7 @@ import { Authenticator, AuthorizationError } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 import invariant from 'tiny-invariant';
 
-import { sessionStorage } from './session.server';
+import { destroySession, getSession, sessionStorage } from './session.server';
 import {
   findUserByEmail,
   findUserById,
@@ -70,11 +70,16 @@ export const getAuthUser = async (
 
   const sessionUserId = await authenticator.isAuthenticated(request);
 
-  // if (sessionUserId === null) {
-  //   throw await authenticator.logout(request, {
-  //     redirectTo: ROUTES.HOME,
-  //   });
-  // } //TODO
+  if (sessionUserId === null) {
+    if (failureRedirect) {
+      const session = await getSession(request.headers.get('Cookie'));
+      throw redirect(failureRedirect, {
+        headers: {
+          'Set-Cookie': await destroySession(session),
+        },
+      });
+    }
+  }
 
   const existedUser =
     typeof sessionUserId === 'number' && (await findUserById(sessionUserId));
