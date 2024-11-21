@@ -24,6 +24,8 @@ if you want to use pgAdmin at browser:
 docker-compose up -d db pgadmin
 ```
 
+Then open a brower: http://localhost:8080/
+
 To seed DB:
 
 ```shellscript

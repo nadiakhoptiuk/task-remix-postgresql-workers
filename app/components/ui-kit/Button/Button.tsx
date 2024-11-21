@@ -10,11 +10,16 @@ export const Button: React.FC<ButtonProps & WithChildren & WithClassName> = ({
   type = 'button',
   isDisabled = false,
   className,
+  centered = false,
 }) => {
   return (
     <button
       type={type}
-      className={classNames(s.baseButton, className)}
+      className={classNames(
+        s.baseButton,
+        className,
+        centered && 'block mx-auto',
+      )}
       disabled={isDisabled}
     >
       {children}

@@ -10,6 +10,7 @@ import type { LinksFunction } from '@remix-run/node';
 import { Header } from './components/layout/Header';
 
 import './tailwind.css';
+import { Toaster } from 'react-hot-toast';
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -37,6 +38,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Header />
         {children}
+
+        <Toaster position="top-center" reverseOrder={false} />
+
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -1,56 +1,61 @@
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
-import { useActionData } from '@remix-run/react';
+import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { useActionData, useLoaderData } from '@remix-run/react';
+import { useEffect } from 'react';
 
 import { LoginForm } from '~/components/forms/LogInForm';
 import { Container } from '~/components/ui-kit/Container/Container';
 
-import { findUserByEmail, verifyPassword } from '~/models/user.server';
+import { authenticator } from '~/services/auth.server';
+import { commitSession, getSession } from '~/services/session.server';
 
+import { LoginActionData } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
+import { notify } from '~/utils/notification';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  await authenticator.isAuthenticated(request, {
+    successRedirect: ROUTES.HOME,
+  });
+
+  const session = await getSession(request.headers.get('cookie'));
+  const error = session.get(authenticator.sessionErrorKey);
+
+  return Response.json(
+    { error },
+    {
+      headers: {
+        'Set-Cookie': await commitSession(session), // You must commit the session whenever you read a flash
+      },
+    },
+  );
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const email = formData.get('email');
-  const password = formData.get('password');
-
-  const existedUser = await findUserByEmail(
-    email as string,
-    password as string,
-  );
-  if (!existedUser) {
-    return Response.json(
-      {
-        errors: { email: "User with such email doesn't exist", password: null },
-      },
-      { status: 400 },
-    );
+  try {
+    return await authenticator.authenticate('user-verify', request, {
+      successRedirect: ROUTES.HOME,
+      failureRedirect: ROUTES.LOGIN,
+    });
+  } catch (error) {
+    if (error instanceof Response) return error;
+    return error;
   }
-
-  const loggedUser = await verifyPassword(existedUser, password as string);
-
-  if (!loggedUser) {
-    return Response.json(
-      { errors: { email: null, password: 'Invalid credentials' } },
-      { status: 400 },
-    );
-  }
-
-  return redirect(ROUTES.HOME);
 };
 
 export default function LoginPage() {
-  const actionData = useActionData<{
-    success?: boolean;
-    errors?: {
-      email?: string;
-      password?: string;
-    };
-  }>();
+  const actionData = useActionData<LoginActionData>();
+  const { error } = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    if (!error) return;
+
+    error && notify.error(error.message);
+  }, [error]);
 
   return (
     <section className="h-screen section">
       <Container>
-        <h1>Please enter your credentials to login</h1>
+        <h1>Please enter your credentials to log in</h1>
 
         <LoginForm actionDataErrors={actionData?.errors} />
       </Container>

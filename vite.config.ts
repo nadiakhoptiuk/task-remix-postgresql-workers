@@ -21,4 +21,12 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  server: {
+    watch: {
+      awaitWriteFinish: {
+        stabilityThreshold: 1000,
+        pollInterval: 100,
+      },
+    },
+  },
 });
