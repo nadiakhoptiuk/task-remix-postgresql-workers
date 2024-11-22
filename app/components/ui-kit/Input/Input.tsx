@@ -10,14 +10,14 @@ export const Input: React.FC<InputProps> = ({
   type,
   labelText,
   placeholder,
-  className,
+  wrapperClassName,
   labelClassName,
   inputClassName,
 }) => {
   const { error, getInputProps } = useField(name);
 
   return (
-    <div className={classNames(s.baseInputWrapper, className)}>
+    <div className={classNames(s.baseInputWrapper, wrapperClassName)}>
       <label htmlFor={name} className={classNames(s.baseLabel, labelClassName)}>
         {labelText}
       </label>

@@ -1,0 +1,11 @@
+.baseItemBlock {
+  @apply flex items-start flex-col w-fit gap-2;
+}
+
+.baseItemHeading {
+  @apply text-lg md:text-2xl xl:text-3xl font-semibold;
+}
+
+.baseItemDesc {
+  @apply text-base md:text-lg xl:text-2xl;
+}

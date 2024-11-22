@@ -11,6 +11,7 @@ import {
 
 import {
   GetCurrentUserOptions,
+  Role,
   SerializedUserType,
 } from '~/types/common.types';
 import { SESSION_ERROR_KEY } from '~/constants/constants';
@@ -109,7 +110,28 @@ export const getAuthUser = async (
 
 export const getAuthUserOrRedirect = async (
   request: Request,
-  route: (typeof ROUTES)[keyof typeof ROUTES],
+  failureRedirect: (typeof ROUTES)[keyof typeof ROUTES],
 ): Promise<SerializedUserType> => {
-  return await getAuthUser(request, { failureRedirect: route });
+  return await getAuthUser(request, { failureRedirect: failureRedirect });
+};
+
+export const verifyUserAccess = (userRole: Role, alowedRoles: Role[]) => {
+  return alowedRoles.includes(userRole);
+};
+
+export const getAuthUserAndVerifyAccessOrRedirect = async (
+  request: Request,
+  failureRedirect: (typeof ROUTES)[keyof typeof ROUTES],
+  allowedRoles: Role[],
+): Promise<SerializedUserType> => {
+  const sessionUser = await getAuthUser(request, {
+    failureRedirect: failureRedirect,
+  });
+  verifyUserAccess(sessionUser.role, allowedRoles);
+
+  if (!verifyUserAccess) {
+    throw redirect(failureRedirect);
+  }
+
+  return sessionUser;
 };
