@@ -1,6 +1,7 @@
 {
   "include": [
     "**/*.ts",
+    "prisma/*.ts",
     "**/*.tsx",
     "**/.server/**/*.ts",
     "**/.server/**/*.tsx",
@@ -15,6 +16,8 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
     "target": "ES2022",
     "strict": true,

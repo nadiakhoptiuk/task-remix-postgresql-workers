@@ -4,10 +4,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react';
-import type { LinksFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import { Toaster } from 'react-hot-toast';
 
 import { Header } from './components/layout/Header';
+
+import { getAuthUser } from './services/auth.server';
+
+import { SerializedUserType } from './types/common.types';
 
 import './tailwind.css';
 
@@ -24,7 +30,18 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  try {
+    return await getAuthUser(request);
+  } catch (error) {
+    if (error instanceof Response) return error;
+    return error;
+  }
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { role: userRole } = useLoaderData<SerializedUserType>();
+
   return (
     <html lang="en">
       <head>
@@ -35,8 +52,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
 
       <body>
-        <Header />
+        <Header userRole={userRole} />
         {children}
+
+        <Toaster position="top-center" reverseOrder={false} />
+
         <ScrollRestoration />
         <Scripts />
       </body>
