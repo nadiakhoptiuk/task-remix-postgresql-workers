@@ -1,3 +1,7 @@
 .baseButton {
   @apply w-full rounded-md bg-ui_accent px-4 py-3 text-white hocus:bg-ui_accent_dark transition-all text-lg md:text-xl xl:text-2xl;
 }
+
+.disabledButton {
+  @apply baseButton !bg-ui_grey;
+}

@@ -19,6 +19,7 @@ export const Button: React.FC<ButtonProps & WithChildren & WithClassName> = ({
         s.baseButton,
         className,
         centered && 'block mx-auto',
+        isDisabled && s.disabledButton,
       )}
       disabled={isDisabled}
     >

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { AuthorizationError } from 'remix-auth';
 
 import { LoginForm } from '~/components/forms/LogInForm';
@@ -9,7 +9,6 @@ import { Container } from '~/components/ui-kit/Container/Container';
 import { authenticator } from '~/services/auth.server';
 import { commitSession, getSession } from '~/services/session.server';
 
-import { LoginActionData } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
 import { notify } from '~/utils/notification';
 
@@ -47,7 +46,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function LoginPage() {
-  const actionData = useActionData<LoginActionData>();
   const { error } = useLoaderData<typeof loader>();
 
   useEffect(() => {
@@ -61,7 +59,7 @@ export default function LoginPage() {
       <Container>
         <h1>Please enter your credentials to log in</h1>
 
-        <LoginForm actionDataErrors={actionData?.errors} />
+        <LoginForm />
       </Container>
     </section>
   );

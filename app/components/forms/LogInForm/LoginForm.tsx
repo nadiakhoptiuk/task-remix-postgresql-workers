@@ -1,13 +1,14 @@
-import { Form } from '@remix-run/react';
+import { ValidatedForm } from 'remix-validated-form';
 
-import { Button } from '~/components/ui-kit/Button';
+import { SubmitButton } from '~/components/ui-kit/SubmitButton';
 import { Input } from '~/components/ui-kit/Input';
 
-import { LoginFormProps } from './LoginForm.types';
+import { authUserCredentialsValidator } from '~/utils/validationSchemas/authSchema';
 
-export const LoginForm: React.FC<LoginFormProps> = ({ actionDataErrors }) => {
+export const LoginForm = () => {
   return (
-    <Form
+    <ValidatedForm
+      validator={authUserCredentialsValidator}
       id="contact-form"
       method="post"
       className="grid grid-cols-1 gap-y-8 max-w-[600px] mx-auto"
@@ -17,8 +18,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ actionDataErrors }) => {
         type="email"
         labelText="Email:"
         placeholder="example@mail"
-        required
-        error={actionDataErrors?.email}
       />
 
       <Input
@@ -26,13 +25,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ actionDataErrors }) => {
         type="password"
         labelText="Password:"
         placeholder="password"
-        required
-        minLength={8}
-        maxLength={12}
-        error={actionDataErrors?.password}
       />
 
-      <Button type="submit">Log in</Button>
-    </Form>
+      <SubmitButton>Log in</SubmitButton>
+    </ValidatedForm>
   );
 };
