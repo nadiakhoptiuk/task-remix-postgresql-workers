@@ -1,6 +1,7 @@
 import prisma from 'prisma/prismaClient';
 
 import { NewEmployeeType } from '~/types/common.types';
+import { passwordHash } from '~/utils/passwordUtils';
 
 export async function getEmployeesList() {
   return await prisma.user.findMany({
@@ -10,7 +11,23 @@ export async function getEmployeesList() {
 }
 
 export async function createNewUser(userData: NewEmployeeType) {
-  return await prisma.user.create({ data: userData });
+  const { password, ...userDataWithOutPassword } = userData;
+
+  const existedUser = await prisma.user.findUnique({
+    where: {
+      email: userData.email,
+    },
+  });
+
+  if (existedUser) {
+    throw new Error('User with such email is already exist in database');
+  }
+
+  const hashedPassword = await passwordHash(password);
+
+  return await prisma.user.create({
+    data: { ...userDataWithOutPassword, password: hashedPassword },
+  });
 }
 
 export async function getEmployeeById(id: number) {
