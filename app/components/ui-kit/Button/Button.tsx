@@ -7,6 +7,7 @@ import s from './Button.module.css';
 
 export const Button: React.FC<ButtonProps & WithChildren & WithClassName> = ({
   children,
+  variant = 'accent',
   type = 'button',
   isDisabled = false,
   className,
@@ -20,6 +21,9 @@ export const Button: React.FC<ButtonProps & WithChildren & WithClassName> = ({
         className,
         centered && 'block mx-auto',
         isDisabled && s.disabledButton,
+        variant === 'accent'
+          ? '!bg-ui_accent hocus:!bg-ui_accent_dark text-white border-ui_accent_dark'
+          : '!bg-white hocus:!bg-ui_light !text-dark  !border-ui_grey',
       )}
       disabled={isDisabled}
     >

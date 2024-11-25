@@ -40,3 +40,9 @@ export const NAVLINKS = [
     restricted: true,
   },
 ];
+
+export const ROLE_SELECT_OPTIONS = [
+  { value: ROLES.USER, label: ROLES.USER },
+  { value: ROLES.MANAGER, label: ROLES.MANAGER },
+  { value: ROLES.ADMIN, label: ROLES.ADMIN },
+];

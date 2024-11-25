@@ -1,0 +1,15 @@
+.baseItemBlock {
+  @apply flex items-start flex-col w-fit gap-2;
+}
+
+.baseItemHeading {
+  @apply text-lg md:text-2xl xl:text-3xl font-semibold;
+}
+
+.baseItemDesc {
+  @apply text-base md:text-lg xl:text-2xl;
+}
+
+.baseLink {
+  @apply border-[1px] rounded-md border-ui_grey hover:bg-ui_light transition-all duration-150 w-full h-full py-4 px-8 flex justify-between;
+}

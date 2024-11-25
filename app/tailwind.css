@@ -15,10 +15,30 @@ body {
   h1 {
     @apply text-2xl md:text-3xl xl:text-4xl mb-10 md:mb-14 xl:mb-20 text-center;
   }
+
+  h2 {
+    @apply text-xl md:text-2xl xl:text-3xl mb-8 md:mb-12 xl:mb-16 text-center;
+  }
 }
 
 @layer components {
   .section {
     @apply py-10 md:py-14 xl:py-20;
   }
+
+  .primaryButton {
+    @apply w-full rounded-md bg-ui_accent px-4 py-3 text-white hocus:bg-ui_accent_dark transition-all text-lg md:text-xl xl:text-2xl;
+  }
+}
+
+.single-select__control {
+  @apply border-solid !border-[1px] !border-ui_accent !bg-ui_light !py-1 !px-4 !text-ui_dark rounded-md;
+}
+
+.single-select__value-container {
+  @apply !px-0;
+}
+
+.single-select__single-value {
+  @apply !text-ui_dark;
 }

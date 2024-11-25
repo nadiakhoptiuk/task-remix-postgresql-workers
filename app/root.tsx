@@ -40,7 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { role: userRole } = useLoaderData<SerializedUserType>();
+  const data = useLoaderData<SerializedUserType>();
 
   return (
     <html lang="en">
@@ -52,9 +52,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
 
       <body>
-        <Header userRole={userRole} />
-        {children}
-
+        <Header userRole={data?.role} />
+        <main className="min-h-full">{children}</main>
         <Toaster position="top-center" reverseOrder={false} />
 
         <ScrollRestoration />

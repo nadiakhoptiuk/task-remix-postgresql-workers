@@ -1,13 +1,12 @@
 export interface InputProps {
   name: string;
+  value: string;
+  setValue: (value: string) => void;
   type: 'text' | 'email' | 'password';
   labelText: string;
   placeholder: string;
   error?: string | undefined;
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  className?: string;
+  wrapperClassName?: string;
   labelClassName?: string;
   inputClassName?: string;
 }

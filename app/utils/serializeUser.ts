@@ -1,8 +1,7 @@
-import { User } from '@prisma/client';
-import { SerializedUserType } from '~/types/common.types';
+import { existedUser, SerializedUserType } from '~/types/common.types';
 
 export const serializedUser = (
-  existedUserWithPassword: User,
+  existedUserWithPassword: existedUser,
 ): SerializedUserType => {
   const { id, role } = existedUserWithPassword;
 
