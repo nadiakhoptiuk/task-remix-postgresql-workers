@@ -1,22 +1,22 @@
 import { FC } from 'react';
 import classNames from 'classnames';
 import Select from 'react-select';
-import { useControlField, useField } from 'remix-validated-form';
+import { useField } from 'remix-validated-form';
 
 import { SingleSelectProps } from './SingleSelect.types';
-import { OptionType } from '~/types/common.types';
 
 import s from './SingleSelect.module.css';
 
 export const SingleSelect: FC<SingleSelectProps> = ({
   name,
+  value,
+  setValue,
   labelText,
   options,
   wrapperClassName,
   labelClassName,
 }) => {
-  const { error, validate } = useField(name);
-  const [value, setValue] = useControlField<OptionType | null>(name);
+  const { error, validate, getInputProps } = useField(name);
 
   return (
     <div className={classNames(s.baseInputWrapper, wrapperClassName)}>
@@ -29,11 +29,12 @@ export const SingleSelect: FC<SingleSelectProps> = ({
         name={name}
         options={options}
         value={value}
-        defaultValue={options[0]}
+        defaultValue={value || options.find(({ value }) => value === 'USER')}
         onChange={newSelection => {
           setValue(newSelection);
           validate();
         }}
+        {...getInputProps()}
         classNamePrefix="single-select"
       />
 

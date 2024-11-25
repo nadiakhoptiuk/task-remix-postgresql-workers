@@ -1,11 +1,24 @@
 import { User } from '@prisma/client';
 import { ActionFunctionArgs, redirect } from '@remix-run/node';
+import { setFormDefaults } from 'remix-validated-form';
 
-import { CreateEmployeeForm } from '~/components/forms/CreateEmployeeForm';
+import { CreateOrUpdateEmployeeForm } from '~/components/forms/CreateOrEditEmployeeForm';
 import { Container } from '~/components/ui-kit/Container/Container';
+import { ROLE_SELECT_OPTIONS } from '~/constants/constants';
 
 import { createNewUser } from '~/models/employees.server';
 import { ROLES, ROUTES } from '~/types/enums';
+
+export const loader = () => {
+  return Response.json(
+    setFormDefaults('user-form', {
+      name: null,
+      email: null,
+      role: ROLE_SELECT_OPTIONS.find(({ value }) => value === 'USER'),
+      password: null,
+    }),
+  );
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -27,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (!Object.values(ROLES).includes(role)) {
-    return new Error('Invalid role');
+    return Response.json({ error: 'Invalid role' }, { status: 400 });
   }
 
   await createNewUser({ name, email, role, password });
@@ -41,7 +54,7 @@ export default function NewEmployeePage() {
       <Container>
         <h2 className="text-ui_accent_dark">Create new employee</h2>
 
-        <CreateEmployeeForm />
+        <CreateOrUpdateEmployeeForm formType="create" />
       </Container>
     </section>
   );

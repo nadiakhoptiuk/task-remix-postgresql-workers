@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
-import { Link, Outlet, useLoaderData } from '@remix-run/react';
+import { Outlet, useLoaderData } from '@remix-run/react';
 
 import { Container } from '~/components/ui-kit/Container/Container';
 import { EmployeesList } from '~/components/lists/EmployeesList';
@@ -31,13 +31,6 @@ export default function EmployeesPage() {
       <section className="section flex-1 flex-grow border-r-[2px] border-ui_grey ">
         <Container>
           <h1>All Employees</h1>
-
-          <Link
-            to="new"
-            className="primaryButton w-fit !inline-block p-4 text-xl text-white bg-ui_accent border-[1px] border-ui_accent_dark mb-10 rounded-sm"
-          >
-            Add New User
-          </Link>
 
           <div>
             {data?.employeesList.length > 0 ? (

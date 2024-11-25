@@ -4,7 +4,7 @@ import prisma from 'prisma/prismaClient';
 import { checkPassword } from '~/utils/passwordUtils';
 import { serializedUser } from '~/utils/serializeUser';
 
-import { SerializedUserType } from '~/types/common.types';
+import { existedUser, SerializedUserType } from '~/types/common.types';
 
 export const findUserByEmail = async (
   email: User['email'],
@@ -32,7 +32,7 @@ export const findUserByEmail = async (
 };
 
 export const verifyPassword = async (
-  user: User,
+  user: existedUser,
   enteredPassword: string,
 ): Promise<SerializedUserType | null> => {
   const isPasswordValid = await checkPassword(enteredPassword, user.password);

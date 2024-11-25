@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import prisma from 'prisma/prismaClient';
 
 import { NewEmployeeType } from '~/types/common.types';
@@ -27,6 +28,32 @@ export async function createNewUser(userData: NewEmployeeType) {
 
   return await prisma.user.create({
     data: { ...userDataWithOutPassword, password: hashedPassword },
+  });
+}
+
+export async function updateUserById(
+  userId: User['id'],
+  userData: NewEmployeeType,
+) {
+  const { password, ...userDataWithOutPassword } = userData;
+
+  const hashedPassword = await passwordHash(password);
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: { ...userDataWithOutPassword, password: hashedPassword },
+  });
+
+  return updatedUser;
+}
+
+export async function deleteUserById(userId: User['id']) {
+  await prisma.user.delete({
+    where: {
+      id: userId,
+    },
   });
 }
 

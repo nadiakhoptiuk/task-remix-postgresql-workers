@@ -14,8 +14,8 @@ model User {
   name      String    @unique
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?  
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime? 
 }
 
 enum Role {

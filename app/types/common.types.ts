@@ -61,3 +61,12 @@ export type OptionType = {
   value: string;
   label: string;
 };
+
+export type existedUser = {
+  id: number;
+  email: string;
+  password: string;
+  name: string;
+  role: User['role'];
+  createdAt: Date;
+};

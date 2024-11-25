@@ -7,7 +7,7 @@ import {
   findUserByEmail,
   findUserByIdAndSerialize,
   verifyPassword,
-} from '~/services/userService';
+} from '~/services/userAuthService';
 
 import {
   GetCurrentUserOptions,
