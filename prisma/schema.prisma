@@ -15,7 +15,30 @@ model User {
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
-  deletedAt DateTime? 
+
+  userTags  UserTag[] @relation("UserTags")
+}
+
+model Tag {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  name       String
+
+  userTags   UserTag[] @relation("TagUsers")
+}
+
+model UserTag {
+  id       Int      @id @default(autoincrement())
+
+  user     User     @relation("UserTags", fields: [userId], references: [id])
+  userId   Int
+
+  tag      Tag      @relation("TagUsers", fields: [tagId], references: [id])
+  tagId    Int
+
+  createdAt DateTime @default(now())
+  @@unique([userId, tagId]) 
 }
 
 enum Role {
