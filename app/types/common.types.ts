@@ -25,6 +25,10 @@ export interface SingleEmployeeLoaderData {
   employeeData: EmployeeTypeWithId;
 }
 
+export interface TagsLoaderData {
+  tagsList: BaseItemType[];
+}
+
 export type Role = (typeof ROLES)[keyof typeof ROLES];
 
 export interface SerializedUserType {
@@ -35,6 +39,38 @@ export interface SerializedUserType {
 export type GetCurrentUserOptions = {
   failureRedirect?: (typeof ROUTES)[keyof typeof ROUTES];
   successRedirect?: (typeof ROUTES)[keyof typeof ROUTES];
+};
+
+export type BaseItemType = {
+  id: number;
+  name: string;
+};
+
+export type FormType = {
+  formType: 'create' | 'update';
+};
+
+export type TagFormType = {
+  defaultValues?: {
+    name: string;
+    connectedUsers?: {
+      user: {
+        name: string;
+        id: number;
+      };
+    }[];
+  };
+  users: OptionType[];
+};
+
+export type TagType = {
+  tagData: {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    name: string;
+    users: { user: { id: number; name: string; role: User['role'] } }[];
+  };
 };
 
 export type NewEmployeeType = {
@@ -51,11 +87,16 @@ export type EmployeeType = {
   createdAt: Date;
 };
 
-export type WithEmployeeId = {
+export type WithId = {
   id: number;
 };
 
-export type EmployeeTypeWithId = EmployeeType & WithEmployeeId;
+export type EmployeeTypeWithId = EmployeeType & WithId;
+
+export type NewTagType = {
+  tagName: string;
+  users: string[] | [];
+};
 
 export type OptionType = {
   value: string;

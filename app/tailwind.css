@@ -42,3 +42,7 @@ body {
 .single-select__single-value {
   @apply !text-ui_dark;
 }
+
+.react-multi-select__control {
+  @apply border-solid !border-[1px] !border-ui_accent !bg-ui_light !py-1 !px-4 !text-ui_dark rounded-md;
+}

@@ -6,7 +6,15 @@ import { passwordHash } from '~/utils/passwordUtils';
 
 export async function getEmployeesList() {
   return await prisma.user.findMany({
-    select: { id: true, email: true, name: true, role: true, createdAt: true },
+    select: { id: true, name: true, role: true },
+    orderBy: [{ role: 'asc' }, { name: 'asc' }],
+  });
+}
+
+export async function getRestEmployeesList(tagId: number) {
+  return await prisma.user.findMany({
+    where: { tags: { none: { tagId } } },
+    select: { id: true, name: true, role: true },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],
   });
 }
