@@ -1,7 +1,7 @@
-import { EmployeeTypeWithId } from '~/types/common.types';
 import { NavLink } from '@remix-run/react';
 
-import { ROUTES } from '~/types/enums';
+import { ROLES, ROUTES } from '~/types/enums';
+import { EmployeeTypeWithId } from '~/types/common.types';
 
 import s from './EmployeesList.module.css';
 
@@ -19,22 +19,24 @@ export const EmployeesList = ({ data }: { data: EmployeeTypeWithId[] }) => {
                   : `${s.baseLink} text-ui_dark cursor-pointer`
               }
             >
-              {/* <div className={s.baseItemBlock}> */}
-              <span className={s.baseItemHeading}>Name:</span>
-              <span className={s.baseItemDesc}>{name}</span>
-              {/* </div> */}
+              <div className={s.baseItemBlock}>
+                <span className={s.baseItemHeading}>Name:</span>
+                <span className={s.baseItemDesc}>{name}</span>
+              </div>
 
               <div className={`${s.baseItemBlock} !hidden`}>
                 <span className={s.baseItemHeading}>Email:</span>
                 <span className={s.baseItemDesc}>{email}</span>
               </div>
 
-              <div className={`${s.baseItemBlock} items-end !hidden`}>
-                <span className={s.baseItemHeading}>ROLE:</span>
-                <span className={`${s.baseItemDesc} text-ui_accent_dark`}>
-                  {role}
-                </span>
-              </div>
+              {role === ROLES.ADMIN && (
+                <div className={`${s.baseItemBlock} items-end !hidden`}>
+                  {/* <span className={s.baseItemHeading}>ROLE:</span> */}
+                  <span className={`${s.baseItemDesc} text-ui_accent_dark`}>
+                    {role}
+                  </span>
+                </div>
+              )}
             </NavLink>
           </li>
         );

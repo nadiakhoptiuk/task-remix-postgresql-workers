@@ -8,7 +8,7 @@ import { Link, useLoaderData, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { ImArrowLeft2 } from 'react-icons/im';
 
-import { DeleteEmployeeForm } from '~/components/forms/DeleteEmployeeForm';
+import { DeleteItemForm } from '~/components/forms/DeleteItemForm';
 import { Container } from '~/components/ui-kit/Container/Container';
 
 import { deleteUserById, getEmployeeById } from '~/models/employees.server';
@@ -87,7 +87,7 @@ export default function EmployeePage() {
             Edit
           </Link>
 
-          <DeleteEmployeeForm />
+          <DeleteItemForm formId="delete-user-form" />
         </div>
       </Container>
     </section>

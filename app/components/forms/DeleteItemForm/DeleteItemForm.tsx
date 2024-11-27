@@ -1,10 +1,11 @@
 import { Form } from '@remix-run/react';
+
 import { SimpleSubmitButton } from '~/components/ui-kit/SimpleSubmitButton';
 
-export const DeleteEmployeeForm = () => {
+export const DeleteItemForm = ({ formId }: { formId: string }) => {
   return (
     <Form
-      id="delete-user-form"
+      id={formId}
       method="post"
       className="grid grid-cols-1 gap-y-8 w-full mx-auto"
     >

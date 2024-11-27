@@ -17,7 +17,7 @@ export const NAVLINKS = [
   },
   {
     route: ROUTES.TAGS,
-    label: 'Employees tags',
+    label: 'Tags',
     roles: [ROLES.ADMIN, ROLES.MANAGER],
     restricted: true,
   },

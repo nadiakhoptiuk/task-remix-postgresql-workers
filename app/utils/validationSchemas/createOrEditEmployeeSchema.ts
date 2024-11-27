@@ -1,6 +1,7 @@
 import { withZod } from '@rvf/zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
+
 import { ROLES } from '~/types/enums';
 
 const createOrEditEmployeeSchema = zfd.formData({
@@ -11,8 +12,8 @@ const createOrEditEmployeeSchema = zfd.formData({
       .regex(new RegExp(/^[a-zA-Z-' ]+$/), {
         message: "Must contains of: a-z, A-Z, - and '",
       })
-      .min(5, { message: 'Email must be 5 or more characters long' })
-      .max(120, { message: 'Email must be 120 or fewer characters long' }),
+      .min(5, { message: 'Name must be 5 or more characters long' })
+      .max(120, { message: 'Name must be 120 or fewer characters long' }),
   ),
   role: zfd.text(z.enum([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER])),
   email: zfd.text(
