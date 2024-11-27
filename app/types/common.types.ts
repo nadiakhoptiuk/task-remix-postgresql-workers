@@ -10,13 +10,6 @@ export type WithClassName = {
   className?: string;
 };
 
-export interface LoginActionData {
-  errors: {
-    email?: string;
-    password?: string;
-  };
-}
-
 export interface EmployeeLoaderData {
   employeesList: EmployeeTypeWithId[];
 }

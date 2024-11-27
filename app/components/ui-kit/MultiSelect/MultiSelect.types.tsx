@@ -3,9 +3,10 @@ import { OptionType } from '~/types/common.types';
 
 export interface MultiSelectProps {
   name: string;
-  value: MultiValue<OptionType>;
   setValue: (value: MultiValue<OptionType>) => void;
   options: OptionType[];
+  value?: MultiValue<OptionType>;
+  defaultValue?: MultiValue<OptionType>;
   labelText?: string;
   error?: string | undefined;
   wrapperClassName?: string;

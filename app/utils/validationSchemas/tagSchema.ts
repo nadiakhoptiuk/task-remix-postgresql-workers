@@ -15,15 +15,7 @@ const createOrEditTagSchema = zfd.formData({
         message: 'Name of tag must be 120 or fewer characters long',
       }),
   ),
-  // users: zfd.repeatableOfType(zfd.text()).optional(),
-  users: zfd.repeatableOfType(
-    z
-      .object({
-        label: z.string(),
-        value: z.string(),
-      })
-      .array(),
-  ),
+  users: zfd.repeatable(z.array(zfd.text()).optional()),
 });
 
 export const tagValidator = withZod(createOrEditTagSchema);

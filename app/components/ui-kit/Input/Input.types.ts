@@ -5,6 +5,7 @@ export interface InputProps {
   type: 'text' | 'email' | 'password';
   labelText: string;
   placeholder: string;
+  defaultValue?: string;
   error?: string | undefined;
   wrapperClassName?: string;
   labelClassName?: string;

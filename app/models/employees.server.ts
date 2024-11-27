@@ -14,7 +14,6 @@ export async function getEmployeesList() {
 export async function getRestEmployeesList(tagId: number) {
   return await prisma.user.findMany({
     where: { tags: { none: { tagId } } },
-    select: { id: true, name: true, role: true },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],
   });
 }

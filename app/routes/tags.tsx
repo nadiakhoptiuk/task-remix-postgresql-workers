@@ -1,13 +1,13 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 
-import { BaseList } from '~/components/lists/BaseList';
+import { BaseNavList } from '~/components/lists/BaseNavList';
 import { Container } from '~/components/ui-kit/Container/Container';
-import { NAVLINKS } from '~/constants/constants';
 
 import { getTagsList } from '~/models/tags.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 
+import { NAVLINKS } from '~/constants/constants';
 import { Role, TagsLoaderData } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
 
@@ -36,7 +36,7 @@ export default function TagsPage() {
 
           <div>
             {data?.tagsList.length > 0 ? (
-              <BaseList data={data?.tagsList} baseRoute={ROUTES.TAGS} />
+              <BaseNavList data={data?.tagsList} baseRoute={ROUTES.TAGS} />
             ) : (
               <p>No tags found</p>
             )}

@@ -27,16 +27,6 @@ export const CreateOrUpdateTagForm: React.FC<TagFormType & FormType> = ({
       validator={tagValidator}
       id="tag-form"
       method="post"
-      defaultValues={{
-        tagName: defaultValues?.name,
-        //TODO users:
-        //   defaultValues?.connectedUsers &&
-        //   defaultValues?.connectedUsers?.length > 0
-        //     ? defaultValues?.connectedUsers?.map(({ user: { name, id } }) => {
-        //         return { value: String(id), label: name };
-        //       })
-        //     : [],
-      }}
       className="grid grid-cols-1 gap-y-8 max-w-[600px] mx-auto"
     >
       <Input
@@ -44,6 +34,7 @@ export const CreateOrUpdateTagForm: React.FC<TagFormType & FormType> = ({
         value={nameValue}
         setValue={setNameValue}
         type="text"
+        defaultValue={defaultValues?.name}
         labelText="Tag name:"
         placeholder="Marketing"
       />
@@ -53,6 +44,11 @@ export const CreateOrUpdateTagForm: React.FC<TagFormType & FormType> = ({
         value={usersListValue}
         labelText="Users:"
         setValue={setUsersListValue}
+        defaultValue={defaultValues?.connectedUsers?.map(
+          ({ user: { name, id } }: { user: { name: string; id: number } }) => {
+            return { value: String(id), label: name };
+          },
+        )}
         options={users}
       />
 

@@ -10,6 +10,7 @@ export const Input: React.FC<InputProps> = ({
   value,
   setValue,
   type,
+  defaultValue,
   labelText,
   placeholder,
   wrapperClassName,
@@ -37,6 +38,7 @@ export const Input: React.FC<InputProps> = ({
             setValue(e.target.value);
           },
         })}
+        defaultValue={defaultValue}
       />
 
       {error && (

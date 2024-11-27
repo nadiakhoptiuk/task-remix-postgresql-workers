@@ -3,9 +3,9 @@ import { BaseItemType } from '~/types/common.types';
 
 import { ROUTES } from '~/types/enums';
 
-import s from './BaseList.module.css';
+import s from './BaseNavList.module.css';
 
-export const BaseList = ({
+export const BaseNavList = ({
   data,
   baseRoute,
 }: {

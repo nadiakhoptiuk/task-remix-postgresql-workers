@@ -6,10 +6,13 @@ import {
 import { Link, useLoaderData, useParams } from '@remix-run/react';
 import { ImArrowLeft2 } from 'react-icons/im';
 import invariant from 'tiny-invariant';
+
 import { CreateOrUpdateTagForm } from '~/components/forms/CreateOrEditTagForm';
 import { Container } from '~/components/ui-kit/Container/Container';
-import { getRestEmployeesList } from '~/models/employees.server';
-import { getTagById } from '~/models/tags.server';
+
+import { getEmployeesList } from '~/models/employees.server';
+import { getTagById, updateTag } from '~/models/tags.server';
+
 import { ROUTES } from '~/types/enums';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -17,9 +20,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(tagId, 'Tag id not found');
   const tagData = await getTagById(Number(tagId));
 
-  const allRestUsersData = await getRestEmployeesList(Number(tagId));
+  const usersList = await getEmployeesList();
 
-  const selectData = allRestUsersData.map(({ name, id }) => ({
+  const selectData = usersList.map(({ name, id }) => ({
     label: name,
     value: String(id),
   }));
@@ -43,7 +46,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
   const tagName = formData.get('tagName');
-  // const users = formData.getAll('users') as string[];
+  const users = formData.getAll('users') as string[];
 
   if (typeof tagName !== 'string') {
     return Response.json({
@@ -52,18 +55,18 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 
   try {
-    // await createNewTag({ tagName, users });
+    await updateTag(Number(tagId), { tagName, users });
   } catch (error) {
     if (error instanceof Error) {
       return Response.json({ error: error.message });
     }
-    return Response.json({ error: 'Error during creating tag' });
+    return Response.json({ error: 'Error during updating tag' });
   }
 
   return redirect(`${ROUTES.TAGS}/${tagId}`);
 };
 
-export default function EditEmployeePage() {
+export default function EditTagPage() {
   const { formDefaults, restUsers } = useLoaderData<typeof loader>();
   const { tagId } = useParams();
 

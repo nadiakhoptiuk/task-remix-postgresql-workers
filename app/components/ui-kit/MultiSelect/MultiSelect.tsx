@@ -12,6 +12,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   setValue,
   labelText = 'Users',
   options,
+  defaultValue,
   wrapperClassName,
   labelClassName,
 }) => {
@@ -28,14 +29,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         isMulti
         instanceId="react-multi-select"
         name={name}
+        {...getInputProps()}
         value={value}
         options={options}
-        defaultValue={value || null}
         onChange={newSelection => {
           setValue(newSelection);
           validate();
         }}
-        {...getInputProps()}
+        defaultValue={defaultValue}
         classNamePrefix="react-multi-select"
       />
 

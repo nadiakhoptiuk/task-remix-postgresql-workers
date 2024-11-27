@@ -1,13 +1,16 @@
-import { LoaderFunctionArgs } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { Link, redirect, useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { ImArrowLeft2 } from 'react-icons/im';
 
+import { Prisma } from '@prisma/client';
+import { deleteTagById, getTagById } from '~/models/tags.server';
+
 import { Container } from '~/components/ui-kit/Container/Container';
+import { SimpleUsersList } from '~/components/lists/SimpleUsersList';
+import { DeleteItemForm } from '~/components/forms/DeleteItemForm';
 
-import { getTagById } from '~/models/tags.server';
-
-import { ROLES, ROUTES } from '~/types/enums';
+import { ROUTES } from '~/types/enums';
 import { TagType } from '~/types/common.types';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -25,33 +28,33 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   });
 };
 
-// export const action = async ({ params }: ActionFunctionArgs) => {
-//   const { tagId } = params;
-//   try {
-// await deleteUserById(Number(tagId)); TODO
+export const action = async ({ params }: ActionFunctionArgs) => {
+  const { tagId } = params;
+  try {
+    await deleteTagById(Number(tagId));
 
-//     return redirect(ROUTES.TAGS);
-//   } catch (error) {
-//     if (
-//       error instanceof Prisma.PrismaClientKnownRequestError &&
-//       error.code === 'P2025'
-//     ) {
-//       return Response.json(
-//         {
-//           error: 'User with such Id does not exist',
-//         },
-//         { status: 404 },
-//       );
-//     }
+    return redirect(ROUTES.TAGS);
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2025'
+    ) {
+      return Response.json(
+        {
+          error: 'Tag with such Id does not exist',
+        },
+        { status: 404 },
+      );
+    }
 
-//     return Response.json(
-//       {
-//         error: 'An unexpected error occurred',
-//       },
-//       { status: 400 },
-//     );
-//   }
-// };
+    return Response.json(
+      {
+        error: 'An unexpected error occurred',
+      },
+      { status: 400 },
+    );
+  }
+};
 
 export default function TagPage() {
   const {
@@ -65,33 +68,10 @@ export default function TagPage() {
           <ImArrowLeft2 />
           Back to all tags
         </Link>
-
         <h1 className="text-ui_accent_dark">TAG: {name}</h1>
-
         <h2 className="text-ui_dark">Users:</h2>
 
-        {users.length > 0 && (
-          <ul className="flex flex-col gap-y-4 mb-16">
-            {users.map(({ user: { id, name, role } }) => {
-              return (
-                <li
-                  key={id}
-                  className="flex justify-between border-b-[1px] border-ui_grey"
-                >
-                  <p className="text-start text-lg md:text-xl xl:text-2xl">
-                    {name}
-                  </p>
-
-                  {role === ROLES.ADMIN && (
-                    <p className="text-start text-ui_accent_dark mb-16 text-lg md:text-xl xl:text-2xl">
-                      {role}
-                    </p>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        <SimpleUsersList data={users} />
 
         <div className="flex flex-col gap-y-6 w-[300px] mx-auto">
           <Link
@@ -100,7 +80,8 @@ export default function TagPage() {
           >
             Edit Tag
           </Link>
-          {/* <DeleteTagForm /> */}
+
+          <DeleteItemForm formId="delete-tag-form" />
         </div>
       </Container>
     </section>
