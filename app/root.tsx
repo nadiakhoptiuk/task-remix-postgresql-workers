@@ -1,10 +1,12 @@
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from '@remix-run/react';
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { Toaster } from 'react-hot-toast';
@@ -53,7 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <body>
         <Header userRole={data?.role} />
-        <main className="min-h-full">{children}</main>
+        <main className="min-h-full pt-[91px]">{children}</main>
         <Toaster position="top-center" reverseOrder={false} />
 
         <ScrollRestoration />
@@ -65,4 +67,35 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return <Outlet />;
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>Помилка {error.status}</h1>
+        <p>{error.data}</p>
+      </div>
+    );
+  }
+
+  if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h1>Something went wrong</h1>
+      <p>Unfortunately, an unexpected error occurred</p>
+    </div>
+  );
 }

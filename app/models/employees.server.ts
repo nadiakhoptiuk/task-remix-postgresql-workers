@@ -11,6 +11,27 @@ export async function getEmployeesList() {
   });
 }
 
+export async function getEmployeesWithDaysList(start: Date, end: Date) {
+  return await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      workdays: {
+        where: {
+          OR: [
+            { date: { gte: new Date(start), lte: new Date(end) } },
+            { date: undefined },
+          ],
+        },
+        select: { date: true, absent: true, billable: true, notBillable: true },
+      },
+      tags: { select: { tag: { select: { name: true } } } },
+    },
+    orderBy: [{ role: 'asc' }, { name: 'asc' }],
+  });
+}
+
 export async function getRestEmployeesList(tagId: number) {
   return await prisma.user.findMany({
     where: { tags: { none: { tagId } } },

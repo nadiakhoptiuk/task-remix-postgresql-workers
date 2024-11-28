@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime? @updatedAt
 
   tags      UserTag[]
+  workdays  Workday[]
 }
 
 model Tag {
@@ -37,6 +38,16 @@ model UserTag {
 
   createdAt DateTime @default(now())
   @@unique([userId, tagId]) 
+}
+
+model Workday {
+id            Int       @id @default(autoincrement())
+date          DateTime  
+billable      Float
+notBillable   Float
+absent        Float
+user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+userId        Int
 }
 
 enum Role {
