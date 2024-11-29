@@ -49,6 +49,23 @@ export interface HomePageLoaderData {
   allEmployees: EmployeeWithWorkdaysData[];
 }
 
+export type TotalDataChartType = {
+  billable: number;
+  notBillable: number;
+  absent: number;
+};
+
+export type barAvgDataType = {
+  billable: number | null;
+  notBillable: number | null;
+  date: Date;
+};
+
+export interface ReportPageLoaderType {
+  totalByGroups: TotalDataChartType;
+  barAvgDataForEveryDay: barAvgDataType[];
+}
+
 export type GetCurrentUserOptions = {
   failureRedirect?: (typeof ROUTES)[keyof typeof ROUTES];
   successRedirect?: (typeof ROUTES)[keyof typeof ROUTES];

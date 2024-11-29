@@ -116,7 +116,9 @@ export default function Index() {
   return (
     <section className="section flex justify-center">
       <Container className="flex flex-col items-center gap-16">
-        <h1>{userRole ? `Hello, ${userRole}` : 'Home Page'}</h1>
+        <h1 className="mb-10">
+          {userRole ? `Hello, ${userRole}` : 'Home Page'}
+        </h1>
 
         <WeekPicker />
         <MainEmployeesTable

@@ -37,7 +37,8 @@ export const WeekPicker = () => {
       {({ close }) => (
         <>
           <p className="text-center mb-4">Select date range:</p>
-          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey">
+
+          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey mx-auto mb-14">
             <span className="leading-[1.0]">
               {`${selectedWeek?.from?.toLocaleDateString('en-GB')} -
                 ${selectedWeek?.to?.toLocaleDateString('en-GB')}`}

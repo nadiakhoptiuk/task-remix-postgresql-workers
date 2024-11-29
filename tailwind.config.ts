@@ -41,7 +41,6 @@ export default {
         ui_light: '#F1F1F1',
         ui_lighter: '#fafafa',
         ui_grey: '#D9D9D9',
-        // ui_placeholder: '#adadad',
         ui_dark: '#020202',
         ui_accent: '#3E69AD',
         ui_accent_dark: '#2C528F',

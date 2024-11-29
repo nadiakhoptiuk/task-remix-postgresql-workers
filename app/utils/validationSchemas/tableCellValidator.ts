@@ -23,37 +23,43 @@ const editWorkHoursSchema = zfd.formData({
     z
       .string()
       .trim()
-      .regex(new RegExp(/^[0-9.]?$/), {
-        message: 'Field may contains of: 0-9 and .',
+      .regex(new RegExp(/^[0-9]{1,2}[.]?[0-9]{0,2}$/), {
+        message: 'Field may contains of: 0-9 and dot',
+      })
+      .min(1, {
+        message: 'Count of hours must be at least 1 character long',
       })
       .max(5, {
-        message: 'Name of tag must be 5 or fewer characters long',
-      })
-      .optional(),
+        message: 'Count of hours must be 5 or fewer characters long',
+      }),
   ),
   workdayNotBill: zfd.text(
     z
       .string()
       .trim()
-      .regex(new RegExp(/^[0-9.]?$/), {
-        message: 'Field may contains of: 0-9 and .',
+      .regex(new RegExp(/^[0-9]{1,2}[.]?[0-9]{0,2}$/), {
+        message: 'Field may contains of: 0-9 and dot',
+      })
+      .min(1, {
+        message: 'Count of hours must be at least 1 character long',
       })
       .max(5, {
         message: 'Name of tag must be 5 or fewer characters long',
-      })
-      .optional(),
+      }),
   ),
   workdayAbsent: zfd.text(
     z
       .string()
       .trim()
-      .regex(new RegExp(/^[0-9.]?$/), {
-        message: 'Field may contains of: 0-9 and .',
+      .regex(new RegExp(/^[0-9]{1,2}[.]?[0-9]{0,2}$/), {
+        message: 'Field may contains of: 0-9 and dot',
+      })
+      .min(1, {
+        message: 'Count of hours must be at least 1 character long',
       })
       .max(5, {
         message: 'Name of tag must be 5 or fewer characters long',
-      })
-      .optional(),
+      }),
   ),
 });
 
