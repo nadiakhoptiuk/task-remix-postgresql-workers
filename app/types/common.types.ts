@@ -29,6 +29,26 @@ export interface SerializedUserType {
   role: User['role'];
 }
 
+export interface WorkdayType {
+  date: Date;
+  billable: number;
+  notBillable: number;
+  absent: number;
+}
+
+export interface EmployeeWithWorkdaysData {
+  id: number;
+  name: string;
+  role: string;
+  workdays: WorkdayType[];
+  tags: { tag: { name?: string } }[] | [];
+}
+
+export interface HomePageLoaderData {
+  user: SerializedUserType;
+  allEmployees: EmployeeWithWorkdaysData[];
+}
+
 export type GetCurrentUserOptions = {
   failureRedirect?: (typeof ROUTES)[keyof typeof ROUTES];
   successRedirect?: (typeof ROUTES)[keyof typeof ROUTES];

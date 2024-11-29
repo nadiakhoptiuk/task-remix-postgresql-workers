@@ -12,20 +12,28 @@ export const Input: React.FC<InputProps> = ({
   type,
   defaultValue,
   labelText,
-  placeholder,
+  placeholder = '',
+  readOnly = false,
   wrapperClassName,
   labelClassName,
   inputClassName,
+  errorTextClassName,
 }) => {
   const { error, getInputProps } = useField(name);
 
   return (
     <div className={classNames(s.baseInputWrapper, wrapperClassName)}>
-      <label htmlFor={name} className={classNames(s.baseLabel, labelClassName)}>
-        {labelText}
-      </label>
+      {labelText && (
+        <label
+          htmlFor={name}
+          className={classNames(s.baseLabel, labelClassName)}
+        >
+          {labelText}
+        </label>
+      )}
 
       <input
+        readOnly={readOnly}
         name={name}
         value={value}
         type={type}
@@ -42,7 +50,12 @@ export const Input: React.FC<InputProps> = ({
       />
 
       {error && (
-        <span className="text-ui_red text-sm absolute bottom-[-24px] left-0">
+        <span
+          className={classNames(
+            'text-ui_red text-sm absolute bottom-[-24px] left-0',
+            errorTextClassName,
+          )}
+        >
           {error}
         </span>
       )}
