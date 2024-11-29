@@ -50,7 +50,7 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
             >
               <DialogPanel
                 className={classNames(
-                  'relative w-full max-w-[85%] space-y-4 border max-xl:px-5 py-12 xl:px-12 rounded-lg base-shadow bg-ui_light',
+                  'relative w-full max-w-[85%] space-y-4 border max-xl:px-5 px-14 py-20 xl:px-12 rounded-lg base-shadow bg-ui_light',
                   className,
                 )}
               >
@@ -58,9 +58,9 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
                 <button
                   onClick={() => setIsOpen(false)}
                   aria-label="Close modal"
-                  className="absolute top-5 right-5 flex h-[50px] w-[50px] items-center justify-center hocus:text-navy-blue text-black !m-0 base-transition"
+                  className="absolute top-5 right-5 flex h-[50px] w-[50px] items-center justify-center hocus:text-navy-blue text-ui_accent_dark !m-0 base-transition"
                 >
-                  <ImCross size={30} />
+                  <ImCross size={20} />
                 </button>
               </DialogPanel>
             </TransitionChild>

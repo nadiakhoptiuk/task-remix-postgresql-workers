@@ -40,14 +40,14 @@ export const MainEmployeesTable = ({
         cell: info => {
           const rowIndex = info.row.original.id;
           const columnId = info.column.id;
+          const userName = info.row.original.name;
+          const workdaysArray = info.row.original.workdays;
 
           return (
             <DefaultCell
-              initialValue={generateHoursForCell(
-                info.row.original.workdays,
-                day,
-              )}
+              initialValue={generateHoursForCell(workdaysArray, day)}
               rowIndex={rowIndex}
+              userName={userName}
               columnId={columnId}
               isEditable={isEditable}
             />
@@ -125,7 +125,7 @@ export const MainEmployeesTable = ({
               {row.getVisibleCells().map(cell => (
                 <td
                   key={cell.id}
-                  className="border-ui_grey border-[1px] px-2 py-2 !w-fit"
+                  className="border-ui_grey border-[1px] px-2 py-2 !w-fit min-h-[90px]"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

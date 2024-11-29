@@ -78,7 +78,7 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     await updateUserWorkHours({
       userId: Number(userId),
-      date,
+      date: Number(date),
       billable,
       notBillable,
       absent,

@@ -9,7 +9,7 @@ export async function updateUserWorkHours({
   absent,
 }: {
   userId: User['id'];
-  date: string;
+  date: number;
   billable: string;
   notBillable: string;
   absent: string;
@@ -29,7 +29,7 @@ export async function updateUserWorkHours({
   const neededWorkday = await prisma.workday.findFirst({
     where: {
       date: new Date(date),
-      userId,
+      userId: userId,
     },
     select: {
       id: true,
@@ -37,7 +37,7 @@ export async function updateUserWorkHours({
   });
 
   if (neededWorkday) {
-    await prisma.workday.update({
+    return await prisma.workday.update({
       where: {
         id: neededWorkday.id,
       },
@@ -48,7 +48,7 @@ export async function updateUserWorkHours({
       },
     });
   } else {
-    await prisma.workday.create({
+    const newWorkday = await prisma.workday.create({
       data: {
         billable: parseFloat(billable),
         notBillable: parseFloat(notBillable),
@@ -56,8 +56,15 @@ export async function updateUserWorkHours({
         date: new Date(date),
         userId: userId,
       },
+      select: {
+        date: true,
+        billable: true,
+        notBillable: true,
+        absent: true,
+        userId: true,
+      },
     });
-  }
 
-  console.log(neededWorkday);
+    return newWorkday;
+  }
 }

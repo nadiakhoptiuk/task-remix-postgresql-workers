@@ -9,6 +9,7 @@ export const DefaultCell: React.FC<DefaultCellType> = ({
   initialValue,
   rowIndex,
   columnId,
+  userName,
   isEditable = false,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +34,7 @@ export const DefaultCell: React.FC<DefaultCellType> = ({
             initialValue={initialValue}
             userId={rowIndex}
             date={columnId}
+            userName={userName}
           />
         </Modal>
       )}

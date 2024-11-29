@@ -1,4 +1,5 @@
 import React from 'react';
+import { format } from 'date-fns';
 import { useControlField, ValidatedForm } from 'remix-validated-form';
 
 import { Input } from '~/components/ui-kit/Input';
@@ -12,6 +13,7 @@ import { EditableCellTableType } from './EditableCellTable.types';
 export const EditableCellTable: React.FC<EditableCellTableType> = ({
   initialValue,
   userId,
+  userName,
   date,
 }) => {
   const arrayOfWorkingHours = splitWorkingHours(initialValue);
@@ -33,34 +35,40 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
     <ValidatedForm
       method="post"
       id="workhours-form"
-      defaultValues={{
-        userId,
-        date,
-        workdayBill: arrayOfWorkingHours[0],
-        workdayNotBill: arrayOfWorkingHours[1],
-        workdayAbsent: arrayOfWorkingHours[2],
-      }}
       validator={tableCellValidator}
-      className=""
     >
-      <div className="grid grid-cols-2 gap-x-10 mb-8">
+      <div className="grid grid-cols-2 gap-x-24 mb-20">
+        <label htmlFor="userId" className="text-2xl text-center font-semibold">
+          {userName}
+        </label>
         <input
           name="userId"
           type="text"
           value={Number(userId)}
           readOnly={true}
+          className="visually-hidden"
         />
 
-        <input name="date" type="number" value={date} readOnly={true} />
+        <label htmlFor="date" className="text-2xl text-left font-semibold">
+          {format(new Date(Number(date)), 'EEEE, dd.LL.y')}
+        </label>
+        <input
+          name="date"
+          type="number"
+          value={date}
+          readOnly={true}
+          className="visually-hidden"
+        />
       </div>
 
-      <div className="grid grid-cols-3 gap-x-8 mb-10">
+      <div className="grid grid-cols-3 gap-x-8 mb-20">
         <Input
           name="workdayBill"
           type="text"
           labelText="Billable hours:"
           value={billableValue}
           setValue={setBillableValue}
+          defaultValue={arrayOfWorkingHours[0]}
         />
         <Input
           name="workdayNotBill"
@@ -68,6 +76,7 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
           labelText="Not billable hours:"
           value={notBillableValue}
           setValue={setNotBillableValue}
+          defaultValue={arrayOfWorkingHours[1]}
         />
         <Input
           name="workdayAbsent"
@@ -75,9 +84,13 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
           labelText="Employee was absent:"
           value={absentValue}
           setValue={setAbsentValue}
+          defaultValue={arrayOfWorkingHours[2]}
         />
       </div>
-      <SubmitButton>Update</SubmitButton>
+
+      <SubmitButton className="max-w-[300px] mx-auto block">
+        Update
+      </SubmitButton>
     </ValidatedForm>
   );
 };
