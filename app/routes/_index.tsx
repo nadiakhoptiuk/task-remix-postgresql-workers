@@ -21,6 +21,7 @@ import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
 
 import { HomePageLoaderData } from '~/types/common.types';
 import { ROLES } from '~/types/enums';
+import { UTCDate } from '@date-fns/utc';
 
 export const meta: MetaFunction = () => {
   return [
@@ -37,16 +38,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const startParam = url.searchParams.get('start');
     const endParam = url.searchParams.get('end');
 
-    const start = Number(startParam);
-    const end = Number(endParam);
+    if (startParam === null || endParam === null) {
+      return Response.json({ user: loggedUser, allEmployees: null });
+    }
 
     const allEmployees = await getEmployeesWithDaysList(
-      new Date(start),
-      new Date(end),
+      new UTCDate(startParam),
+      new UTCDate(endParam),
     );
 
     return Response.json({ user: loggedUser, allEmployees });
   } catch (error) {
+    // console.log(error);
     if (error instanceof Response) return error;
     if (error instanceof AuthorizationError) {
       return Response.json({ error: error.message });
@@ -78,7 +81,7 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     await updateUserWorkHours({
       userId: Number(userId),
-      date: Number(date),
+      date: date,
       billable,
       notBillable,
       absent,
@@ -116,15 +119,15 @@ export default function Index() {
   return (
     <section className="section flex justify-center">
       <Container className="flex flex-col items-center gap-16">
-        <h1 className="mb-10">
-          {userRole ? `Hello, ${userRole}` : 'Home Page'}
-        </h1>
+        <h1 className="mb-10">Employees Table</h1>
 
         <WeekPicker />
-        <MainEmployeesTable
-          data={allEmployees}
-          isEditable={userRole !== ROLES.USER}
-        />
+        {allEmployees !== null && (
+          <MainEmployeesTable
+            data={allEmployees}
+            isEditable={userRole !== ROLES.USER}
+          />
+        )}
       </Container>
     </section>
   );

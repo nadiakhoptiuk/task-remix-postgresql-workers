@@ -9,15 +9,9 @@ const editWorkHoursSchema = zfd.formData({
     }),
   ),
   date: zfd.text(
-    z
-      .string()
-      .trim()
-      .regex(new RegExp(/^[0-9]+$/), {
-        message: 'Field may contains of: 0-9',
-      })
-      .min(10, {
-        message: 'Date must be 10 characters long',
-      }),
+    z.string().min(10, {
+      message: 'Date must be 10 characters long',
+    }),
   ),
   workdayBill: zfd.text(
     z

@@ -15,7 +15,10 @@ import {
 import { NAVLINKS } from '~/constants/constants';
 import { ReportPageLoaderType, Role } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
-import { BarChart } from '~/components/charts/BarChart/BarChart';
+
+import { UTCDate } from '@date-fns/utc';
+
+import { BarChartByDays } from '~/components/charts/BarChart';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
@@ -31,18 +34,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const startParam = url.searchParams.get('start');
   const endParam = url.searchParams.get('end');
 
-  const start = Number(startParam);
-  const end = Number(endParam);
+  if (startParam === null || endParam === null) {
+    return Response.json({});
+  }
 
   try {
     const totalByGroups = await getTotalDataByGroups(
-      new Date(start),
-      new Date(end),
+      new UTCDate(startParam),
+      new UTCDate(endParam),
     );
 
     const barAvgDataForEveryDay = await getAverageDataForDay(
-      new Date(start),
-      new Date(end),
+      new UTCDate(startParam),
+      new UTCDate(endParam),
     );
 
     return Response.json({ totalByGroups, barAvgDataForEveryDay });
@@ -70,8 +74,10 @@ export default function ReportsPage() {
           <WeekPicker />
 
           <div className="grid grid-cols-1 gap-x-10 gap-y-16">
-            <PieChart data={totalByGroups} />
-            <BarChart data={barAvgDataForEveryDay} />
+            {totalByGroups && <PieChart data={totalByGroups} />}
+            {barAvgDataForEveryDay && (
+              <BarChartByDays data={barAvgDataForEveryDay} />
+            )}
           </div>
         </Container>
       </section>

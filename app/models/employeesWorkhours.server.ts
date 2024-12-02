@@ -1,4 +1,5 @@
 import { User } from '@prisma/client';
+
 import prisma from 'prisma/prismaClient';
 
 export async function updateUserWorkHours({
@@ -9,7 +10,7 @@ export async function updateUserWorkHours({
   absent,
 }: {
   userId: User['id'];
-  date: number;
+  date: string;
   billable: string;
   notBillable: string;
   absent: string;

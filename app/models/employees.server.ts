@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import { User } from '@prisma/client';
 import prisma from 'prisma/prismaClient';
 
@@ -20,7 +21,7 @@ export async function getEmployeesWithDaysList(start: Date, end: Date) {
       workdays: {
         where: {
           OR: [
-            { date: { gte: new Date(start), lte: new Date(end) } },
+            { date: { gte: new UTCDate(start), lte: new UTCDate(end) } },
             { date: undefined },
           ],
         },
@@ -28,13 +29,6 @@ export async function getEmployeesWithDaysList(start: Date, end: Date) {
       },
       tags: { select: { tag: { select: { name: true } } } },
     },
-    orderBy: [{ role: 'asc' }, { name: 'asc' }],
-  });
-}
-
-export async function getRestEmployeesList(tagId: number) {
-  return await prisma.user.findMany({
-    where: { tags: { none: { tagId } } },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],
   });
 }

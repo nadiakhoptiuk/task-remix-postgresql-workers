@@ -58,6 +58,7 @@ export type TotalDataChartType = {
 export type barAvgDataType = {
   billable: number | null;
   notBillable: number | null;
+  absent: number | null;
   date: Date;
 };
 

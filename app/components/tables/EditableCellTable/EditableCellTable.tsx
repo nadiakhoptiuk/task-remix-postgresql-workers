@@ -50,11 +50,11 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
         />
 
         <label htmlFor="date" className="text-2xl text-left font-semibold">
-          {format(new Date(Number(date)), 'EEEE, dd.LL.y')}
+          {format(new Date(date), 'EEEE, dd.LL.y')}
         </label>
         <input
           name="date"
-          type="number"
+          type="string"
           value={date}
           readOnly={true}
           className="visually-hidden"
@@ -81,7 +81,7 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
         <Input
           name="workdayAbsent"
           type="text"
-          labelText="Employee was absent:"
+          labelText="Was absent:"
           value={absentValue}
           setValue={setAbsentValue}
           defaultValue={arrayOfWorkingHours[2]}

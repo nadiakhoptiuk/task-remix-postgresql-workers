@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import { getUnixTime } from 'date-fns';
 import { WorkdayType } from '~/types/common.types';
 
@@ -6,7 +7,8 @@ export const generateHoursForCell = (
   currentCellDate: Date,
 ) => {
   const dateHoursObj = dataObject.find(
-    ({ date }) => getUnixTime(new Date(date)) === getUnixTime(currentCellDate),
+    ({ date }) =>
+      getUnixTime(new UTCDate(date)) === getUnixTime(currentCellDate),
   );
   if (!dateHoursObj) return '(not filled)';
 

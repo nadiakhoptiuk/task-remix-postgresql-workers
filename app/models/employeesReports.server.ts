@@ -28,6 +28,7 @@ export async function getAverageDataForDay(start: Date, end: Date) {
       _avg: {
         billable: true,
         notBillable: true,
+        absent: true,
       },
       where: {
         date: { equals: new Date(day) },
