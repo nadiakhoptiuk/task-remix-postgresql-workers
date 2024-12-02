@@ -67,13 +67,9 @@ export default function ReportsPage() {
     <div className="md:flex">
       <section className="section flex-1 flex-grow border-r-[2px] border-ui_grey ">
         <Container>
-          <h1 className="mb-8">
-            {NAVLINKS.find(({ route }) => route === ROUTES.REPORTS)?.label}
-          </h1>
-
           <WeekPicker />
 
-          <div className="grid grid-cols-1 gap-x-10 gap-y-16">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-10 gap-y-16">
             {totalByGroups && <PieChart data={totalByGroups} />}
             {barAvgDataForEveryDay && (
               <BarChartByDays data={barAvgDataForEveryDay} />

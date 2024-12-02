@@ -22,23 +22,43 @@ ChartJS.register(
 );
 
 export const BarChartByDays = ({ data }: { data: barAvgDataType[] }) => {
-  const labels = data.map(({ date }) => format(new Date(date), 'EEEE'));
-  // const colors = ['#32a852', '#F80909', '#e6e645'];
+  const days = data.map(({ date }) => format(new Date(date), 'EEEE'));
+  const labels = ['Billable', 'Not Billable', 'Absent'];
+  const colors = [
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 99, 132, 0.2)',
+  ];
 
-  const datasets = data.map(({ billable, notBillable, absent, date }) => {
-    return {
-      label: format(new Date(date), 'EEEE'),
-      data: [billable, notBillable, absent],
-      backgroundColor: '#32a852',
-    };
+  const billableData = data.map(({ billable }) => {
+    return billable;
+  });
+  const notBillableData = data.map(({ notBillable }) => {
+    return notBillable;
+  });
+  const absentData = data.map(({ absent }) => {
+    return absent;
   });
 
+  const arrayOfData = [billableData, notBillableData, absentData];
+
+  const datasets = labels.map((label, index) => ({
+    label: label,
+    data: arrayOfData[index],
+    backgroundColor: colors[index],
+    hoverOffset: 4,
+    borderWidth: 2,
+  }));
+
   return (
-    <div className="mx-auto max-w-[1200px] w-full  max-h-[600px] flex flex-col justify-center items-center py-6 px-6 border-[1px] border-ui_grey">
-      <h2 className="mb-10">Total data by groups for the selected week:</h2>
+    <div className="mx-auto max-w-[1200px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey">
+      <h2 className="mb-4 text-lg">
+        Total data by groups for the selected week:
+      </h2>
+
       <Bar
         data={{
-          labels: labels,
+          labels: days,
           datasets: datasets,
         }}
         options={{}}

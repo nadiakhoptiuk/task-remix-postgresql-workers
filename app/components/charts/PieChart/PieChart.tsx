@@ -1,75 +1,54 @@
-import { PieChart as BasePieChart, Pie, Cell, Legend } from 'recharts';
+import { Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Title,
+  ArcElement,
+  Legend,
+} from 'chart.js';
 
 import { TotalDataChartType } from '~/types/common.types';
 
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: {
-  cx: string;
-  cy: string;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-  midAngle: number;
-}) => {
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? 'start' : 'end'}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(2)}%`}
-    </text>
-  );
-};
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Title,
+  Legend,
+  ArcElement,
+);
 
 export const PieChart = ({ data }: { data: TotalDataChartType }) => {
-  const colors = ['#3E69AD', '#F80909', '#D9D9D9'];
+  const labels = ['Billable', 'Not Billable', 'Absent'];
+  const colors = [
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 99, 132, 0.2)',
+  ];
 
-  const dataArray = Object.entries(data).map(arr => ({
-    name: arr[0],
-    value: arr[1] ?? 0,
-  }));
+  const chartData = [
+    {
+      data: Object.values(data),
+      backgroundColor: colors,
+      hoverOffset: 4,
+      borderWidth: 2,
+    },
+  ];
 
   return (
-    <>
-      {data && dataArray.length !== 0 ? (
-        <div className="mx-auto w-[600px] h-[500px] flex flex-col justify-center items-center py-8 px-12 border-[1px] border-ui_grey">
-          <h2 className="mb-10">Total data by groups for the selected week:</h2>
-
-          <BasePieChart width={450} height={350}>
-            <Legend />
-            <Pie
-              data={dataArray}
-              nameKey="name"
-              dataKey="value"
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={renderCustomizedLabel}
-              outerRadius={120}
-              fill="#3E69AD"
-            />
-            {dataArray.map((_, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index]} />
-            ))}
-          </BasePieChart>
-        </div>
-      ) : (
-        <p>There is no data for chart</p>
-      )}
-    </>
+    <div className="mx-auto max-w-[500px] w-full max-h-[400px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey">
+      <h2 className="mb-4 text-lg">
+        Total data by groups for the selected week:
+      </h2>
+      <Pie
+        data={{
+          labels: labels,
+          datasets: chartData,
+        }}
+        options={{ radius: 100 }}
+      />
+    </div>
   );
 };
