@@ -1,9 +1,10 @@
+import { UTCDate } from '@date-fns/utc';
 import { eachDayOfInterval } from 'date-fns';
 import prisma from 'prisma/prismaClient';
 
-import { GroupType, OrderType } from '~/types/common.types';
+import { GroupType, WorkHoursOrderType } from '~/types/common.types';
 
-export async function getTotalDataByGroups(start: Date, end: Date) {
+export async function getTotalDataByGroups(start: string, end: string) {
   const sumData = await prisma.workday.aggregate({
     _sum: {
       billable: true,
@@ -11,17 +12,17 @@ export async function getTotalDataByGroups(start: Date, end: Date) {
       absent: true,
     },
     where: {
-      date: { gte: new Date(start), lte: new Date(end) },
+      date: { gte: new UTCDate(start), lte: new UTCDate(end) },
     },
   });
 
   return sumData._sum;
 }
 
-export async function getAverageDataForDay(start: Date, end: Date) {
+export async function getAverageDataForDay(start: string, end: string) {
   const arrayOfDates = eachDayOfInterval({
-    start: new Date(start),
-    end: new Date(end),
+    start: new UTCDate(start),
+    end: new UTCDate(end),
   });
 
   const results = [];
@@ -33,7 +34,7 @@ export async function getAverageDataForDay(start: Date, end: Date) {
         absent: true,
       },
       where: {
-        date: { equals: new Date(day) },
+        date: { equals: new UTCDate(day) },
       },
     });
 
@@ -49,14 +50,14 @@ export async function getTopOrAntitopEmployees({
   start,
   end,
 }: {
-  order: OrderType;
+  order: WorkHoursOrderType;
   group: GroupType;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
 }) {
   return await prisma.workday.findMany({
     where: {
-      date: { gte: new Date(start), lte: new Date(end) },
+      date: { gte: new UTCDate(start), lte: new UTCDate(end) },
     },
     orderBy: { [group]: order === 'max' ? 'desc' : 'asc' },
     take: 5,

@@ -37,7 +37,7 @@ export interface SerializedUserType {
 }
 
 export type GroupType = 'billable' | 'notBillable' | 'absent';
-export type OrderType = 'min' | 'max';
+export type WorkHoursOrderType = 'min' | 'max';
 
 export interface WorkdayType {
   date: Date;
@@ -57,6 +57,8 @@ export interface EmployeeWithWorkdaysData {
 export interface HomePageLoaderData {
   user: SerializedUserType;
   allEmployees: EmployeeWithWorkdaysData[];
+  start: string;
+  end: string;
 }
 
 export type TotalDataChartType = {
@@ -86,6 +88,10 @@ export interface ReportPageLoaderType {
   totalByGroups: TotalDataChartType;
   barAvgDataForEveryDay: BarAvgDataType[];
   topOrAntitopEmployees: TopOrAntitopEmpType[] | [];
+  start: string;
+  end: string;
+  order: WorkHoursOrderType;
+  group: GroupType;
 }
 
 export type GetCurrentUserOptions = {

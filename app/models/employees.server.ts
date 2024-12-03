@@ -25,7 +25,7 @@ export async function getEmployeesList(query?: string | undefined | null) {
   });
 }
 
-export async function getEmployeesWithDaysList(start: Date, end: Date) {
+export async function getEmployeesWithDaysList(start: string, end: string) {
   return await prisma.user.findMany({
     select: {
       id: true,

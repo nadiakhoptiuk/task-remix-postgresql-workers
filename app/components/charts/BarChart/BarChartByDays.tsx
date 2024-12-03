@@ -53,7 +53,7 @@ export const BarChartByDays = ({ data }: { data: BarAvgDataType[] }) => {
   return (
     <div className="mx-auto max-w-[1200px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey rounded-md">
       <h2 className="mb-4 text-lg">
-        Total data by groups for the selected week:
+        Total data by groups for each day of week:
       </h2>
 
       <Bar

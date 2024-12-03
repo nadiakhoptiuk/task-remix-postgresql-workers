@@ -1,36 +1,14 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from '@remix-run/react';
-import { UTCDate } from '@date-fns/utc';
-import { endOfWeek, startOfWeek } from 'date-fns';
-import { DateRange, DayPicker } from 'react-day-picker';
+
+import { DayPicker } from 'react-day-picker';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { enGB } from 'date-fns/locale';
 
 import 'react-day-picker/style.css';
+import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
-export const WeekPicker = () => {
+export const WeekPicker = ({ start, end }: { start: string; end: string }) => {
   const [_, setSearchParams] = useSearchParams();
-  const [selectedWeek, setSelectedWeek] = useState<DateRange>({
-    from: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    to: endOfWeek(new Date(), { weekStartsOn: 1 }),
-  });
-
-  useEffect(() => {
-    setSearchParams(prev => {
-      prev.set(
-        'start',
-        selectedWeek.from
-          ? new Date(selectedWeek.from).toISOString()
-          : 'undefined',
-      );
-      prev.set(
-        'end',
-        selectedWeek.to ? new Date(selectedWeek.to).toISOString() : 'undefined',
-      );
-
-      return prev;
-    });
-  }, [selectedWeek, setSearchParams]);
 
   return (
     <Popover>
@@ -40,8 +18,8 @@ export const WeekPicker = () => {
 
           <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey mx-auto mb-14">
             <span className="leading-[1.0]">
-              {`${selectedWeek?.from?.toLocaleDateString('en-GB')} -
-                ${selectedWeek?.to?.toLocaleDateString('en-GB')}`}
+              {`${start}  - 
+                ${end}`}
             </span>
           </PopoverButton>
 
@@ -57,23 +35,15 @@ export const WeekPicker = () => {
               locale={enGB}
               max={7}
               modifiers={{
-                selected: selectedWeek,
-                range_start: selectedWeek?.from,
-                range_end: selectedWeek?.to,
+                selected: { from: new Date(start), to: new Date(end) },
+                range_start: new Date(start),
+                range_end: new Date(end),
                 weekend: true,
               }}
-              onDayClick={(day, modifiers) => {
-                if (modifiers.selected) {
-                  setSelectedWeek({
-                    from: startOfWeek(new UTCDate(), { weekStartsOn: 1 }),
-                    to: endOfWeek(new UTCDate(), { weekStartsOn: 1 }),
-                  });
-                  return;
-                }
-
-                setSelectedWeek({
-                  from: startOfWeek(day, { weekStartsOn: 1 }),
-                  to: endOfWeek(day, { weekStartsOn: 1 }),
+              onDayClick={day => {
+                setSearchParams(prev => {
+                  prev.set('start', getStartAndEndOfWeek(day).start);
+                  return prev;
                 });
                 close();
               }}

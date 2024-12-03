@@ -18,10 +18,10 @@ import { WeekPicker } from '~/components/ui-kit/WeekPicker';
 import { getAuthUser } from '~/services/auth.server';
 import { getEmployeesWithDaysList } from '~/models/employees.server';
 import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
+import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
 import { HomePageLoaderData } from '~/types/common.types';
 import { ROLES } from '~/types/enums';
-import { UTCDate } from '@date-fns/utc';
 
 export const meta: MetaFunction = () => {
   return [
@@ -36,20 +36,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const url = new URL(request.url);
     const startParam = url.searchParams.get('start');
-    const endParam = url.searchParams.get('end');
+    const { start, end } = getStartAndEndOfWeek(startParam);
 
-    if (startParam === null || endParam === null) {
-      return Response.json({ user: loggedUser, allEmployees: null });
-    }
+    const allEmployees = await getEmployeesWithDaysList(start, end);
 
-    const allEmployees = await getEmployeesWithDaysList(
-      new UTCDate(startParam),
-      new UTCDate(endParam),
-    );
-
-    return Response.json({ user: loggedUser, allEmployees });
+    return Response.json({ user: loggedUser, allEmployees, start, end });
   } catch (error) {
-    // console.log(error);
     if (error instanceof Response) return error;
     if (error instanceof AuthorizationError) {
       return Response.json({ error: error.message });
@@ -114,6 +106,8 @@ export default function Index() {
   const {
     user: { role: userRole },
     allEmployees,
+    start,
+    end,
   } = useLoaderData<HomePageLoaderData>();
 
   return (
@@ -121,11 +115,13 @@ export default function Index() {
       <Container className="flex flex-col items-center gap-16">
         <h1 className="mb-10">Employees Table</h1>
 
-        <WeekPicker />
+        <WeekPicker start={start} end={end} />
         {allEmployees !== null && (
           <MainEmployeesTable
             data={allEmployees}
             isEditable={userRole !== ROLES.USER}
+            start={start}
+            end={end}
           />
         )}
       </Container>

@@ -1,7 +1,6 @@
 import { AuthorizationError } from 'remix-auth';
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { ScrollRestoration, useLoaderData } from '@remix-run/react';
-import { UTCDate } from '@date-fns/utc';
 
 import { Container } from '~/components/ui-kit/Container/Container';
 import { WeekPicker } from '~/components/ui-kit/WeekPicker';
@@ -16,14 +15,20 @@ import {
   getTotalDataByGroups,
 } from '~/models/employeesReports.server';
 
-import { NAVLINKS } from '~/constants/constants';
+import {
+  GROUP_SELECT_OPTIONS,
+  NAVLINKS,
+  ORDER_SELECT_OPTIONS,
+} from '~/constants/constants';
 import {
   GroupType,
-  OrderType,
   ReportPageLoaderType,
   Role,
+  WorkHoursOrderType,
 } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
+
+import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
@@ -37,71 +42,34 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url);
   const startParam = url.searchParams.get('start');
-  const endParam = url.searchParams.get('end');
-  const orderParam = url.searchParams.get('order') as OrderType;
-  const groupParam = url.searchParams.get('group') as GroupType;
+  const { start, end } = getStartAndEndOfWeek(startParam);
 
-  if (
-    startParam === null &&
-    endParam === null &&
-    orderParam === null &&
-    groupParam === null
-  ) {
-    return Response.json({});
-  }
+  const workHoursOrderParam =
+    url.searchParams.get('order') || ORDER_SELECT_OPTIONS[0].value;
+  const groupParam =
+    url.searchParams.get('group') || GROUP_SELECT_OPTIONS[0].value;
 
   try {
-    if (
-      startParam !== null &&
-      endParam !== null &&
-      (orderParam === null || groupParam === null)
-    ) {
-      const totalByGroups = await getTotalDataByGroups(
-        new UTCDate(startParam),
-        new UTCDate(endParam),
-      );
+    const totalByGroups = await getTotalDataByGroups(start, end);
 
-      const barAvgDataForEveryDay = await getAverageDataForDay(
-        new UTCDate(startParam),
-        new UTCDate(endParam),
-      );
+    const barAvgDataForEveryDay = await getAverageDataForDay(start, end);
 
-      return Response.json({
-        totalByGroups,
-        barAvgDataForEveryDay,
-        topOrAntitopEmployees: [],
-      });
-    }
+    const topOrAntitopEmployees = await getTopOrAntitopEmployees({
+      start,
+      end,
+      order: workHoursOrderParam as WorkHoursOrderType,
+      group: groupParam as GroupType,
+    });
 
-    if (
-      startParam !== null &&
-      endParam !== null &&
-      orderParam !== null &&
-      groupParam !== null
-    ) {
-      const totalByGroups = await getTotalDataByGroups(
-        new UTCDate(startParam),
-        new UTCDate(endParam),
-      );
-
-      const barAvgDataForEveryDay = await getAverageDataForDay(
-        new UTCDate(startParam),
-        new UTCDate(endParam),
-      );
-
-      const topOrAntitopEmployees = await getTopOrAntitopEmployees({
-        start: new UTCDate(startParam),
-        end: new UTCDate(endParam),
-        order: orderParam,
-        group: groupParam,
-      });
-
-      return Response.json({
-        totalByGroups,
-        barAvgDataForEveryDay,
-        topOrAntitopEmployees,
-      });
-    }
+    return Response.json({
+      totalByGroups,
+      barAvgDataForEveryDay,
+      topOrAntitopEmployees,
+      start,
+      end,
+      order: workHoursOrderParam,
+      group: groupParam,
+    });
   } catch (error) {
     if (error instanceof Response) return error;
     if (error instanceof AuthorizationError) {
@@ -112,21 +80,35 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function ReportsPage() {
-  const data = useLoaderData<ReportPageLoaderType>();
+  const {
+    start,
+    end,
+    order,
+    group,
+    totalByGroups,
+    barAvgDataForEveryDay,
+    topOrAntitopEmployees,
+  } = useLoaderData<ReportPageLoaderType>();
 
   return (
     <div className="md:flex">
       <section className="section flex-1 flex-grow border-r-[2px] border-ui_grey ">
         <Container>
-          <WeekPicker />
+          <WeekPicker start={start} end={end} />
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-10 gap-y-16">
-            {data?.totalByGroups && <PieChart data={data?.totalByGroups} />}
-            {data?.barAvgDataForEveryDay && (
-              <BarChartByDays data={data?.barAvgDataForEveryDay} />
+            {totalByGroups && <PieChart data={totalByGroups} />}
+
+            {barAvgDataForEveryDay && (
+              <BarChartByDays data={barAvgDataForEveryDay} />
             )}
-            {data?.topOrAntitopEmployees && (
-              <ReportTableEmployees data={data?.topOrAntitopEmployees} />
+
+            {topOrAntitopEmployees && (
+              <ReportTableEmployees
+                data={topOrAntitopEmployees}
+                order={order}
+                group={group}
+              />
             )}
           </div>
         </Container>
