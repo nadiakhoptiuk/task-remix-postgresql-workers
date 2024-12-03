@@ -1,4 +1,4 @@
-export interface EditableCellTableType {
+export interface EditableCellFormType {
   userId: number;
   userName: string;
   date: string;

@@ -20,7 +20,7 @@ export const EmployeesList = ({ data }: { data: EmployeeTypeWithId[] }) => {
               }
             >
               <div className={s.baseItemBlock}>
-                <span className={s.baseItemHeading}>Name:</span>
+                {/* <span className={s.baseItemHeading}>Name:</span> */}
                 <span className={s.baseItemDesc}>{name}</span>
               </div>
 

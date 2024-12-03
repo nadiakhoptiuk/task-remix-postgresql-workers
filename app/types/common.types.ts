@@ -12,6 +12,7 @@ export type WithClassName = {
 
 export interface EmployeeLoaderData {
   employeesList: EmployeeTypeWithId[];
+  query: string;
 }
 
 export interface SingleEmployeeLoaderData {
@@ -20,14 +21,23 @@ export interface SingleEmployeeLoaderData {
 
 export interface TagsLoaderData {
   tagsList: BaseItemType[];
+  query: string;
 }
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
+
+export type RoleSelectOption = {
+  label: Role;
+  value: Role;
+};
 
 export interface SerializedUserType {
   id: number;
   role: User['role'];
 }
+
+export type GroupType = 'billable' | 'notBillable' | 'absent';
+export type OrderType = 'min' | 'max';
 
 export interface WorkdayType {
   date: Date;
@@ -47,6 +57,35 @@ export interface EmployeeWithWorkdaysData {
 export interface HomePageLoaderData {
   user: SerializedUserType;
   allEmployees: EmployeeWithWorkdaysData[];
+}
+
+export type TotalDataChartType = {
+  billable: number;
+  notBillable: number;
+  absent: number;
+};
+
+export type BarAvgDataType = {
+  billable: number | null;
+  notBillable: number | null;
+  absent: number | null;
+  date: Date;
+};
+
+export interface TopOrAntitopEmpType {
+  billable?: number;
+  notBillable?: number;
+  absent?: number;
+  date: Date;
+  user: {
+    name: string;
+  };
+}
+
+export interface ReportPageLoaderType {
+  totalByGroups: TotalDataChartType;
+  barAvgDataForEveryDay: BarAvgDataType[];
+  topOrAntitopEmployees: TopOrAntitopEmpType[] | [];
 }
 
 export type GetCurrentUserOptions = {

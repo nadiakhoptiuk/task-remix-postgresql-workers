@@ -17,6 +17,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@date-fns/utc": "^2.1.0",
     "@headlessui/react": "^2.2.0",
     "@prisma/client": "^5.22.0",
     "@remix-run/node": "^2.14.0",
@@ -29,10 +30,12 @@
     "@tanstack/react-table": "^8.20.5",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^2.4.3",
+    "chart.js": "^4.4.7",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-day-picker": "^9.4.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

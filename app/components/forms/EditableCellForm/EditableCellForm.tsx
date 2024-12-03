@@ -8,9 +8,9 @@ import { SubmitButton } from '~/components/ui-kit/SubmitButton';
 import { tableCellValidator } from '~/utils/validationSchemas/tableCellValidator';
 import { splitWorkingHours } from '~/utils/tableUtilities/generateHoursForCell';
 
-import { EditableCellTableType } from './EditableCellTable.types';
+import { EditableCellFormType } from './EditableCellForm.types';
 
-export const EditableCellTable: React.FC<EditableCellTableType> = ({
+export const EditableCellForm: React.FC<EditableCellFormType> = ({
   initialValue,
   userId,
   userName,
@@ -36,8 +36,9 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
       method="post"
       id="workhours-form"
       validator={tableCellValidator}
+      className="w-[300px] mx-auto"
     >
-      <div className="grid grid-cols-2 gap-x-24 mb-20">
+      <div className="grid grid-cols-1 gap-y-4 gap-x-24 mb-10">
         <label htmlFor="userId" className="text-2xl text-center font-semibold">
           {userName}
         </label>
@@ -49,19 +50,19 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
           className="visually-hidden"
         />
 
-        <label htmlFor="date" className="text-2xl text-left font-semibold">
-          {format(new Date(Number(date)), 'EEEE, dd.LL.y')}
+        <label htmlFor="date" className="text-2xl text-center font-semibold">
+          {format(new Date(date), 'EEEE, dd.LL.y')}
         </label>
         <input
           name="date"
-          type="number"
+          type="string"
           value={date}
           readOnly={true}
           className="visually-hidden"
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-x-8 mb-20">
+      <div className="w-fit mx-auto grid grid-cols-[300px] gap-x-8 gap-y-4 mb-20">
         <Input
           name="workdayBill"
           type="text"
@@ -81,7 +82,7 @@ export const EditableCellTable: React.FC<EditableCellTableType> = ({
         <Input
           name="workdayAbsent"
           type="text"
-          labelText="Employee was absent:"
+          labelText="Was absent:"
           value={absentValue}
           setValue={setAbsentValue}
           defaultValue={arrayOfWorkingHours[2]}

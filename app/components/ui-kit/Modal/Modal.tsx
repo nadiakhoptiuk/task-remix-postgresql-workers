@@ -50,7 +50,7 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
             >
               <DialogPanel
                 className={classNames(
-                  'relative w-full max-w-[85%] space-y-4 border max-xl:px-5 px-14 py-20 xl:px-12 rounded-lg base-shadow bg-ui_light',
+                  'relative w-fit max-w-[85%] space-y-4 border max-xl:px-5 px-14 py-20 xl:px-12 rounded-lg base-shadow bg-ui_light',
                   className,
                 )}
               >

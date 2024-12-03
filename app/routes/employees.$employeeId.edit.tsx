@@ -6,7 +6,6 @@ import {
 } from '@remix-run/node';
 import { Link, useLoaderData, useParams } from '@remix-run/react';
 import { ImArrowLeft2 } from 'react-icons/im';
-import { setFormDefaults } from 'remix-validated-form';
 import invariant from 'tiny-invariant';
 
 import { CreateOrUpdateEmployeeForm } from '~/components/forms/CreateOrEditEmployeeForm';
@@ -24,14 +23,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (employeeData !== null) {
     const { name, email, role } = employeeData;
 
-    return Response.json(
-      setFormDefaults('user-form', {
+    return Response.json({
+      formDefaults: {
         name: name,
         email: email,
         role: ROLE_SELECT_OPTIONS.find(({ value }) => value === role),
-        password: null,
-      }),
-    );
+        password: '',
+      },
+    });
   }
 };
 
@@ -106,7 +105,10 @@ export default function EditEmployeePage() {
 
         <h2 className="text-ui_accent_dark">Edit {data.name}</h2>
 
-        <CreateOrUpdateEmployeeForm formType="update" />
+        <CreateOrUpdateEmployeeForm
+          formType="update"
+          defaultValues={data.formDefaults}
+        />
       </Container>
     </section>
   );

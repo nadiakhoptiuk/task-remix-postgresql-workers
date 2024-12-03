@@ -4,14 +4,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-
-import { EmployeeWithWorkdaysData } from '~/types/common.types';
 import { useMemo } from 'react';
 import { useSearchParams } from '@remix-run/react';
 import { eachDayOfInterval, format } from 'date-fns';
+
 import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
 
 import { DefaultCell } from '../DefaultCell';
+
+import { EmployeeWithWorkdaysData } from '~/types/common.types';
 
 export const MainEmployeesTable = ({
   data,
@@ -28,15 +29,21 @@ export const MainEmployeesTable = ({
     const start = searchParams.get('start');
     const end = searchParams.get('end');
 
+    if (start === null || end === null) {
+      throw new Error(
+        'Invalid date parameters: startParam or endParam is null.', //TODO
+      );
+    }
+
     const dateArray = eachDayOfInterval({
-      start: new Date(Number(start)),
-      end: new Date(Number(end)),
+      start: new Date(start),
+      end: new Date(end),
     });
 
     return dateArray.map(day => {
       return columnHelper.accessor('workdays', {
-        id: new Date(day).getTime().toString(),
-        header: () => <span>{format(day, 'EEEE, dd.LL.y')}</span>,
+        id: new Date(day).toISOString(),
+        header: () => <span>{format(new Date(day), 'E, dd')}</span>,
         cell: info => {
           const rowIndex = info.row.original.id;
           const columnId = info.column.id;
@@ -64,22 +71,15 @@ export const MainEmployeesTable = ({
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('id', {
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('role', {
-        header: () => <span>Access</span>,
-        cell: info => info.renderValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor(row => row.tags, {
-        id: 'tag',
-        header: () => <span>Tags</span>,
-        cell: info =>
-          info.row.original.tags.map(({ tag: { name } }) => name).join(', '),
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('id', {
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
+      // columnHelper.accessor('role', {
+      //   header: () => <span>Access</span>,
+      //   cell: info => info.renderValue(),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.group({
         header: 'Work hours accounting',
         footer: props => props.column.id,

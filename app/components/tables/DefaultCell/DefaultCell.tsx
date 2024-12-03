@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { DefaultCellType } from './DefaultCell.types';
 
-import { EditableCellTable } from '../EditableCellTable';
 import { Modal } from '~/components/ui-kit/Modal';
+import { EditableCellForm } from '~/components/forms/EditableCellForm';
 
 export const DefaultCell: React.FC<DefaultCellType> = ({
   initialValue,
@@ -30,7 +30,7 @@ export const DefaultCell: React.FC<DefaultCellType> = ({
 
       {isModalOpen && isEditable && (
         <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-          <EditableCellTable
+          <EditableCellForm
             initialValue={initialValue}
             userId={rowIndex}
             date={columnId}

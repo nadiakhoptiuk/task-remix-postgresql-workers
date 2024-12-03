@@ -7,6 +7,7 @@ export interface SingleSelectProps {
   setValue: (value: SingleValue<OptionType>) => void;
   labelText: string;
   options: OptionType[];
+  defaultValue?: SingleValue<OptionType>;
   error?: string | undefined;
   wrapperClassName?: string;
   labelClassName?: string;

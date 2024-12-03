@@ -15,6 +15,7 @@ export const SingleSelect: FC<SingleSelectProps> = ({
   options,
   wrapperClassName,
   labelClassName,
+  defaultValue,
 }) => {
   const { error, validate, getInputProps } = useField(name);
 
@@ -29,7 +30,7 @@ export const SingleSelect: FC<SingleSelectProps> = ({
         name={name}
         options={options}
         value={value}
-        defaultValue={value || options.find(({ value }) => value === 'USER')}
+        defaultValue={defaultValue}
         onChange={newSelection => {
           setValue(newSelection);
           validate();

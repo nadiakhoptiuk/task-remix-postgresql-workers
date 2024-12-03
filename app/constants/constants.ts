@@ -46,3 +46,14 @@ export const ROLE_SELECT_OPTIONS = [
   { value: ROLES.MANAGER, label: ROLES.MANAGER },
   { value: ROLES.ADMIN, label: ROLES.ADMIN },
 ];
+
+export const ORDER_SELECT_OPTIONS = [
+  { value: 'max', label: 'max' },
+  { value: 'min', label: 'min' },
+];
+
+export const GROUP_SELECT_OPTIONS = [
+  { value: 'billable', label: 'Billable' },
+  { value: 'notBillable', label: 'Not billable' },
+  { value: 'absent', label: 'Absent' },
+];

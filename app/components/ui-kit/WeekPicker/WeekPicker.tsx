@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from '@remix-run/react';
-import { endOfWeek, getTime, startOfWeek } from 'date-fns';
+import { UTCDate } from '@date-fns/utc';
+import { endOfWeek, startOfWeek } from 'date-fns';
 import { DateRange, DayPicker } from 'react-day-picker';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { enGB } from 'date-fns/locale';
@@ -19,15 +20,14 @@ export const WeekPicker = () => {
       prev.set(
         'start',
         selectedWeek.from
-          ? String(getTime(new Date(selectedWeek.from)))
+          ? new Date(selectedWeek.from).toISOString()
           : 'undefined',
       );
       prev.set(
         'end',
-        selectedWeek.to
-          ? String(getTime(new Date(selectedWeek.to)))
-          : 'undefined',
+        selectedWeek.to ? new Date(selectedWeek.to).toISOString() : 'undefined',
       );
+
       return prev;
     });
   }, [selectedWeek, setSearchParams]);
@@ -37,7 +37,8 @@ export const WeekPicker = () => {
       {({ close }) => (
         <>
           <p className="text-center mb-4">Select date range:</p>
-          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey">
+
+          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey mx-auto mb-14">
             <span className="leading-[1.0]">
               {`${selectedWeek?.from?.toLocaleDateString('en-GB')} -
                 ${selectedWeek?.to?.toLocaleDateString('en-GB')}`}
@@ -64,11 +65,12 @@ export const WeekPicker = () => {
               onDayClick={(day, modifiers) => {
                 if (modifiers.selected) {
                   setSelectedWeek({
-                    from: startOfWeek(new Date(), { weekStartsOn: 1 }),
-                    to: endOfWeek(new Date(), { weekStartsOn: 1 }),
+                    from: startOfWeek(new UTCDate(), { weekStartsOn: 1 }),
+                    to: endOfWeek(new UTCDate(), { weekStartsOn: 1 }),
                   });
                   return;
                 }
+
                 setSelectedWeek({
                   from: startOfWeek(day, { weekStartsOn: 1 }),
                   to: endOfWeek(day, { weekStartsOn: 1 }),
