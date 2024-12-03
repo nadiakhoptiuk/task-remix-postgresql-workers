@@ -5,8 +5,21 @@ import prisma from 'prisma/prismaClient';
 import { NewEmployeeType } from '~/types/common.types';
 import { passwordHash } from '~/utils/passwordUtils';
 
-export async function getEmployeesList() {
+export async function getEmployeesList(query?: string | undefined | null) {
+  if (!query) {
+    return await prisma.user.findMany({
+      select: { id: true, name: true, role: true },
+      orderBy: [{ role: 'asc' }, { name: 'asc' }],
+    });
+  }
+
   return await prisma.user.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
     select: { id: true, name: true, role: true },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],
   });

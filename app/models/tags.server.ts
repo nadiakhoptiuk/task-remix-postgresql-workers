@@ -1,8 +1,16 @@
 import prisma from 'prisma/prismaClient';
 import { NewTagType } from '~/types/common.types';
 
-export async function getTagsList() {
+export async function getTagsList(query: string | undefined | null) {
+  if (!query) {
+    return await prisma.tag.findMany({
+      select: { id: true, name: true },
+      orderBy: [{ name: 'asc' }],
+    });
+  }
+
   return await prisma.tag.findMany({
+    where: { name: { contains: query, mode: 'insensitive' } },
     select: { id: true, name: true },
     orderBy: [{ name: 'asc' }],
   });

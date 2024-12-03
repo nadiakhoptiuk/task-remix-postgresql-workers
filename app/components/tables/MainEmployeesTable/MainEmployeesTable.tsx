@@ -4,14 +4,15 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-
-import { EmployeeWithWorkdaysData } from '~/types/common.types';
 import { useMemo } from 'react';
 import { useSearchParams } from '@remix-run/react';
 import { eachDayOfInterval, format } from 'date-fns';
+
 import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
 
 import { DefaultCell } from '../DefaultCell';
+
+import { EmployeeWithWorkdaysData } from '~/types/common.types';
 
 export const MainEmployeesTable = ({
   data,
@@ -70,15 +71,15 @@ export const MainEmployeesTable = ({
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('id', {
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('role', {
-        header: () => <span>Access</span>,
-        cell: info => info.renderValue(),
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('id', {
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
+      // columnHelper.accessor('role', {
+      //   header: () => <span>Access</span>,
+      //   cell: info => info.renderValue(),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.group({
         header: 'Work hours accounting',
         footer: props => props.column.id,

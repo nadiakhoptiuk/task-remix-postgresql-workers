@@ -13,6 +13,7 @@ import { EmployeeFormProps } from './CreateOrUpdateEmployeeForm.types';
 
 export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
   formType,
+  defaultValues,
 }) => {
   const [nameValue, setNameValue] = useControlField<string>(
     'user-form',
@@ -40,6 +41,7 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
     >
       <Input
         name="name"
+        defaultValue={defaultValues?.name}
         value={nameValue}
         setValue={setNameValue}
         type="text"
@@ -49,6 +51,7 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
 
       <SingleSelect
         name="role"
+        defaultValue={defaultValues?.role}
         value={roleValue}
         setValue={setRoleValue}
         labelText="Role:"
@@ -57,6 +60,7 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
 
       <Input
         name="email"
+        defaultValue={defaultValues?.email}
         value={emailValue}
         setValue={setEmailValue}
         type="email"
@@ -66,6 +70,7 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
 
       <Input
         name="password"
+        defaultValue={defaultValues?.password}
         value={passwordValue}
         setValue={setPasswordValue}
         type="password"

@@ -38,7 +38,7 @@ export const PieChart = ({ data }: { data: TotalDataChartType }) => {
   ];
 
   return (
-    <div className="mx-auto max-w-[500px] w-full max-h-[400px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey">
+    <div className="mx-auto max-w-[700px] w-full max-h-[400px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey">
       <h2 className="mb-4 text-lg">
         Total data by groups for the selected week:
       </h2>

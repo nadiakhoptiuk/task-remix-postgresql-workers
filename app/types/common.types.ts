@@ -12,6 +12,7 @@ export type WithClassName = {
 
 export interface EmployeeLoaderData {
   employeesList: EmployeeTypeWithId[];
+  query: string;
 }
 
 export interface SingleEmployeeLoaderData {
@@ -20,9 +21,15 @@ export interface SingleEmployeeLoaderData {
 
 export interface TagsLoaderData {
   tagsList: BaseItemType[];
+  query: string;
 }
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
+
+export type RoleSelectOption = {
+  label: Role;
+  value: Role;
+};
 
 export interface SerializedUserType {
   id: number;

@@ -10,6 +10,7 @@ import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 import { ROUTES } from '~/types/enums';
 import { EmployeeLoaderData, Role } from '~/types/common.types';
 import { NAVLINKS } from '~/constants/constants';
+import { SearchForm } from '~/components/forms/SearchForm';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
@@ -21,8 +22,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     pageAllowedRoles,
   );
 
-  const employeesList = await getEmployeesList();
-  return Response.json({ employeesList });
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
+
+  const employeesList = await getEmployeesList(query);
+
+  return Response.json({ employeesList, query });
 };
 
 export default function EmployeesPage() {
@@ -32,7 +37,7 @@ export default function EmployeesPage() {
     <div className="md:flex h-[calc(100vh-140px)] md:h-[calc(100vh-96px)]">
       <section className="section flex-1 flex-grow border-r-[2px] border-ui_grey ">
         <Container>
-          <h1>All Employees</h1>
+          <SearchForm query={data.query} />
 
           <div>
             {data?.employeesList.length > 0 ? (
