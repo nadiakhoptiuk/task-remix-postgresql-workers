@@ -10,7 +10,7 @@ import {
   BarElement,
 } from 'chart.js';
 
-import { barAvgDataType } from '~/types/common.types';
+import { BarAvgDataType } from '~/types/common.types';
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +21,7 @@ ChartJS.register(
   Legend,
 );
 
-export const BarChartByDays = ({ data }: { data: barAvgDataType[] }) => {
+export const BarChartByDays = ({ data }: { data: BarAvgDataType[] }) => {
   const days = data.map(({ date }) => format(new Date(date), 'EEEE'));
   const labels = ['Billable', 'Not Billable', 'Absent'];
   const colors = [
@@ -51,7 +51,7 @@ export const BarChartByDays = ({ data }: { data: barAvgDataType[] }) => {
   }));
 
   return (
-    <div className="mx-auto max-w-[1200px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey">
+    <div className="mx-auto max-w-[1200px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey rounded-md">
       <h2 className="mb-4 text-lg">
         Total data by groups for the selected week:
       </h2>

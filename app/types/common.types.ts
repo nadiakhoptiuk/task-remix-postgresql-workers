@@ -36,6 +36,9 @@ export interface SerializedUserType {
   role: User['role'];
 }
 
+export type GroupType = 'billable' | 'notBillable' | 'absent';
+export type OrderType = 'min' | 'max';
+
 export interface WorkdayType {
   date: Date;
   billable: number;
@@ -62,16 +65,27 @@ export type TotalDataChartType = {
   absent: number;
 };
 
-export type barAvgDataType = {
+export type BarAvgDataType = {
   billable: number | null;
   notBillable: number | null;
   absent: number | null;
   date: Date;
 };
 
+export interface TopOrAntitopEmpType {
+  billable?: number;
+  notBillable?: number;
+  absent?: number;
+  date: Date;
+  user: {
+    name: string;
+  };
+}
+
 export interface ReportPageLoaderType {
   totalByGroups: TotalDataChartType;
-  barAvgDataForEveryDay: barAvgDataType[];
+  barAvgDataForEveryDay: BarAvgDataType[];
+  topOrAntitopEmployees: TopOrAntitopEmpType[] | [];
 }
 
 export type GetCurrentUserOptions = {
