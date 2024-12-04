@@ -11,7 +11,7 @@ import {
 import { AuthorizationError } from 'remix-auth';
 import { Prisma } from '@prisma/client';
 
-import { Container } from '~/components/ui-kit/Container/Container';
+import { ResponsiveContainer } from '~/components/ui-kit/ResponsiveContainer';
 import { MainEmployeesTable } from '~/components/tables/MainEmployeesTable';
 import { WeekPicker } from '~/components/ui-kit/WeekPicker';
 import { FilterSelect } from '~/components/ui-kit/FilterSelect';
@@ -145,10 +145,9 @@ export default function Index() {
 
   return (
     <section className="section flex justify-center">
-      <Container className="">
+      <ResponsiveContainer>
         <h1 className="mb-4">Employees Table</h1>
-
-        <div className="flex items-center justify-center gap-x-8 mx-auto w-fit  mb-10">
+        <div className="flex max-md:flex-col items-center justify-center gap-y-4 gap-x-8 mx-auto w-fit mb-10">
           <WeekPicker start={start} end={end} />
 
           <FilterSelect
@@ -168,7 +167,7 @@ export default function Index() {
             end={end}
           />
         )}
-      </Container>
+      </ResponsiveContainer>
     </section>
   );
 }

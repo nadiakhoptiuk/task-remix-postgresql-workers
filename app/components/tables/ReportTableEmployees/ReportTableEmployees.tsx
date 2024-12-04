@@ -63,10 +63,10 @@ export const ReportTableEmployees = ({
   });
 
   return (
-    <div className="max-w-[700px] border-[1px] border-ui_grey rounded-md p-8">
+    <div className="w-full xl:max-w-[700px] mx-auto border-[1px] border-ui_grey rounded-md p-8">
       <h2 className="mb-4 text-lg">Minimum and maximum working hours:</h2>
 
-      <div className="grid grid-cols-2 gap-x-8 mb-4">
+      <div className="flex w-max mx-auto gap-x-8 mb-4">
         <FilterSelect
           paramsName="order"
           options={ORDER_SELECT_OPTIONS}
@@ -81,7 +81,7 @@ export const ReportTableEmployees = ({
         />
       </div>
 
-      {data.length > 0 && (
+      {data.length > 0 ? (
         <div>
           <table className="relative !w-fit mx-auto">
             <thead>
@@ -124,6 +124,10 @@ export const ReportTableEmployees = ({
             </tbody>
           </table>
         </div>
+      ) : (
+        <p className="text-center my-8 text-ui_dark_grey">
+          No data to display. Please choose another week...
+        </p>
       )}
     </div>
   );

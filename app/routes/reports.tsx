@@ -2,7 +2,7 @@ import { AuthorizationError } from 'remix-auth';
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { ScrollRestoration, useLoaderData } from '@remix-run/react';
 
-import { Container } from '~/components/ui-kit/Container/Container';
+import { ResponsiveContainer } from '~/components/ui-kit/ResponsiveContainer';
 import { WeekPicker } from '~/components/ui-kit/WeekPicker';
 import { PieChart } from '~/components/charts/PieChart';
 import { BarChartByDays } from '~/components/charts/BarChart';
@@ -94,11 +94,13 @@ export default function ReportsPage() {
 
   return (
     <div className="md:flex">
-      <section className="section flex-1 flex-grow border-r-[2px] border-ui_grey ">
-        <Container>
-          <WeekPicker start={start} end={end} />
+      <section className="section flex-1 flex-grow">
+        <ResponsiveContainer>
+          <h1 className="md:visually-hidden">Reports</h1>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-10 gap-y-16">
+          <WeekPicker start={start} end={end} className="mb-8 w-fit mx-auto" />
+
+          <div className="max-xl:w-full max-xl:flex max-xl:flex-col max-xl:gap-y-8 xl:grid xl:grid-cols-[570px_570px] gap-x-10 gap-y-16 !mx-auto">
             {totalByGroups && <PieChart data={totalByGroups} />}
 
             {barAvgDataForEveryDay && (
@@ -113,7 +115,7 @@ export default function ReportsPage() {
               />
             )}
           </div>
-        </Container>
+        </ResponsiveContainer>
       </section>
 
       <ScrollRestoration />

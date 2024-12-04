@@ -7,19 +7,28 @@ import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
 import { START_RANGE_PARAMETER_NAME } from '~/constants/constants';
 import 'react-day-picker/style.css';
+import { isAfter } from 'date-fns';
 
-export const WeekPicker = ({ start, end }: { start: string; end: string }) => {
+export const WeekPicker = ({
+  start,
+  end,
+  className,
+}: {
+  start: string;
+  end: string;
+  className?: string;
+}) => {
   const [_, setSearchParams] = useSearchParams();
 
   return (
-    <Popover>
+    <Popover className={className}>
       {({ close }) => (
         <>
           <p className="text-center mb-4">Select date range:</p>
 
-          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey mx-auto">
+          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:w-full border-[1px] border-ui_grey mx-auto">
             <span className="leading-[1.0]">
-              {`${start}  - 
+              {`${start} -
                 ${end}`}
             </span>
           </PopoverButton>
@@ -40,6 +49,10 @@ export const WeekPicker = ({ start, end }: { start: string; end: string }) => {
                 range_start: new Date(start),
                 range_end: new Date(end),
                 weekend: true,
+                disabled: date => {
+                  const { end } = getStartAndEndOfWeek(new Date());
+                  return isAfter(date, new Date(end));
+                },
               }}
               onDayClick={day => {
                 setSearchParams(prev => {

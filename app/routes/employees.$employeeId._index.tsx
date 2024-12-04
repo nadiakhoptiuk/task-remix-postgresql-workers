@@ -63,19 +63,22 @@ export default function EmployeePage() {
   const { employeeId } = useParams();
 
   return (
-    <section className="section bg-ui_lighter h-full">
+    <section className="section max-md:pt-0 md:bg-ui_lighter h-full">
       <Container>
-        <Link to={ROUTES.EMPLOYEES} className="flex gap-4 items-center mb-20">
+        <Link
+          to={ROUTES.EMPLOYEES}
+          className="max-md:mb-8 flex gap-4 items-center md:mb-10 xl:mb-20 hocus:text-ui_accent w-fit transition-colors"
+        >
           <ImArrowLeft2 />
           Back to all employees
         </Link>
 
         <h2 className="text-ui_accent_dark">Name: {name}</h2>
 
-        <p className="text-center mb-16 text-lg md:text-xl xl:text-2xl">
-          Email: {email}
+        <p className="text-center mb-8 text-lg md:text-xl xl:text-2xl">
+          {email}
         </p>
-        <p className="text-center mb-16 text-lg md:text-xl xl:text-2xl">
+        <p className="text-center mb-8 text-lg md:text-xl xl:text-2xl">
           Role: {role}
         </p>
 

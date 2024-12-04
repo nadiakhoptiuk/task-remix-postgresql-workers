@@ -29,7 +29,11 @@ export const DefaultCell: React.FC<DefaultCellType> = ({
       {!isEditable && <span>{initialValue}</span>}
 
       {isModalOpen && isEditable && (
-        <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+        <Modal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          className="max-md:!py-10"
+        >
           <EditableCellForm
             initialValue={initialValue}
             userId={rowIndex}

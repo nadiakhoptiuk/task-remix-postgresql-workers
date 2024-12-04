@@ -1,17 +1,31 @@
+import { MouseEventHandler } from 'react';
 import { NavLink } from '@remix-run/react';
+import classNames from 'classnames';
 
-import { NAVLINKS as navlinks } from '~/constants/constants';
 import { ROLES } from '~/types/enums';
+import { NAVLINKS as navlinks } from '~/constants/constants';
 import s from './NavBar.module.css';
 
 export const NavBar = ({
   userRole,
+  className = '',
+  isMenu = false,
+  closeMenu,
 }: {
   userRole: (typeof ROLES)[keyof typeof ROLES];
+  className?: string;
+  isMenu?: boolean;
+  closeMenu?: MouseEventHandler<HTMLAnchorElement> | undefined;
 }) => {
   return (
-    <nav>
-      <ul className="flex gap-x-8 flex-wrap items-center justify-center">
+    <nav className={className}>
+      <ul
+        className={classNames(
+          isMenu
+            ? 'grid grid-cols-1'
+            : 'flex gap-x-8 flex-wrap items-center justify-center',
+        )}
+      >
         {navlinks.map(({ route, label, restricted, roles }, index) => {
           const isShown =
             roles.includes(userRole) || (!restricted && !userRole);
@@ -27,6 +41,7 @@ export const NavBar = ({
                     ? `${s.baseLink} text-ui_accent cursor-default pointer-events-none`
                     : `${s.baseLink} text-ui_dark cursor-pointer`
                 }
+                onClick={closeMenu}
               >
                 {label}
               </NavLink>

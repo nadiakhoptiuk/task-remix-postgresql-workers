@@ -93,17 +93,17 @@ export default function EditEmployeePage() {
   const { employeeId } = useParams();
 
   return (
-    <section className="section bg-ui_lighter h-full overflow-y-auto">
+    <section className="section md:bg-ui_lighter h-full overflow-y-auto">
       <Container>
         <Link
           to={`${ROUTES.EMPLOYEES}/${employeeId}`}
-          className="flex gap-4 items-center mb-10"
+          className="flex gap-4 items-center mb-8 hocus:text-ui_accent transition-colors"
         >
           <ImArrowLeft2 />
           Back
         </Link>
 
-        <h2 className="text-ui_accent_dark">Edit {data.name}</h2>
+        <h2 className="visually-hidden">Edit {data.formDefaults.name}</h2>
 
         <CreateOrUpdateEmployeeForm
           formType="update"

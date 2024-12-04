@@ -35,8 +35,10 @@ export default function EmployeesPage() {
 
   return (
     <div className="md:flex h-[calc(100vh-140px)] md:h-[calc(100vh-96px)]">
-      <section className="section flex-1 flex-grow border-r-[2px] border-ui_grey ">
+      <section className="section flex-1 flex-grow md:border-r-[2px] border-ui_grey ">
         <Container>
+          <h1 className="md:visually-hidden">All Employees</h1>
+
           <SearchForm query={data.query} />
 
           <div>

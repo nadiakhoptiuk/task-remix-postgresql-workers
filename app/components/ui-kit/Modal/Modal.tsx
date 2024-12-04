@@ -17,6 +17,7 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
   setIsOpen,
   children,
   className = '',
+  isMenu = false,
 }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -38,7 +39,12 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
         </TransitionChild>
 
         <div className="fixed inset-0 bottom-0 left-0 right-0 top-0 z-30 h-full w-full overflow-y-auto bg-[rgba(0,0,0,0.5)]">
-          <div className="flex min-h-full items-center justify-center py-14">
+          <div
+            className={classNames(
+              'flex min-h-full items-center justify-center',
+              isMenu ? 'p-0' : 'py-14',
+            )}
+          >
             <TransitionChild
               as={Fragment}
               enter="transition duration-300 ease-out"
@@ -58,7 +64,7 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
                 <button
                   onClick={() => setIsOpen(false)}
                   aria-label="Close modal"
-                  className="absolute top-5 right-5 flex h-[50px] w-[50px] items-center justify-center hocus:text-navy-blue text-ui_accent_dark !m-0 base-transition"
+                  className="absolute top-4 right-4 flex h-[50px] w-[50px] items-center justify-center hocus:text-navy-blue text-ui_accent_dark !m-0 base-transition"
                 >
                   <ImCross size={20} />
                 </button>
