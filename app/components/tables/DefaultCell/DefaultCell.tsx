@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import { DefaultCellType } from './DefaultCell.types';
-
 import { Modal } from '~/components/ui-kit/Modal';
 import { EditableCellForm } from '~/components/forms/EditableCellForm';
+
+import { DefaultCellType } from './DefaultCell.types';
 
 export const DefaultCell: React.FC<DefaultCellType> = ({
   initialValue,
@@ -20,7 +20,7 @@ export const DefaultCell: React.FC<DefaultCellType> = ({
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="w-full h-full block"
+          className="w-full h-full block text-nowrap"
         >
           {initialValue}
         </button>

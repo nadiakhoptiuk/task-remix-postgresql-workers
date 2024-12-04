@@ -14,11 +14,15 @@ import {
   getTopOrAntitopEmployees,
   getTotalDataByGroups,
 } from '~/models/employeesReports.server';
+import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
 import {
+  GROUP_PARAMETER_NAME,
   GROUP_SELECT_OPTIONS,
   NAVLINKS,
+  ORDER_PARAMETER_NAME,
   ORDER_SELECT_OPTIONS,
+  START_RANGE_PARAMETER_NAME,
 } from '~/constants/constants';
 import {
   GroupType,
@@ -27,8 +31,6 @@ import {
   WorkHoursOrderType,
 } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
-
-import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
@@ -41,13 +43,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   );
 
   const url = new URL(request.url);
-  const startParam = url.searchParams.get('start');
+  const startParam = url.searchParams.get(START_RANGE_PARAMETER_NAME);
   const { start, end } = getStartAndEndOfWeek(startParam);
 
   const workHoursOrderParam =
-    url.searchParams.get('order') || ORDER_SELECT_OPTIONS[0].value;
+    url.searchParams.get(ORDER_PARAMETER_NAME) || ORDER_SELECT_OPTIONS[0].value;
   const groupParam =
-    url.searchParams.get('group') || GROUP_SELECT_OPTIONS[0].value;
+    url.searchParams.get(GROUP_PARAMETER_NAME) || GROUP_SELECT_OPTIONS[0].value;
 
   try {
     const totalByGroups = await getTotalDataByGroups(start, end);

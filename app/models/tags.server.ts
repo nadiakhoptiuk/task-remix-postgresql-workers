@@ -1,19 +1,46 @@
 import prisma from 'prisma/prismaClient';
+
+import {
+  ALL_TAGS,
+  SEARCH_PARAMETER_NAME,
+  TAG_FILTER_PARAMETER_NAME,
+} from '~/constants/constants';
 import { NewTagType } from '~/types/common.types';
 
-export async function getTagsList(query: string | undefined | null) {
-  if (!query) {
+export async function getTagsList(
+  query: string | undefined | null,
+  queryParamName: string,
+) {
+  if (
+    !query ||
+    (queryParamName === TAG_FILTER_PARAMETER_NAME && query === ALL_TAGS)
+  ) {
     return await prisma.tag.findMany({
       select: { id: true, name: true },
       orderBy: [{ name: 'asc' }],
     });
   }
 
-  return await prisma.tag.findMany({
-    where: { name: { contains: query, mode: 'insensitive' } },
-    select: { id: true, name: true },
-    orderBy: [{ name: 'asc' }],
-  });
+  if (queryParamName === TAG_FILTER_PARAMETER_NAME && query !== ALL_TAGS) {
+    return await prisma.tag.findMany({
+      where: {
+        name: { contains: query.replace('_', ' '), mode: 'insensitive' },
+      },
+      select: { id: true, name: true },
+      orderBy: [{ name: 'asc' }],
+    });
+  }
+
+  if (queryParamName === SEARCH_PARAMETER_NAME && query) {
+    const tags = await prisma.tag.findMany({
+      where: { name: { contains: query, mode: 'insensitive' } },
+      select: { id: true, name: true },
+      orderBy: [{ name: 'asc' }],
+    });
+
+    console.log(tags);
+    return tags;
+  }
 }
 
 export async function createNewTag({ tagName, users }: NewTagType) {

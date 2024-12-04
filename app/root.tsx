@@ -55,7 +55,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <body>
         <Header userRole={data?.role} />
-        <main className="min-h-full pt-[91px]">{children}</main>
+        <main className="min-h-full md:pt-[136px] xl:pt-[91px]">
+          {children}
+        </main>
         <Toaster position="top-center" reverseOrder={false} />
 
         <ScrollRestoration />

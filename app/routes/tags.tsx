@@ -1,16 +1,16 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
 
-import { BaseNavList } from '~/components/lists/BaseNavList';
 import { Container } from '~/components/ui-kit/Container/Container';
+import { BaseNavList } from '~/components/lists/BaseNavList';
+import { SearchForm } from '~/components/forms/SearchForm';
 
 import { getTagsList } from '~/models/tags.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 
-import { NAVLINKS } from '~/constants/constants';
+import { NAVLINKS, SEARCH_PARAMETER_NAME } from '~/constants/constants';
 import { Role, TagsLoaderData } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
-import { SearchForm } from '~/components/forms/SearchForm';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
@@ -23,9 +23,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   );
 
   const url = new URL(request.url);
-  const query = url.searchParams.get('query');
+  const query = url.searchParams.get(SEARCH_PARAMETER_NAME);
 
-  const tagsList = await getTagsList(query);
+  const tagsList = await getTagsList(query, SEARCH_PARAMETER_NAME);
   return Response.json({ tagsList, query });
 };
 

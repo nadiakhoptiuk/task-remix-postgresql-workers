@@ -14,14 +14,21 @@ import { Prisma } from '@prisma/client';
 import { Container } from '~/components/ui-kit/Container/Container';
 import { MainEmployeesTable } from '~/components/tables/MainEmployeesTable';
 import { WeekPicker } from '~/components/ui-kit/WeekPicker';
+import { FilterSelect } from '~/components/ui-kit/FilterSelect';
 
 import { getAuthUser } from '~/services/auth.server';
 import { getEmployeesWithDaysList } from '~/models/employees.server';
 import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
 import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
+import { getTagsList } from '~/models/tags.server';
 
 import { HomePageLoaderData } from '~/types/common.types';
 import { ROLES } from '~/types/enums';
+import {
+  ALL_TAGS,
+  START_RANGE_PARAMETER_NAME,
+  TAG_FILTER_PARAMETER_NAME,
+} from '~/constants/constants';
 
 export const meta: MetaFunction = () => {
   return [
@@ -35,12 +42,36 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const loggedUser = await getAuthUser(request);
 
     const url = new URL(request.url);
-    const startParam = url.searchParams.get('start');
+    const startParam = url.searchParams.get(START_RANGE_PARAMETER_NAME);
+    const tagFIlterParam =
+      url.searchParams.get(TAG_FILTER_PARAMETER_NAME) || ALL_TAGS;
     const { start, end } = getStartAndEndOfWeek(startParam);
 
-    const allEmployees = await getEmployeesWithDaysList(start, end);
+    const allEmployees = await getEmployeesWithDaysList(
+      start,
+      end,
+      tagFIlterParam,
+    );
 
-    return Response.json({ user: loggedUser, allEmployees, start, end });
+    const allTags = await getTagsList(
+      tagFIlterParam,
+      TAG_FILTER_PARAMETER_NAME,
+    );
+
+    const allTagsForSelect = allTags
+      ? allTags.map(({ name }) => {
+          return { value: name.toLowerCase().replace(' ', '_'), label: name };
+        })
+      : [];
+
+    return Response.json({
+      user: loggedUser,
+      allEmployees,
+      start,
+      end,
+      tagFIlterParam,
+      allTags: [...allTagsForSelect, { value: 'all', label: 'All' }],
+    });
   } catch (error) {
     if (error instanceof Response) return error;
     if (error instanceof AuthorizationError) {
@@ -108,14 +139,27 @@ export default function Index() {
     allEmployees,
     start,
     end,
+    tagFIlterParam,
+    allTags,
   } = useLoaderData<HomePageLoaderData>();
 
   return (
     <section className="section flex justify-center">
-      <Container className="flex flex-col items-center gap-16">
-        <h1 className="mb-10">Employees Table</h1>
+      <Container className="">
+        <h1 className="mb-4">Employees Table</h1>
 
-        <WeekPicker start={start} end={end} />
+        <div className="flex items-center justify-center gap-x-8 mx-auto w-fit  mb-10">
+          <WeekPicker start={start} end={end} />
+
+          <FilterSelect
+            paramsName={TAG_FILTER_PARAMETER_NAME}
+            value={tagFIlterParam}
+            options={allTags}
+            id="tag-filter-select"
+            heading="Filter by tag:"
+          />
+        </div>
+
         {allEmployees !== null && (
           <MainEmployeesTable
             data={allEmployees}

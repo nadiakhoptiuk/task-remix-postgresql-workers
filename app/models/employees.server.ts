@@ -2,8 +2,10 @@ import { UTCDate } from '@date-fns/utc';
 import { User } from '@prisma/client';
 import prisma from 'prisma/prismaClient';
 
-import { NewEmployeeType } from '~/types/common.types';
 import { passwordHash } from '~/utils/passwordUtils';
+
+import { ALL_TAGS } from '~/constants/constants';
+import { NewEmployeeType } from '~/types/common.types';
 
 export async function getEmployeesList(query?: string | undefined | null) {
   if (!query) {
@@ -25,8 +27,50 @@ export async function getEmployeesList(query?: string | undefined | null) {
   });
 }
 
-export async function getEmployeesWithDaysList(start: string, end: string) {
+export async function getEmployeesWithDaysList(
+  start: string,
+  end: string,
+  tagFIlterParam: string,
+) {
+  if (tagFIlterParam === ALL_TAGS) {
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        role: true,
+        workdays: {
+          where: {
+            OR: [
+              { date: { gte: new UTCDate(start), lte: new UTCDate(end) } },
+              { date: undefined },
+            ],
+          },
+          select: {
+            date: true,
+            absent: true,
+            billable: true,
+            notBillable: true,
+          },
+        },
+        tags: { select: { tag: { select: { name: true } } } },
+      },
+      orderBy: [{ role: 'asc' }, { name: 'asc' }],
+    });
+  }
+
   return await prisma.user.findMany({
+    where: {
+      tags: {
+        some: {
+          tag: {
+            name: {
+              equals: tagFIlterParam.replace('_', ' '),
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+    },
     select: {
       id: true,
       name: true,
@@ -38,7 +82,12 @@ export async function getEmployeesWithDaysList(start: string, end: string) {
             { date: undefined },
           ],
         },
-        select: { date: true, absent: true, billable: true, notBillable: true },
+        select: {
+          date: true,
+          absent: true,
+          billable: true,
+          notBillable: true,
+        },
       },
       tags: { select: { tag: { select: { name: true } } } },
     },

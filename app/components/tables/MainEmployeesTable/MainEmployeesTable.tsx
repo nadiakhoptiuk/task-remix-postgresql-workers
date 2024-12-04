@@ -6,13 +6,13 @@ import {
 } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { eachDayOfInterval, format } from 'date-fns';
-
-import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
+import { UTCDate } from '@date-fns/utc';
 
 import { DefaultCell } from '../DefaultCell';
 
+import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
+
 import { EmployeeWithWorkdaysData } from '~/types/common.types';
-import { UTCDate } from '@date-fns/utc';
 
 export const MainEmployeesTable = ({
   data,
@@ -36,7 +36,9 @@ export const MainEmployeesTable = ({
     return dateArray.map(day => {
       return columnHelper.accessor('workdays', {
         id: new Date(day).toISOString(),
-        header: () => <span>{format(new Date(day), 'E, dd')}</span>,
+        header: () => (
+          <span className="text-nowrap">{format(new Date(day), 'E, dd')}</span>
+        ),
         cell: info => {
           const rowIndex = info.row.original.id;
           const columnId = info.column.id;
@@ -61,7 +63,7 @@ export const MainEmployeesTable = ({
     () => [
       columnHelper.accessor('name', {
         header: () => <span>Name</span>,
-        cell: info => info.getValue(),
+        cell: info => <span className="text-nowrap">{info.getValue()}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.group({
@@ -81,7 +83,7 @@ export const MainEmployeesTable = ({
 
   return (
     <div className="max-w-[1280px]">
-      <table className="relative w-[400px]">
+      <table className="relative w-[400px] mx-auto">
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>

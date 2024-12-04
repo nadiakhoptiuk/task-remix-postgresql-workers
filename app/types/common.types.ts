@@ -59,6 +59,8 @@ export interface HomePageLoaderData {
   allEmployees: EmployeeWithWorkdaysData[];
   start: string;
   end: string;
+  tagFIlterParam: string;
+  allTags: OptionType[];
 }
 
 export type TotalDataChartType = {

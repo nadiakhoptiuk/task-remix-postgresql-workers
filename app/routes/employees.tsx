@@ -3,14 +3,14 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 
 import { Container } from '~/components/ui-kit/Container/Container';
 import { EmployeesList } from '~/components/lists/EmployeesList';
+import { SearchForm } from '~/components/forms/SearchForm';
 
 import { getEmployeesList } from '~/models/employees.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 
 import { ROUTES } from '~/types/enums';
 import { EmployeeLoaderData, Role } from '~/types/common.types';
-import { NAVLINKS } from '~/constants/constants';
-import { SearchForm } from '~/components/forms/SearchForm';
+import { NAVLINKS, SEARCH_PARAMETER_NAME } from '~/constants/constants';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   );
 
   const url = new URL(request.url);
-  const query = url.searchParams.get('query');
+  const query = url.searchParams.get(SEARCH_PARAMETER_NAME);
 
   const employeesList = await getEmployeesList(query);
 

@@ -9,21 +9,27 @@ export const FilterSelect: React.FC<FilterSelectType> = ({
   options,
   id,
   classNamePrefix,
+  heading,
 }) => {
   const [_, setSearchParams] = useSearchParams();
 
   return (
-    <Select
-      instanceId={id}
-      value={options.find(({ value: optionValue }) => value === optionValue)}
-      options={options}
-      onChange={value => {
-        setSearchParams(prev => {
-          prev.set(paramsName, value?.value || '');
-          return prev;
-        });
-      }}
-      classNamePrefix={classNamePrefix}
-    />
+    <div>
+      {heading && <p className="text-center mb-4">{heading}</p>}
+
+      <Select
+        instanceId={id}
+        value={options.find(({ value: optionValue }) => value === optionValue)}
+        options={options}
+        onChange={value => {
+          setSearchParams(prev => {
+            prev.set(paramsName, value?.value || '');
+            return prev;
+          });
+        }}
+        classNamePrefix={classNamePrefix}
+        className="min-w-[120px] w-max text-center"
+      />
+    </div>
   );
 };
