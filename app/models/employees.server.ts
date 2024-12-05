@@ -2,31 +2,109 @@ import { UTCDate } from '@date-fns/utc';
 import { User } from '@prisma/client';
 import prisma from 'prisma/prismaClient';
 
-import { NewEmployeeType } from '~/types/common.types';
 import { passwordHash } from '~/utils/passwordUtils';
 
-export async function getEmployeesList(query?: string | undefined | null) {
+import { ALL_TAGS, PAGINATION_LIMIT } from '~/constants/constants';
+import { NewEmployeeType } from '~/types/common.types';
+
+export async function getAllEmployeesList() {
+  return await prisma.user.findMany({
+    select: { id: true, name: true, role: true },
+    orderBy: [{ role: 'asc' }, { name: 'asc' }],
+  });
+}
+
+export async function getEmployeesList(
+  page: number,
+  query?: string | undefined | null,
+) {
   if (!query) {
-    return await prisma.user.findMany({
+    const totalCount = await prisma.user.count();
+    const pagesCount = Math.ceil(totalCount / PAGINATION_LIMIT);
+
+    const actualPage = page > pagesCount ? pagesCount : page;
+
+    const users = await prisma.user.findMany({
+      skip: (actualPage - 1) * PAGINATION_LIMIT,
+      take: PAGINATION_LIMIT,
       select: { id: true, name: true, role: true },
       orderBy: [{ role: 'asc' }, { name: 'asc' }],
     });
+
+    return { users, actualPage, pagesCount };
   }
 
-  return await prisma.user.findMany({
+  const totalCount = await prisma.user.count({
     where: {
       name: {
         contains: query,
         mode: 'insensitive',
       },
     },
+  });
+  const pagesCount = Math.ceil(totalCount / PAGINATION_LIMIT);
+  const actualPage = page > pagesCount ? pagesCount : page;
+
+  const users = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
+    skip: (actualPage - 1) * PAGINATION_LIMIT,
+    take: PAGINATION_LIMIT,
     select: { id: true, name: true, role: true },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],
   });
+
+  return { users, actualPage, pagesCount };
 }
 
-export async function getEmployeesWithDaysList(start: Date, end: Date) {
+export async function getEmployeesWithDaysList(
+  start: string,
+  end: string,
+  tagFIlterParam: string,
+) {
+  if (tagFIlterParam === ALL_TAGS) {
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        role: true,
+        workdays: {
+          where: {
+            OR: [
+              { date: { gte: new UTCDate(start), lte: new UTCDate(end) } },
+              { date: undefined },
+            ],
+          },
+          select: {
+            date: true,
+            absent: true,
+            billable: true,
+            notBillable: true,
+          },
+        },
+        tags: { select: { tag: { select: { name: true } } } },
+      },
+      orderBy: [{ role: 'asc' }, { name: 'asc' }],
+    });
+  }
+
   return await prisma.user.findMany({
+    where: {
+      tags: {
+        some: {
+          tag: {
+            name: {
+              equals: tagFIlterParam.replace('_', ' '),
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+    },
     select: {
       id: true,
       name: true,
@@ -38,7 +116,12 @@ export async function getEmployeesWithDaysList(start: Date, end: Date) {
             { date: undefined },
           ],
         },
-        select: { date: true, absent: true, billable: true, notBillable: true },
+        select: {
+          date: true,
+          absent: true,
+          billable: true,
+          notBillable: true,
+        },
       },
       tags: { select: { tag: { select: { name: true } } } },
     },

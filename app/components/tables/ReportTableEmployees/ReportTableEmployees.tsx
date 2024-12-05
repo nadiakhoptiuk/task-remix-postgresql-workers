@@ -1,4 +1,3 @@
-import { useSearchParams } from '@remix-run/react';
 import {
   createColumnHelper,
   flexRender,
@@ -6,42 +5,29 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
-import Select, { SingleValue } from 'react-select';
+import { useMemo } from 'react';
+
+import { FilterSelect } from '~/components/ui-kit/FilterSelect';
 
 import {
   GROUP_SELECT_OPTIONS,
   ORDER_SELECT_OPTIONS,
 } from '~/constants/constants';
-import { OptionType, TopOrAntitopEmpType } from '~/types/common.types';
+import {
+  GroupType,
+  TopOrAntitopEmpType,
+  WorkHoursOrderType,
+} from '~/types/common.types';
 
 export const ReportTableEmployees = ({
   data,
+  order,
+  group,
 }: {
   data: TopOrAntitopEmpType[] | [];
+  order: WorkHoursOrderType;
+  group: GroupType;
 }) => {
-  const [_, setSearchParams] = useSearchParams();
-  const [order, setOrder] = useState<SingleValue<OptionType>>(
-    ORDER_SELECT_OPTIONS[0],
-  );
-  const [group, setGroup] = useState<SingleValue<OptionType>>(
-    GROUP_SELECT_OPTIONS[0],
-  );
-
-  useEffect(() => {
-    setSearchParams(prev => {
-      prev.set('order', order?.value ?? '');
-      return prev;
-    });
-  }, [order, setSearchParams]);
-
-  useEffect(() => {
-    setSearchParams(prev => {
-      prev.set('group', group?.value ?? '');
-      return prev;
-    });
-  }, [group, setSearchParams]);
-
   const columnHelper = createColumnHelper<TopOrAntitopEmpType>();
 
   const memoizedColumns = useMemo(
@@ -77,29 +63,27 @@ export const ReportTableEmployees = ({
   });
 
   return (
-    <div className="max-w-[600px] border-[1px] border-ui_grey rounded-md p-8">
+    <div className="w-full xl:max-w-[700px] mx-auto border-[1px] border-ui_grey rounded-md p-8">
       <h2 className="mb-4 text-lg">Minimum and maximum working hours:</h2>
 
-      <div className="grid grid-cols-2 gap-x-8 mb-4">
-        <Select
-          instanceId="order-react-select"
-          name="order"
-          value={order}
+      <div className="flex w-max mx-auto gap-x-8 mb-4">
+        <FilterSelect
+          paramsName="order"
           options={ORDER_SELECT_OPTIONS}
-          onChange={setOrder}
-          classNamePrefix="order-single-select"
+          id="order-select"
+          value={order}
+          classNamePrefix="order-filter"
         />
-        <Select
-          instanceId="group-react-select"
-          name="group"
-          value={group}
+        <FilterSelect
+          paramsName="group"
           options={GROUP_SELECT_OPTIONS}
-          onChange={setGroup}
-          classNamePrefix="group-single-select"
+          id="group-select"
+          value={group}
+          classNamePrefix="group-filter"
         />
       </div>
 
-      {data.length > 0 && (
+      {data.length > 0 ? (
         <div>
           <table className="relative !w-fit mx-auto">
             <thead>
@@ -142,6 +126,10 @@ export const ReportTableEmployees = ({
             </tbody>
           </table>
         </div>
+      ) : (
+        <p className="text-center my-8 text-ui_dark_grey">
+          No data to display. Please choose another week...
+        </p>
       )}
     </div>
   );

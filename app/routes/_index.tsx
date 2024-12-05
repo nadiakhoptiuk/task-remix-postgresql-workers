@@ -11,17 +11,24 @@ import {
 import { AuthorizationError } from 'remix-auth';
 import { Prisma } from '@prisma/client';
 
-import { Container } from '~/components/ui-kit/Container/Container';
+import { ResponsiveContainer } from '~/components/ui-kit/ResponsiveContainer';
 import { MainEmployeesTable } from '~/components/tables/MainEmployeesTable';
 import { WeekPicker } from '~/components/ui-kit/WeekPicker';
+import { FilterSelect } from '~/components/ui-kit/FilterSelect';
 
 import { getAuthUser } from '~/services/auth.server';
 import { getEmployeesWithDaysList } from '~/models/employees.server';
 import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
+import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
+import { getAllTagsList } from '~/models/tags.server';
 
 import { HomePageLoaderData } from '~/types/common.types';
 import { ROLES } from '~/types/enums';
-import { UTCDate } from '@date-fns/utc';
+import {
+  ALL_TAGS,
+  START_RANGE_PARAMETER_NAME,
+  TAG_FILTER_PARAMETER_NAME,
+} from '~/constants/constants';
 
 export const meta: MetaFunction = () => {
   return [
@@ -35,21 +42,35 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const loggedUser = await getAuthUser(request);
 
     const url = new URL(request.url);
-    const startParam = url.searchParams.get('start');
-    const endParam = url.searchParams.get('end');
+    const startParam = url.searchParams.get(START_RANGE_PARAMETER_NAME);
+    const tagFIlterParam =
+      url.searchParams.get(TAG_FILTER_PARAMETER_NAME) || ALL_TAGS;
 
-    if (startParam === null || endParam === null) {
-      return Response.json({ user: loggedUser, allEmployees: null });
-    }
+    const { start, end } = getStartAndEndOfWeek(startParam);
 
     const allEmployees = await getEmployeesWithDaysList(
-      new UTCDate(startParam),
-      new UTCDate(endParam),
+      start,
+      end,
+      tagFIlterParam,
     );
 
-    return Response.json({ user: loggedUser, allEmployees });
+    const allTags = await getAllTagsList();
+
+    const allTagsForSelect = allTags
+      ? allTags.map(({ name }) => {
+          return { value: name.toLowerCase().replace(' ', '_'), label: name };
+        })
+      : [];
+
+    return Response.json({
+      user: loggedUser,
+      allEmployees,
+      start,
+      end,
+      tagFIlterParam,
+      allTags: [{ value: 'all', label: 'All' }, ...allTagsForSelect],
+    });
   } catch (error) {
-    // console.log(error);
     if (error instanceof Response) return error;
     if (error instanceof AuthorizationError) {
       return Response.json({ error: error.message });
@@ -114,21 +135,39 @@ export default function Index() {
   const {
     user: { role: userRole },
     allEmployees,
+    start,
+    end,
+    tagFIlterParam,
+    allTags,
   } = useLoaderData<HomePageLoaderData>();
 
   return (
     <section className="section flex justify-center">
-      <Container className="flex flex-col items-center gap-16">
-        <h1 className="mb-10">Employees Table</h1>
+      <ResponsiveContainer>
+        <h1 className="mb-4">Employees Table</h1>
+        <div className="flex max-md:flex-col items-center justify-center gap-y-4 gap-x-8 mx-auto w-fit mb-10">
+          <WeekPicker start={start} end={end} />
 
-        <WeekPicker />
+          <FilterSelect
+            paramsName={TAG_FILTER_PARAMETER_NAME}
+            value={tagFIlterParam}
+            options={allTags}
+            id="tag-filter-select"
+            heading="Filter by tag:"
+            className="w-auto"
+            classNamePrefix="tag-filter-select"
+          />
+        </div>
+
         {allEmployees !== null && (
           <MainEmployeesTable
             data={allEmployees}
             isEditable={userRole !== ROLES.USER}
+            start={start}
+            end={end}
           />
         )}
-      </Container>
+      </ResponsiveContainer>
     </section>
   );
 }

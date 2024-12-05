@@ -1,53 +1,41 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from '@remix-run/react';
-import { UTCDate } from '@date-fns/utc';
-import { endOfWeek, startOfWeek } from 'date-fns';
-import { DateRange, DayPicker } from 'react-day-picker';
+import { DayPicker } from 'react-day-picker';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { enGB } from 'date-fns/locale';
+import { isAfter } from 'date-fns';
 
+import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
+
+import { START_RANGE_PARAMETER_NAME } from '~/constants/constants';
 import 'react-day-picker/style.css';
 
-export const WeekPicker = () => {
+export const WeekPicker = ({
+  start,
+  end,
+  className,
+}: {
+  start: string;
+  end: string;
+  className?: string;
+}) => {
   const [_, setSearchParams] = useSearchParams();
-  const [selectedWeek, setSelectedWeek] = useState<DateRange>({
-    from: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    to: endOfWeek(new Date(), { weekStartsOn: 1 }),
-  });
-
-  useEffect(() => {
-    setSearchParams(prev => {
-      prev.set(
-        'start',
-        selectedWeek.from
-          ? new Date(selectedWeek.from).toISOString()
-          : 'undefined',
-      );
-      prev.set(
-        'end',
-        selectedWeek.to ? new Date(selectedWeek.to).toISOString() : 'undefined',
-      );
-
-      return prev;
-    });
-  }, [selectedWeek, setSearchParams]);
 
   return (
-    <Popover>
+    <Popover className={className}>
       {({ close }) => (
         <>
           <p className="text-center mb-4">Select date range:</p>
 
-          <PopoverButton className="flex h-11 items-center justify-between gap-x-5 rounded bg-ui_lighter px-6 py-2 max-md:mt-5 max-md:w-full border-[1px] border-ui_grey mx-auto mb-14">
+          <PopoverButton className="flex h-11 items-center justify-center gap-x-5 rounded bg-ui_lighter px-6 py-2 min-w-[247px] max-md:w-full border-[1px] border-ui_grey mx-auto">
             <span className="leading-[1.0]">
-              {`${selectedWeek?.from?.toLocaleDateString('en-GB')} -
-                ${selectedWeek?.to?.toLocaleDateString('en-GB')}`}
+              {`${start} -
+                ${end}`}
             </span>
           </PopoverButton>
 
           <PopoverPanel
             anchor="bottom"
-            className="datePicker flex flex-col rounded bg-[#fff] px-4 py-5 shadow-[0_4px_8px_0_rgba(0,0,0,0.25)] max-md:w-[calc(100%-40px)] max-md:!max-w-[440px] md:px-5"
+            className="datePicker flex flex-col rounded bg-white px-4 py-5 shadow-lg w-max max-md:!max-w-[440px] md:px-5"
           >
             <DayPicker
               weekStartsOn={1}
@@ -56,25 +44,30 @@ export const WeekPicker = () => {
               lang="en"
               locale={enGB}
               max={7}
+              defaultMonth={new Date(end)}
               modifiers={{
-                selected: selectedWeek,
-                range_start: selectedWeek?.from,
-                range_end: selectedWeek?.to,
+                selected: { from: new Date(start), to: new Date(end) },
+                range_start: new Date(start),
+                range_end: new Date(end),
                 weekend: true,
+                disabled: date => {
+                  const { end } = getStartAndEndOfWeek(new Date());
+                  return isAfter(date, new Date(end));
+                },
               }}
-              onDayClick={(day, modifiers) => {
-                if (modifiers.selected) {
-                  setSelectedWeek({
-                    from: startOfWeek(new UTCDate(), { weekStartsOn: 1 }),
-                    to: endOfWeek(new UTCDate(), { weekStartsOn: 1 }),
-                  });
-                  return;
-                }
-
-                setSelectedWeek({
-                  from: startOfWeek(day, { weekStartsOn: 1 }),
-                  to: endOfWeek(day, { weekStartsOn: 1 }),
-                });
+              onDayClick={day => {
+                setSearchParams(
+                  prev => {
+                    prev.set(
+                      START_RANGE_PARAMETER_NAME,
+                      getStartAndEndOfWeek(day).start,
+                    );
+                    return prev;
+                  },
+                  {
+                    preventScrollReset: true,
+                  },
+                );
                 close();
               }}
             />

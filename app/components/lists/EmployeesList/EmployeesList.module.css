@@ -11,5 +11,5 @@
 }
 
 .baseLink {
-  @apply border-[1px] rounded-md border-ui_grey hover:bg-ui_light transition-all duration-150 w-full h-full py-2 px-4 flex justify-between;
+  @apply border-[1px] rounded-md border-ui_grey hocus:bg-ui_light hocus:shadow-md transition-all duration-150 w-full h-max py-2 px-4 flex justify-between;
 }

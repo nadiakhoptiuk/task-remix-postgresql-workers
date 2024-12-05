@@ -36,10 +36,13 @@ export const EditableCellForm: React.FC<EditableCellFormType> = ({
       method="post"
       id="workhours-form"
       validator={tableCellValidator}
-      className="w-[300px] mx-auto"
+      className="max-md:w-full md:w-[300px] mx-auto"
     >
       <div className="grid grid-cols-1 gap-y-4 gap-x-24 mb-10">
-        <label htmlFor="userId" className="text-2xl text-center font-semibold">
+        <label
+          htmlFor="userId"
+          className="text-xl xl:text-2xl text-center font-semibold"
+        >
           {userName}
         </label>
         <input
@@ -50,7 +53,10 @@ export const EditableCellForm: React.FC<EditableCellFormType> = ({
           className="visually-hidden"
         />
 
-        <label htmlFor="date" className="text-2xl text-center font-semibold">
+        <label
+          htmlFor="date"
+          className="text-xl xl:text-2xl text-center font-semibold"
+        >
           {format(new Date(date), 'EEEE, dd.LL.y')}
         </label>
         <input
@@ -62,7 +68,7 @@ export const EditableCellForm: React.FC<EditableCellFormType> = ({
         />
       </div>
 
-      <div className="w-fit mx-auto grid grid-cols-[300px] gap-x-8 gap-y-4 mb-20">
+      <div className="w-fit mx-auto grid grid-cols-1 gap-x-8 gap-y-4 mb-8">
         <Input
           name="workdayBill"
           type="text"

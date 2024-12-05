@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Form, useNavigation, useSubmit } from '@remix-run/react';
 import classNames from 'classnames';
-
 import { ImSpinner2 } from 'react-icons/im';
 
+import { SEARCH_PARAMETER_NAME } from '~/constants/constants';
 import s from './SearchForm.module.css';
 
 export const SearchForm = ({ query }: { query: string }) => {
@@ -13,7 +13,7 @@ export const SearchForm = ({ query }: { query: string }) => {
 
   const searching =
     navigation.location &&
-    new URLSearchParams(navigation.location.search).has('query');
+    new URLSearchParams(navigation.location.search).has(SEARCH_PARAMETER_NAME);
 
   useEffect(() => {
     setQueryString(query || '');
@@ -23,7 +23,7 @@ export const SearchForm = ({ query }: { query: string }) => {
     <Form
       id="search-form"
       role="search"
-      className="w-fit h-fit mb-8 relative"
+      className="w-full h-fit relative"
       onChange={event => {
         const isFirstSearch = query === null;
 
@@ -33,11 +33,11 @@ export const SearchForm = ({ query }: { query: string }) => {
       }}
     >
       <input
-        id="query"
+        id="search"
         aria-label="Search contacts"
         placeholder="Search..."
         type="search"
-        name="query"
+        name="search"
         className={s.searchInput}
         value={queryString}
         onChange={e => setQueryString(e.target.value)}

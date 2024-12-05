@@ -1,5 +1,5 @@
 .searchInput {
-  @apply border-[1px] border-ui_grey rounded-md p-2 pl-8;
+  @apply border-[1px] border-ui_grey rounded-md p-2 pl-8 w-full;
 }
 
 .iconLoading {

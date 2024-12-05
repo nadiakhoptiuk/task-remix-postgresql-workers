@@ -13,6 +13,8 @@ export type WithClassName = {
 export interface EmployeeLoaderData {
   employeesList: EmployeeTypeWithId[];
   query: string;
+  actualPage: number;
+  pagesCount: number;
 }
 
 export interface SingleEmployeeLoaderData {
@@ -22,6 +24,8 @@ export interface SingleEmployeeLoaderData {
 export interface TagsLoaderData {
   tagsList: BaseItemType[];
   query: string;
+  actualPage: number;
+  pagesCount: number;
 }
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
@@ -37,7 +41,7 @@ export interface SerializedUserType {
 }
 
 export type GroupType = 'billable' | 'notBillable' | 'absent';
-export type OrderType = 'min' | 'max';
+export type WorkHoursOrderType = 'min' | 'max';
 
 export interface WorkdayType {
   date: Date;
@@ -57,6 +61,10 @@ export interface EmployeeWithWorkdaysData {
 export interface HomePageLoaderData {
   user: SerializedUserType;
   allEmployees: EmployeeWithWorkdaysData[];
+  start: string;
+  end: string;
+  tagFIlterParam: string;
+  allTags: OptionType[];
 }
 
 export type TotalDataChartType = {
@@ -86,6 +94,10 @@ export interface ReportPageLoaderType {
   totalByGroups: TotalDataChartType;
   barAvgDataForEveryDay: BarAvgDataType[];
   topOrAntitopEmployees: TopOrAntitopEmpType[] | [];
+  start: string;
+  end: string;
+  order: WorkHoursOrderType;
+  group: GroupType;
 }
 
 export type GetCurrentUserOptions = {

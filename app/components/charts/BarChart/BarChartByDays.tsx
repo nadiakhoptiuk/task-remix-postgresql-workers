@@ -22,6 +22,28 @@ ChartJS.register(
 );
 
 export const BarChartByDays = ({ data }: { data: BarAvgDataType[] }) => {
+  const isEmptyAllData =
+    data
+      .map(({ date: _date, ...rest }) => {
+        return { ...rest };
+      })
+      .map(object => {
+        return Object.values(object).filter(el => el !== null);
+      })
+      .filter(arr => arr.length > 0).length === 0;
+
+  if (isEmptyAllData) {
+    return (
+      <div className="mx-auto max-w-[1100px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey rounded-md">
+        <h2 className="mb-4 text-lg">Data by groups for each day of week:</h2>
+
+        <p className="text-center my-8 text-ui_dark_grey">
+          No data to display. Please choose another week...
+        </p>
+      </div>
+    );
+  }
+
   const days = data.map(({ date }) => format(new Date(date), 'EEEE'));
   const labels = ['Billable', 'Not Billable', 'Absent'];
   const colors = [
@@ -51,10 +73,8 @@ export const BarChartByDays = ({ data }: { data: BarAvgDataType[] }) => {
   }));
 
   return (
-    <div className="mx-auto max-w-[1200px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey rounded-md">
-      <h2 className="mb-4 text-lg">
-        Total data by groups for the selected week:
-      </h2>
+    <div className="mx-auto max-w-[1100px] w-full  max-h-[600px] flex flex-col justify-between items-center py-6 px-6 border-[1px] border-ui_grey rounded-md">
+      <h2 className="mb-4 text-lg">Data by groups for each day of week:</h2>
 
       <Bar
         data={{

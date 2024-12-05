@@ -60,3 +60,73 @@ body {
 .react-multi-select__control {
   @apply border-solid !border-[1px] !border-ui_accent !bg-ui_light !py-1 !px-4 !text-ui_dark rounded-md;
 }
+
+/* Filters */
+
+.tag-filter-select__control {
+  @apply !bg-ui_lighter h-11 max-md:w-[247px] hover:cursor-pointer;
+}
+.tag-filter-select__control--is-focused,
+.order-filter__control--is-focused,
+.group-filter__control--is-focused {
+  @apply !border-ui_accent !shadow-md;
+}
+.tag-filter-select__menu,
+.order-filter__menu,
+.group-filter__menu {
+  @apply bg-ui_accent;
+}
+.tag-filter-select__option--is-selected,
+.order-filter__option--is-selected,
+.group-filter__option--is-selected {
+  @apply !bg-ui_accent;
+}
+
+/* Week picker */
+.datePicker {
+  @apply w-max;
+}
+.datePicker .rdp-day {
+  @apply text-ui_accent_dark;
+}
+.datePicker .rdp-selected {
+  @apply bg-ui_accent;
+}
+.datePicker .rdp-today {
+  @apply !font-bold;
+}
+.datePicker .rdp-today .rdp-day_button {
+  @apply !text-ui_accent_dark !bg-ui_light !font-bold;
+}
+.datePicker .rdp-selected.rdp-today .rdp-day_button {
+  @apply !text-white !bg-ui_accent_dark;
+}
+.datePicker .rdp-day_button {
+  @apply !border-none font-medium;
+}
+.datePicker .rdp-selected .rdp-day_button {
+  @apply !bg-ui_accent !text-ui_light;
+}
+.datePicker .rdp-range_start {
+  @apply !bg-none !bg-ui_accent !rounded-l-full;
+}
+.datePicker .rdp-range_end {
+  @apply !bg-none !bg-ui_accent !rounded-r-full;
+}
+.datePicker .rdp-range_end .rdp-day_button,
+.datePicker .rdp-range_start .rdp-day_button {
+  @apply bg-ui_accent;
+}
+.datePicker .rdp-nav .rdp-chevron {
+  @apply fill-ui_accent;
+}
+.rdp-disabled .rdp-day_button {
+  @apply text-ui_dark_grey;
+}
+.datePicker .rdp-outside {
+  @apply opacity-100;
+}
+.datePicker .rdp-range_end,
+.datePicker .rdp-range_start {
+  @apply !bg-none;
+}

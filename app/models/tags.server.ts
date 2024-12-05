@@ -1,19 +1,55 @@
 import prisma from 'prisma/prismaClient';
+import { PAGINATION_LIMIT } from '~/constants/constants';
+
 import { NewTagType } from '~/types/common.types';
 
-export async function getTagsList(query: string | undefined | null) {
-  if (!query) {
-    return await prisma.tag.findMany({
-      select: { id: true, name: true },
-      orderBy: [{ name: 'asc' }],
-    });
-  }
-
+export async function getAllTagsList() {
   return await prisma.tag.findMany({
-    where: { name: { contains: query, mode: 'insensitive' } },
     select: { id: true, name: true },
     orderBy: [{ name: 'asc' }],
   });
+}
+
+export async function getTagsList(
+  page: number,
+  query?: string | undefined | null,
+) {
+  if (!query) {
+    const totalCount = await prisma.tag.count();
+    const pagesCount = Math.ceil(totalCount / PAGINATION_LIMIT);
+
+    const actualPage = page > pagesCount ? pagesCount : page;
+
+    const tags = await prisma.tag.findMany({
+      skip: (actualPage - 1) * PAGINATION_LIMIT,
+      take: PAGINATION_LIMIT,
+      select: { id: true, name: true },
+      orderBy: [{ name: 'asc' }],
+    });
+
+    return { tags, actualPage, pagesCount };
+  }
+
+  const totalCount = await prisma.tag.count({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
+  });
+  const pagesCount = Math.ceil(totalCount / PAGINATION_LIMIT);
+  const actualPage = page > pagesCount ? pagesCount : page;
+
+  const tags = await prisma.tag.findMany({
+    where: { name: { contains: query, mode: 'insensitive' } },
+    skip: (actualPage - 1) * PAGINATION_LIMIT,
+    take: PAGINATION_LIMIT,
+    select: { id: true, name: true },
+    orderBy: [{ name: 'asc' }],
+  });
+
+  return { tags, actualPage, pagesCount };
 }
 
 export async function createNewTag({ tagName, users }: NewTagType) {

@@ -57,3 +57,15 @@ export const GROUP_SELECT_OPTIONS = [
   { value: 'notBillable', label: 'Not billable' },
   { value: 'absent', label: 'Absent' },
 ];
+
+export const GROUP_PARAMETER_NAME = 'group';
+export const ORDER_PARAMETER_NAME = 'order';
+export const START_RANGE_PARAMETER_NAME = 'start';
+export const TAG_FILTER_PARAMETER_NAME = 'tag';
+export const SEARCH_PARAMETER_NAME = 'search';
+
+export const ALL_TAGS = 'all';
+
+export const PAGINATION_LIMIT = 5;
+export const PAGINATION_PARAMETR_NAME = 'page';
+export const MAX_PAGINATION_BUTTONS = 3;

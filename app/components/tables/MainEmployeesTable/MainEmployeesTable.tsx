@@ -5,45 +5,40 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useMemo } from 'react';
-import { useSearchParams } from '@remix-run/react';
 import { eachDayOfInterval, format } from 'date-fns';
-
-import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
+import { UTCDate } from '@date-fns/utc';
 
 import { DefaultCell } from '../DefaultCell';
+
+import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
 
 import { EmployeeWithWorkdaysData } from '~/types/common.types';
 
 export const MainEmployeesTable = ({
   data,
+  start,
+  end,
   isEditable,
 }: {
   data: EmployeeWithWorkdaysData[];
   isEditable: boolean;
+  start: string;
+  end: string;
 }) => {
-  const [searchParams] = useSearchParams();
-
   const columnHelper = createColumnHelper<EmployeeWithWorkdaysData>();
 
   const memoizedColumnWorkdaysDef = useMemo(() => {
-    const start = searchParams.get('start');
-    const end = searchParams.get('end');
-
-    if (start === null || end === null) {
-      throw new Error(
-        'Invalid date parameters: startParam or endParam is null.', //TODO
-      );
-    }
-
     const dateArray = eachDayOfInterval({
-      start: new Date(start),
-      end: new Date(end),
+      start: new UTCDate(start),
+      end: new UTCDate(end),
     });
 
     return dateArray.map(day => {
       return columnHelper.accessor('workdays', {
         id: new Date(day).toISOString(),
-        header: () => <span>{format(new Date(day), 'E, dd')}</span>,
+        header: () => (
+          <span className="text-nowrap">{format(new Date(day), 'E, dd')}</span>
+        ),
         cell: info => {
           const rowIndex = info.row.original.id;
           const columnId = info.column.id;
@@ -62,24 +57,15 @@ export const MainEmployeesTable = ({
         },
       });
     });
-  }, [columnHelper, isEditable, searchParams]);
+  }, [columnHelper, end, isEditable, start]);
 
   const memoizedColumns = useMemo(
     () => [
       columnHelper.accessor('name', {
         header: () => <span>Name</span>,
-        cell: info => info.getValue(),
+        cell: info => <span className="text-nowrap">{info.getValue()}</span>,
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('id', {
-      //   cell: info => info.getValue(),
-      //   footer: info => info.column.id,
-      // }),
-      // columnHelper.accessor('role', {
-      //   header: () => <span>Access</span>,
-      //   cell: info => info.renderValue(),
-      //   footer: info => info.column.id,
-      // }),
       columnHelper.group({
         header: 'Work hours accounting',
         footer: props => props.column.id,
@@ -96,8 +82,8 @@ export const MainEmployeesTable = ({
   });
 
   return (
-    <div className="max-w-[1280px]">
-      <table className="relative !w-fit">
+    <div className="overflow-x-auto min-h-[290px]">
+      <table className="relative w-[400px] mx-auto">
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>

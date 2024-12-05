@@ -5,12 +5,12 @@ import { Container } from '~/components/ui-kit/Container/Container';
 import { CreateOrUpdateTagForm } from '~/components/forms/CreateOrEditTagForm';
 
 import { createNewTag } from '~/models/tags.server';
-import { getEmployeesList } from '~/models/employees.server';
+import { getAllEmployeesList } from '~/models/employees.server';
 
 import { ROUTES } from '~/types/enums';
 
 export const loader = async () => {
-  const allUsersData = await getEmployeesList();
+  const allUsersData = await getAllEmployeesList();
 
   const selectData = allUsersData.map(({ name, id }) => ({
     label: name,
