@@ -20,7 +20,7 @@ export const LoginForm = () => {
       validator={authUserCredentialsValidator}
       id="user-auth-form"
       method="post"
-      className="grid grid-cols-1 gap-y-8 max-w-[600px] mx-auto"
+      className="grid grid-cols-1 gap-y-8 max-w-[400px] mx-auto"
     >
       <Input
         name="email"

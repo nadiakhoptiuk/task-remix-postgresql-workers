@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { ROLES } from '~/types/enums';
 import { NAVLINKS as navlinks } from '~/constants/constants';
+import { EditorLocationType } from '~/types/common.types';
 import s from './NavBar.module.css';
 
 export const NavBar = ({
@@ -11,8 +12,10 @@ export const NavBar = ({
   className = '',
   isMenu = false,
   closeMenu,
+  activeEditors,
 }: {
   userRole: (typeof ROLES)[keyof typeof ROLES];
+  activeEditors?: EditorLocationType[] | undefined;
   className?: string;
   isMenu?: boolean;
   closeMenu?: MouseEventHandler<HTMLAnchorElement> | undefined;
@@ -26,28 +29,29 @@ export const NavBar = ({
             : 'flex gap-x-8 flex-wrap items-center justify-center',
         )}
       >
-        {navlinks.map(({ route, label, restricted, roles }, index) => {
-          const isShown =
-            roles.includes(userRole) || (!restricted && !userRole);
+        {!activeEditors &&
+          navlinks.map(({ route, label, restricted, roles }, index) => {
+            const isShown =
+              roles.includes(userRole) || (!restricted && !userRole);
 
-          if (!isShown) return null;
+            if (!isShown) return null;
 
-          return (
-            <li key={index} className="h-full">
-              <NavLink
-                to={route}
-                className={({ isActive }) =>
-                  isActive
-                    ? `${s.baseLink} text-ui_accent cursor-default pointer-events-none`
-                    : `${s.baseLink} text-ui_dark cursor-pointer`
-                }
-                onClick={closeMenu}
-              >
-                {label}
-              </NavLink>
-            </li>
-          );
-        })}
+            return (
+              <li key={index} className="h-full">
+                <NavLink
+                  to={route}
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${s.baseLink} text-ui_accent cursor-default pointer-events-none`
+                      : `${s.baseLink} text-ui_dark cursor-pointer`
+                  }
+                  onClick={closeMenu}
+                >
+                  {label}
+                </NavLink>
+              </li>
+            );
+          })}
       </ul>
     </nav>
   );

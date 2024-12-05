@@ -21,9 +21,13 @@ import { getEmployeesWithDaysList } from '~/models/employees.server';
 import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
 import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 import { getAllTagsList } from '~/models/tags.server';
+import {
+  getAllActiveEditorsLocation,
+  sendEditorLocation,
+} from '~/models/userLocation';
 
 import { HomePageLoaderData } from '~/types/common.types';
-import { ROLES } from '~/types/enums';
+import { ROLES, ROUTES } from '~/types/enums';
 import {
   ALL_TAGS,
   START_RANGE_PARAMETER_NAME,
@@ -40,6 +44,14 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const loggedUser = await getAuthUser(request);
+
+    if (loggedUser !== null) {
+      await sendEditorLocation(loggedUser.id, ROUTES.HOME);
+    }
+    const activeEditors =
+      loggedUser !== null && loggedUser.role !== ROLES.USER
+        ? await getAllActiveEditorsLocation(loggedUser.id)
+        : [];
 
     const url = new URL(request.url);
     const startParam = url.searchParams.get(START_RANGE_PARAMETER_NAME);
@@ -63,7 +75,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       : [];
 
     return Response.json({
-      user: loggedUser,
+      user: loggedUser ? loggedUser : null,
+      activeEditors,
       allEmployees,
       start,
       end,
@@ -132,26 +145,19 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Index() {
-  const {
-    user: { role: userRole },
-    allEmployees,
-    start,
-    end,
-    tagFIlterParam,
-    allTags,
-  } = useLoaderData<HomePageLoaderData>();
+  const data = useLoaderData<HomePageLoaderData>();
 
   return (
     <section className="section flex justify-center">
       <ResponsiveContainer>
         <h1 className="mb-4">Employees Table</h1>
         <div className="flex max-md:flex-col items-center justify-center gap-y-4 gap-x-8 mx-auto w-fit mb-10">
-          <WeekPicker start={start} end={end} />
+          <WeekPicker start={data.start} end={data.end} />
 
           <FilterSelect
             paramsName={TAG_FILTER_PARAMETER_NAME}
-            value={tagFIlterParam}
-            options={allTags}
+            value={data.tagFIlterParam}
+            options={data.allTags}
             id="tag-filter-select"
             heading="Filter by tag:"
             className="w-auto"
@@ -159,12 +165,12 @@ export default function Index() {
           />
         </div>
 
-        {allEmployees !== null && (
+        {data.allEmployees !== null && (
           <MainEmployeesTable
-            data={allEmployees}
-            isEditable={userRole !== ROLES.USER}
-            start={start}
-            end={end}
+            data={data.allEmployees}
+            isEditable={data?.user !== null && data?.user?.role !== ROLES.USER}
+            start={data.start}
+            end={data.end}
           />
         )}
       </ResponsiveContainer>
