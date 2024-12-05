@@ -9,12 +9,13 @@ export const FilterSelect: React.FC<FilterSelectType> = ({
   options,
   id,
   classNamePrefix,
+  className = '',
   heading,
 }) => {
   const [_, setSearchParams] = useSearchParams();
 
   return (
-    <div>
+    <div className={className}>
       {heading && <p className="text-center mb-4">{heading}</p>}
 
       <Select
@@ -22,13 +23,18 @@ export const FilterSelect: React.FC<FilterSelectType> = ({
         value={options.find(({ value: optionValue }) => value === optionValue)}
         options={options}
         onChange={value => {
-          setSearchParams(prev => {
-            prev.set(paramsName, value?.value || '');
-            return prev;
-          });
+          setSearchParams(
+            prev => {
+              prev.set(paramsName, value?.value || '');
+              return prev;
+            },
+            {
+              preventScrollReset: true,
+            },
+          );
         }}
         classNamePrefix={classNamePrefix}
-        className="min-w-[120px] w-max text-center"
+        className="min-w-[200px] text-center w-max bg-ui_light"
       />
     </div>
   );

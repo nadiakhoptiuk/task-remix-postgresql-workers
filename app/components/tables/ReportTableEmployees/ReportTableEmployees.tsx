@@ -72,12 +72,14 @@ export const ReportTableEmployees = ({
           options={ORDER_SELECT_OPTIONS}
           id="order-select"
           value={order}
+          classNamePrefix="order-filter"
         />
         <FilterSelect
           paramsName="group"
           options={GROUP_SELECT_OPTIONS}
           id="group-select"
           value={group}
+          classNamePrefix="group-filter"
         />
       </div>
 

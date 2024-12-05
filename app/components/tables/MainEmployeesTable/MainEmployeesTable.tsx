@@ -82,7 +82,7 @@ export const MainEmployeesTable = ({
   });
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto min-h-[290px]">
       <table className="relative w-[400px] mx-auto">
         <thead>
           {table.getHeaderGroups().map(headerGroup => (

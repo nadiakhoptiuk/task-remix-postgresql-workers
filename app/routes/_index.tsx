@@ -45,6 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const startParam = url.searchParams.get(START_RANGE_PARAMETER_NAME);
     const tagFIlterParam =
       url.searchParams.get(TAG_FILTER_PARAMETER_NAME) || ALL_TAGS;
+
     const { start, end } = getStartAndEndOfWeek(startParam);
 
     const allEmployees = await getEmployeesWithDaysList(
@@ -67,7 +68,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       start,
       end,
       tagFIlterParam,
-      allTags: [...allTagsForSelect, { value: 'all', label: 'All' }],
+      allTags: [{ value: 'all', label: 'All' }, ...allTagsForSelect],
     });
   } catch (error) {
     if (error instanceof Response) return error;
@@ -153,6 +154,8 @@ export default function Index() {
             options={allTags}
             id="tag-filter-select"
             heading="Filter by tag:"
+            className="w-auto"
+            classNamePrefix="tag-filter-select"
           />
         </div>
 

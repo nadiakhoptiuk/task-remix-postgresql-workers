@@ -6,5 +6,6 @@ export type FilterSelectType = {
   options: OptionType[];
   id: string;
   classNamePrefix?: string;
+  className?: string;
   heading?: string;
 };
