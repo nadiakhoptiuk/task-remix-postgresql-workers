@@ -1,0 +1,7 @@
+.paginationButton {
+  @apply md:p-4 bg-ui_lighter md:h-12 md:w-12 xl:h-14 xl:w-14 p-2 h-10 w-10 cursor-pointer flex items-center justify-center rounded-md shadow-md hocus:shadow-lg hocus:bg-ui_light transition-all;
+}
+
+.prevNextButton {
+  @apply max-md:hidden;
+}

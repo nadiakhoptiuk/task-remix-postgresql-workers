@@ -10,7 +10,7 @@ import invariant from 'tiny-invariant';
 import { CreateOrUpdateTagForm } from '~/components/forms/CreateOrEditTagForm';
 import { Container } from '~/components/ui-kit/Container/Container';
 
-import { getEmployeesList } from '~/models/employees.server';
+import { getAllEmployeesList } from '~/models/employees.server';
 import { getTagById, updateTag } from '~/models/tags.server';
 
 import { ROUTES } from '~/types/enums';
@@ -20,7 +20,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(tagId, 'Tag id not found');
   const tagData = await getTagById(Number(tagId));
 
-  const usersList = await getEmployeesList();
+  const usersList = await getAllEmployeesList();
 
   const selectData = usersList.map(({ name, id }) => ({
     label: name,

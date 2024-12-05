@@ -4,27 +4,61 @@ import prisma from 'prisma/prismaClient';
 
 import { passwordHash } from '~/utils/passwordUtils';
 
-import { ALL_TAGS } from '~/constants/constants';
+import { ALL_TAGS, PAGINATION_LIMIT } from '~/constants/constants';
 import { NewEmployeeType } from '~/types/common.types';
 
-export async function getEmployeesList(query?: string | undefined | null) {
+export async function getAllEmployeesList() {
+  return await prisma.user.findMany({
+    select: { id: true, name: true, role: true },
+    orderBy: [{ role: 'asc' }, { name: 'asc' }],
+  });
+}
+
+export async function getEmployeesList(
+  page: number,
+  query?: string | undefined | null,
+) {
   if (!query) {
-    return await prisma.user.findMany({
+    const totalCount = await prisma.user.count();
+    const pagesCount = Math.ceil(totalCount / PAGINATION_LIMIT);
+
+    const actualPage = page > pagesCount ? pagesCount : page;
+
+    const users = await prisma.user.findMany({
+      skip: (actualPage - 1) * PAGINATION_LIMIT,
+      take: PAGINATION_LIMIT,
       select: { id: true, name: true, role: true },
       orderBy: [{ role: 'asc' }, { name: 'asc' }],
     });
+
+    return { users, actualPage, pagesCount };
   }
 
-  return await prisma.user.findMany({
+  const totalCount = await prisma.user.count({
     where: {
       name: {
         contains: query,
         mode: 'insensitive',
       },
     },
+  });
+  const pagesCount = Math.ceil(totalCount / PAGINATION_LIMIT);
+  const actualPage = page > pagesCount ? pagesCount : page;
+
+  const users = await prisma.user.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
+    skip: (actualPage - 1) * PAGINATION_LIMIT,
+    take: PAGINATION_LIMIT,
     select: { id: true, name: true, role: true },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],
   });
+
+  return { users, actualPage, pagesCount };
 }
 
 export async function getEmployeesWithDaysList(

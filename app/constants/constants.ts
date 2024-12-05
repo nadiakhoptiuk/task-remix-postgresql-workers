@@ -65,3 +65,7 @@ export const TAG_FILTER_PARAMETER_NAME = 'tag';
 export const SEARCH_PARAMETER_NAME = 'search';
 
 export const ALL_TAGS = 'all';
+
+export const PAGINATION_LIMIT = 5;
+export const PAGINATION_PARAMETR_NAME = 'page';
+export const MAX_PAGINATION_BUTTONS = 3;

@@ -7,10 +7,10 @@ import s from './EmployeesList.module.css';
 
 export const EmployeesList = ({ data }: { data: EmployeeTypeWithId[] }) => {
   return (
-    <ul className="grid grid-cols-1 gap-y-4">
+    <ul className="grid grid-cols-1 gap-y-4 min-h-[275px] md:min-h-[295px]">
       {data.map(({ id, email, name, role }) => {
         return (
-          <li key={id}>
+          <li key={id} className="h-max">
             <NavLink
               to={`${ROUTES.EMPLOYEES}/${id}`}
               className={({ isActive }) =>
@@ -29,8 +29,8 @@ export const EmployeesList = ({ data }: { data: EmployeeTypeWithId[] }) => {
                 <span className={s.baseItemDesc}>{email}</span>
               </div>
 
-              {role === ROLES.ADMIN && (
-                <div className={`${s.baseItemBlock} items-end !hidden`}>
+              {role !== ROLES.USER && (
+                <div className={`${s.baseItemBlock} items-end`}>
                   {/* <span className={s.baseItemHeading}>ROLE:</span> */}
                   <span className={`${s.baseItemDesc} text-ui_accent_dark`}>
                     {role}

@@ -23,7 +23,7 @@ export const SearchForm = ({ query }: { query: string }) => {
     <Form
       id="search-form"
       role="search"
-      className="w-fit h-fit mb-8 relative"
+      className="w-full h-fit relative"
       onChange={event => {
         const isFirstSearch = query === null;
 

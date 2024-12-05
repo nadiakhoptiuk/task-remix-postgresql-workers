@@ -20,7 +20,7 @@ import { getAuthUser } from '~/services/auth.server';
 import { getEmployeesWithDaysList } from '~/models/employees.server';
 import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
 import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
-import { getTagsList } from '~/models/tags.server';
+import { getAllTagsList } from '~/models/tags.server';
 
 import { HomePageLoaderData } from '~/types/common.types';
 import { ROLES } from '~/types/enums';
@@ -53,10 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       tagFIlterParam,
     );
 
-    const allTags = await getTagsList(
-      tagFIlterParam,
-      TAG_FILTER_PARAMETER_NAME,
-    );
+    const allTags = await getAllTagsList();
 
     const allTagsForSelect = allTags
       ? allTags.map(({ name }) => {
