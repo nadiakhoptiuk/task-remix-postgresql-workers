@@ -13,15 +13,11 @@ import { Toaster } from 'react-hot-toast';
 
 import { Header } from './components/layout/Header';
 
-import {
-  getAllActiveEditorsLocation,
-  sendEditorLocation,
-} from './models/userLocation';
+import { getAllActiveEditorsLocation } from './models/userLocation';
 import { getAuthUser } from './services/auth.server';
-import { filterLocationByAccess } from './services/userLocation.server';
 
 import { RootLoaderData } from './types/common.types';
-import { ROLES, ROUTES } from './types/enums';
+import { ROLES } from './types/enums';
 import './tailwind.css';
 
 export const links: LinksFunction = () => [
@@ -45,21 +41,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return { user: null, activeEditors: [] };
     }
 
-    await sendEditorLocation(loggedUser.id, ROUTES.HOME);
-
     const activeEditors =
       loggedUser.role !== ROLES.USER
         ? await getAllActiveEditorsLocation(loggedUser.id)
         : [];
 
-    const availableLocations =
-      activeEditors.length > 0
-        ? filterLocationByAccess(activeEditors, loggedUser.role)
-        : null;
-
-    return availableLocations
-      ? { user: loggedUser, activeEditors: availableLocations }
-      : { user: loggedUser };
+    return { user: loggedUser, activeEditors: activeEditors };
   } catch (error) {
     if (error instanceof Response) return error;
     return error;
@@ -79,10 +66,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
 
       <body>
-        <Header
-          userRole={data?.user?.role}
-          activeEditors={data?.activeEditors}
-        />
+        <Header userRole={data?.user?.role} />
         <main className="min-h-full max-md:pt-[82px] md:pt-[91px]">
           {children}
         </main>

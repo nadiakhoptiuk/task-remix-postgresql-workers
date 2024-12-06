@@ -1,31 +1,39 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
-import { Link, Outlet, useLoaderData } from '@remix-run/react';
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useRouteLoaderData,
+} from '@remix-run/react';
 
 import { Container } from '~/components/ui-kit/Container/Container';
 import { BaseNavList } from '~/components/lists/BaseNavList';
 import { SearchForm } from '~/components/forms/SearchForm';
+import { PaginationBar } from '~/components/navigation/PaginationBar';
 
 import { getTagsList } from '~/models/tags.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
+import { sendEditorLocation } from '~/models/userLocation';
 
 import {
   NAVLINKS,
   PAGINATION_PARAMETR_NAME,
   SEARCH_PARAMETER_NAME,
 } from '~/constants/constants';
-import { Role, TagsLoaderData } from '~/types/common.types';
+import { Role, RootLoaderData, TagsLoaderData } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
-import { PaginationBar } from '~/components/navigation/PaginationBar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =
     NAVLINKS.find(({ route }) => route === ROUTES.TAGS)?.roles ?? [];
 
-  await getAuthUserAndVerifyAccessOrRedirect(
+  const loggedUser = await getAuthUserAndVerifyAccessOrRedirect(
     request,
     ROUTES.HOME,
     pageAllowedRoles,
   );
+
+  await sendEditorLocation(loggedUser.id, ROUTES.TAGS);
 
   const url = new URL(request.url);
   const query = url.searchParams.get(SEARCH_PARAMETER_NAME);
@@ -42,6 +50,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function TagsPage() {
   const { tagsList, query, actualPage, pagesCount } =
     useLoaderData<TagsLoaderData>();
+  const data = useRouteLoaderData<RootLoaderData>('root');
 
   return (
     <div className="md:flex h-[calc(100vh-140px)] md:h-[calc(100vh-96px)]">
@@ -61,7 +70,11 @@ export default function TagsPage() {
           </div>
 
           {tagsList.length > 0 ? (
-            <BaseNavList data={tagsList} baseRoute={ROUTES.TAGS} />
+            <BaseNavList
+              data={tagsList}
+              baseRoute={ROUTES.TAGS}
+              activeEditors={data?.activeEditors}
+            />
           ) : (
             <p>No tags found</p>
           )}

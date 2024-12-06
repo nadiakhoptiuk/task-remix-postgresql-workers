@@ -182,6 +182,12 @@ export type existedUser = {
   createdAt: Date;
 };
 
-export type EditorLocationType = {
+export type EditorLocationDBType = {
   user: { name: string; location: { location: string; time: Date } | null };
+};
+
+export type EditorLocationType = {
+  userName: string;
+  location: string;
+  time: Date;
 };

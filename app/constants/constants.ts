@@ -69,3 +69,21 @@ export const ALL_TAGS = 'all';
 export const PAGINATION_LIMIT = 5;
 export const PAGINATION_PARAMETR_NAME = 'page';
 export const MAX_PAGINATION_BUTTONS = 3;
+
+export const CHARTS_COLORS = [
+  'rgba(75, 192, 192, 0.2)',
+  'rgba(255, 159, 64, 0.2)',
+  'rgba(255, 99, 132, 0.2)',
+];
+
+export const USERS_COLORS = [
+  'text-[#4bc0c0]',
+  'text-[#ff9f40]',
+  'text-[#ff6384]',
+];
+
+export const USERS_TOP = [
+  'top-[30px] left-[-30px]',
+  'top-[47px] left-[-20px]',
+  'top-[64px] left-[-10px]',
+];

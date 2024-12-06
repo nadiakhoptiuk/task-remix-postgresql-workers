@@ -7,14 +7,11 @@ import { Button } from '~/components/ui-kit/Button';
 import { MobileMenu } from '~/components/navigation/MobileMenu';
 
 import { ROLES } from '~/types/enums';
-import { EditorLocationType } from '~/types/common.types';
 
 export const Header = ({
   userRole,
-  activeEditors,
 }: {
   userRole: (typeof ROLES)[keyof typeof ROLES];
-  activeEditors?: EditorLocationType[] | undefined;
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -25,11 +22,7 @@ export const Header = ({
   return (
     <header className="bg-ui_light max-md:py-4 md:py-6 fixed w-full left-0 top-0 z-10">
       <Container className="flex items-center justify-center">
-        <NavBar
-          userRole={userRole}
-          className="max-md:hidden"
-          activeEditors={activeEditors}
-        />
+        <NavBar userRole={userRole} className="max-md:hidden" />
 
         <Button
           variant="transparent"

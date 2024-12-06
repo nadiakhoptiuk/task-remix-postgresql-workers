@@ -29,5 +29,12 @@ export const getAllActiveEditorsLocation = async (userId: number) => {
     },
   });
 
+  if (allActiveEditors) {
+    return allActiveEditors.map(({ user: { name, location } }) => ({
+      userName: name,
+      ...location,
+    }));
+  }
+
   return allActiveEditors;
 };
