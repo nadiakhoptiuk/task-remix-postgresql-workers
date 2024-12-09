@@ -29,7 +29,11 @@ import {
   START_RANGE_PARAMETER_NAME,
   TAG_FILTER_PARAMETER_NAME,
 } from '~/constants/constants';
-import { getAllActiveEditorsLocation } from '~/models/userLocation';
+import {
+  deleteCurrentUserLocation,
+  getAllActiveEditorsLocation,
+} from '~/models/userLocation';
+import { sessionStorage } from '~/services/session.server';
 
 export const meta: MetaFunction = () => {
   return [
@@ -70,7 +74,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     return Response.json({
       user: loggedUser ? loggedUser : null,
-      activeEditors,
+      activeEditors: activeEditors.map(({ user: { name }, ...rest }) => ({
+        userName: name,
+        ...rest,
+      })),
       allEmployees,
       start,
       end,
@@ -106,7 +113,13 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
 
+  const session = await sessionStorage.getSession(
+    request.headers.get('cookie'),
+  );
+  const loggedUser = session.get('user');
+
   try {
+    await deleteCurrentUserLocation(loggedUser.id);
     await updateUserWorkHours({
       userId: Number(userId),
       date: date,

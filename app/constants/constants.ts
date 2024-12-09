@@ -83,7 +83,7 @@ export const USERS_COLORS = [
 ];
 
 export const USERS_TOP = [
-  'top-[30px] left-[-30px]',
-  'top-[47px] left-[-20px]',
-  'top-[64px] left-[-10px]',
+  'top-[-20%] left-0',
+  'top-[-40%] left-0',
+  'top-[-60%] left-0',
 ];

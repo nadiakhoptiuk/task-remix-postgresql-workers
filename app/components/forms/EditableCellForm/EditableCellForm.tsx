@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { format } from 'date-fns';
+import { useFetcher } from '@remix-run/react';
 import { useControlField, ValidatedForm } from 'remix-validated-form';
 
 import { Input } from '~/components/ui-kit/Input';
@@ -15,8 +16,9 @@ import {
 
 export const EditableCellForm: React.FC<
   EditableCellFormType & DispatchEditableCellFormType
-> = ({ initialValue, userId, userName, date, setEditFormValues }) => {
+> = ({ initialValue, userId, userName, date, setEditFormValues, editorId }) => {
   const arrayOfWorkingHours = splitWorkingHours(initialValue);
+  const fetcher = useFetcher();
 
   const [billableValue, setBillableValue] = useControlField<string>(
     'workhours-form',
@@ -30,6 +32,16 @@ export const EditableCellForm: React.FC<
     'workhours-form',
     'workdayAbsent',
   );
+
+  useEffect(() => {
+    if (editorId) {
+      fetcher.submit(
+        { rowIndex: userId, columnId: date, editorId },
+        { method: 'POST', action: '/handleUserLocationSend' },
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ValidatedForm

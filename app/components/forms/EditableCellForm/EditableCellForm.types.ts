@@ -5,6 +5,7 @@ export type EditableCellFormType = {
   userName: string;
   date: string;
   initialValue: string;
+  editorId?: number | null | undefined;
 };
 
 export type DispatchEditableCellFormType = {

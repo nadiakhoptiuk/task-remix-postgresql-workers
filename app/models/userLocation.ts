@@ -4,6 +4,9 @@ export const getAllActiveEditorsLocation = async (userId: number) => {
   const allActiveEditors = await prisma.location.findMany({
     where: { userId: { not: userId } },
     select: {
+      columnId: true,
+      rowIndex: true,
+      time: true,
       user: {
         select: {
           name: true,

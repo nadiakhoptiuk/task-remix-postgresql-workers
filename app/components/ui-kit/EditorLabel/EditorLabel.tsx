@@ -22,7 +22,7 @@ export const EditorLabel = ({
   return (
     <span
       className={classNames(
-        'absolute flex top-10 text-sm',
+        'absolute flex items-center justify-center text-sm bg-white bg-opacity-80 border-ui_grey border-[1px] rounded-md px-1 z-[9]',
         USERS_COLORS[index],
         USERS_TOP[index],
         className,
