@@ -1,47 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Modal } from '~/components/ui-kit/Modal';
-import { EditableCellForm } from '~/components/forms/EditableCellForm';
+import { DefaultCellType, InitialValueType } from './DefaultCell.types';
 
-import { DefaultCellType } from './DefaultCell.types';
-
-export const DefaultCell: React.FC<DefaultCellType> = ({
+export const DefaultCell: React.FC<DefaultCellType & InitialValueType> = ({
   initialValue,
-  rowIndex,
-  columnId,
-  userName,
+  editorId: _editorId,
+  handleOpenModal,
   isEditable = false,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <>
       {isEditable && (
         <button
           type="button"
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleOpenModal}
           className="w-full h-full block text-nowrap"
         >
           {initialValue}
         </button>
       )}
-
       {!isEditable && <span>{initialValue}</span>}
-
-      {isModalOpen && isEditable && (
-        <Modal
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-          className="max-md:!py-10"
-        >
-          <EditableCellForm
-            initialValue={initialValue}
-            userId={rowIndex}
-            date={columnId}
-            userName={userName}
-          />
-        </Modal>
-      )}
     </>
   );
 };

@@ -12,22 +12,20 @@ import { CreateOrUpdateEmployeeForm } from '~/components/forms/CreateOrEditEmplo
 import { Container } from '~/components/ui-kit/Container/Container';
 
 import { getEmployeeById, updateUserById } from '~/models/employees.server';
-import { sessionStorage } from '~/services/session.server';
-import { sendEditorLocation } from '~/models/userLocation';
 
 import { ROLE_SELECT_OPTIONS } from '~/constants/constants';
 import { ROLES, ROUTES } from '~/types/enums';
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.employeeId, 'Employee id not found');
-  const session = await sessionStorage.getSession(
-    request.headers.get('cookie'),
-  );
-  const loggedUser = session.get('user');
-  await sendEditorLocation(
-    loggedUser.id,
-    `${ROUTES.EMPLOYEES}/${params.employeeId}/edit`,
-  );
+  // const session = await sessionStorage.getSession(
+  //   request.headers.get('cookie'),
+  // );
+  // const loggedUser = session.get('user');
+  // await sendEditorLocation(
+  //   loggedUser.id,
+  //   `${ROUTES.EMPLOYEES}/${params.employeeId}/edit`,
+  // );
 
   const employeeData = await getEmployeeById(Number(params.employeeId));
 

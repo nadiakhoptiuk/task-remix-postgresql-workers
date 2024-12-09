@@ -8,14 +8,14 @@ import { SubmitButton } from '~/components/ui-kit/SubmitButton';
 import { tableCellValidator } from '~/utils/validationSchemas/tableCellValidator';
 import { splitWorkingHours } from '~/utils/tableUtilities/generateHoursForCell';
 
-import { EditableCellFormType } from './EditableCellForm.types';
+import {
+  DispatchEditableCellFormType,
+  EditableCellFormType,
+} from './EditableCellForm.types';
 
-export const EditableCellForm: React.FC<EditableCellFormType> = ({
-  initialValue,
-  userId,
-  userName,
-  date,
-}) => {
+export const EditableCellForm: React.FC<
+  EditableCellFormType & DispatchEditableCellFormType
+> = ({ initialValue, userId, userName, date, setEditFormValues }) => {
   const arrayOfWorkingHours = splitWorkingHours(initialValue);
 
   const [billableValue, setBillableValue] = useControlField<string>(
@@ -36,7 +36,10 @@ export const EditableCellForm: React.FC<EditableCellFormType> = ({
       method="post"
       id="workhours-form"
       validator={tableCellValidator}
-      className="max-md:w-full md:w-[300px] mx-auto"
+      className="w-full mx-auto"
+      onSubmit={() => {
+        setEditFormValues(null);
+      }}
     >
       <div className="grid grid-cols-1 gap-y-4 gap-x-24 mb-10">
         <label

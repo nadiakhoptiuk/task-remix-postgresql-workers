@@ -13,11 +13,10 @@ import { Toaster } from 'react-hot-toast';
 
 import { Header } from './components/layout/Header';
 
-import { getAllActiveEditorsLocation } from './models/userLocation';
 import { getAuthUser } from './services/auth.server';
 
 import { RootLoaderData } from './types/common.types';
-import { ROLES } from './types/enums';
+
 import './tailwind.css';
 
 export const links: LinksFunction = () => [
@@ -41,12 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return { user: null, activeEditors: [] };
     }
 
-    const activeEditors =
-      loggedUser.role !== ROLES.USER
-        ? await getAllActiveEditorsLocation(loggedUser.id)
-        : [];
-
-    return { user: loggedUser, activeEditors: activeEditors };
+    return { user: loggedUser };
   } catch (error) {
     if (error instanceof Response) return error;
     return error;

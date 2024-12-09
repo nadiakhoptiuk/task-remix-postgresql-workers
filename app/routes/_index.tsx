@@ -21,18 +21,15 @@ import { getEmployeesWithDaysList } from '~/models/employees.server';
 import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
 import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 import { getAllTagsList } from '~/models/tags.server';
-import {
-  getAllActiveEditorsLocation,
-  sendEditorLocation,
-} from '~/models/userLocation';
 
 import { HomePageLoaderData } from '~/types/common.types';
-import { ROLES, ROUTES } from '~/types/enums';
+import { ROLES } from '~/types/enums';
 import {
   ALL_TAGS,
   START_RANGE_PARAMETER_NAME,
   TAG_FILTER_PARAMETER_NAME,
 } from '~/constants/constants';
+import { getAllActiveEditorsLocation } from '~/models/userLocation';
 
 export const meta: MetaFunction = () => {
   return [
@@ -45,9 +42,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const loggedUser = await getAuthUser(request);
 
-    if (loggedUser !== null) {
-      await sendEditorLocation(loggedUser.id, ROUTES.HOME);
-    }
     const activeEditors =
       loggedUser !== null && loggedUser.role !== ROLES.USER
         ? await getAllActiveEditorsLocation(loggedUser.id)
@@ -168,9 +162,11 @@ export default function Index() {
         {data.allEmployees !== null && (
           <MainEmployeesTable
             data={data.allEmployees}
+            activeEditors={data.activeEditors}
             isEditable={data?.user !== null && data?.user?.role !== ROLES.USER}
             start={data.start}
             end={data.end}
+            editorId={data.user.id || null}
           />
         )}
       </ResponsiveContainer>

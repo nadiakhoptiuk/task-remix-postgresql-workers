@@ -4,28 +4,80 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { eachDayOfInterval, format } from 'date-fns';
 import { UTCDate } from '@date-fns/utc';
 
-import { DefaultCell } from '../DefaultCell';
+import { Modal } from '~/components/ui-kit/Modal';
+import { EditableCellForm } from '~/components/forms/EditableCellForm';
+import { EditableCellFormType } from '~/components/forms/EditableCellForm/EditableCellForm.types';
 
 import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
 
-import { EmployeeWithWorkdaysData } from '~/types/common.types';
+import {
+  EditorLocationType,
+  EmployeeWithWorkdaysData,
+  OpenModalHandlerParams,
+} from '~/types/common.types';
+import { DefaultCell } from '../DefaultCell';
 
 export const MainEmployeesTable = ({
   data,
   start,
   end,
   isEditable,
+  activeEditors: _activeEditors,
+  editorId: _editorId,
 }: {
   data: EmployeeWithWorkdaysData[];
-  isEditable: boolean;
   start: string;
   end: string;
+  isEditable: boolean;
+  activeEditors: EditorLocationType[] | [];
+  editorId?: number | null;
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editFormValues, setEditFormValues] =
+    useState<EditableCellFormType | null>(null);
   const columnHelper = createColumnHelper<EmployeeWithWorkdaysData>();
+
+  const handleOpenModal = ({
+    initialValue,
+    userId,
+    date,
+    userName,
+  }: OpenModalHandlerParams) => {
+    setEditFormValues({
+      initialValue,
+      userId,
+      date,
+      userName,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setEditFormValues(null);
+  };
+
+  useEffect(() => {
+    if (editFormValues !== null) {
+      // if (fetcher.state === 'idle' && editorId) {
+      //   fetcher.submit(
+      //     { rowIndex, columnId, editorId },
+      //     { method: 'POST', action: '/handleUserLocationSend' },
+      //   );
+      // }
+      setIsModalOpen(true);
+    } else {
+      // if (editorId) {
+      //   fetcher.submit(
+      //     { editorId },
+      //     { method: 'POST', action: '/handleUserLocationDelete' },
+      //   );
+      // }
+      setIsModalOpen(false);
+    }
+  }, [editFormValues]);
 
   const memoizedColumnWorkdaysDef = useMemo(() => {
     const dateArray = eachDayOfInterval({
@@ -44,14 +96,20 @@ export const MainEmployeesTable = ({
           const columnId = info.column.id;
           const userName = info.row.original.name;
           const workdaysArray = info.row.original.workdays;
+          const initialValue = generateHoursForCell(workdaysArray, day);
 
           return (
             <DefaultCell
-              initialValue={generateHoursForCell(workdaysArray, day)}
-              rowIndex={rowIndex}
-              userName={userName}
-              columnId={columnId}
+              initialValue={initialValue}
               isEditable={isEditable}
+              handleOpenModal={() =>
+                handleOpenModal({
+                  initialValue,
+                  userId: rowIndex,
+                  date: columnId,
+                  userName: userName,
+                })
+              }
             />
           );
         },
@@ -120,6 +178,20 @@ export const MainEmployeesTable = ({
           ))}
         </tbody>
       </table>
+
+      {isModalOpen && isEditable && editFormValues && (
+        <Modal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          className="max-md:!py-10"
+          handleCloseModal={handleCloseModal}
+        >
+          <EditableCellForm
+            {...editFormValues}
+            setEditFormValues={setEditFormValues}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

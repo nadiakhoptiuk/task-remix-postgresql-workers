@@ -16,6 +16,7 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
   isOpen,
   setIsOpen,
   children,
+  handleCloseModal,
   className = '',
   isMenu = false,
 }) => {
@@ -62,7 +63,11 @@ export const Modal: FC<ModalType & WithChildren & WithClassName> = ({
               >
                 {children}
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={
+                    handleCloseModal
+                      ? () => handleCloseModal()
+                      : () => setIsOpen(false)
+                  }
                   aria-label="Close modal"
                   className="absolute top-4 right-4 flex h-[50px] w-[50px] items-center justify-center hocus:text-navy-blue text-ui_accent_dark !m-0 base-transition"
                 >

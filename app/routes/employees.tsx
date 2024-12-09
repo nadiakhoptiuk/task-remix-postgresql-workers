@@ -1,10 +1,5 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
-import {
-  Link,
-  Outlet,
-  useLoaderData,
-  useRouteLoaderData,
-} from '@remix-run/react';
+import { Link, Outlet, useLoaderData } from '@remix-run/react';
 
 import { Container } from '~/components/ui-kit/Container/Container';
 import { EmployeesList } from '~/components/lists/EmployeesList';
@@ -15,7 +10,7 @@ import { getEmployeesList } from '~/models/employees.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 
 import { ROUTES } from '~/types/enums';
-import { EmployeeLoaderData, Role, RootLoaderData } from '~/types/common.types';
+import { EmployeeLoaderData, Role } from '~/types/common.types';
 import {
   NAVLINKS,
   PAGINATION_PARAMETR_NAME,
@@ -48,7 +43,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function EmployeesPage() {
   const { employeesList, query, actualPage, pagesCount } =
     useLoaderData<EmployeeLoaderData>();
-  const data = useRouteLoaderData<RootLoaderData>('root');
 
   return (
     <div className="md:flex h-[calc(100vh-140px)] md:h-[calc(100vh-96px)]">
@@ -69,10 +63,7 @@ export default function EmployeesPage() {
 
           <div>
             {employeesList.length > 0 ? (
-              <EmployeesList
-                data={employeesList}
-                activeEditors={data?.activeEditors}
-              />
+              <EmployeesList data={employeesList} />
             ) : (
               <p>No Employees found</p>
             )}

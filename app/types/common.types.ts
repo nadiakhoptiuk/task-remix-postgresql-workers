@@ -70,7 +70,6 @@ export interface HomePageLoaderData {
 
 export type RootLoaderData = {
   user: SerializedUserType;
-  activeEditors: EditorLocationType[] | [];
 };
 
 export type TotalDataChartType = {
@@ -182,12 +181,16 @@ export type existedUser = {
   createdAt: Date;
 };
 
-export type EditorLocationDBType = {
-  user: { name: string; location: { location: string; time: Date } | null };
+export type OpenModalHandlerParams = {
+  initialValue: string;
+  userId: number;
+  date: string;
+  userName: string;
 };
 
 export type EditorLocationType = {
   userName: string;
-  location: string;
+  columnId: string;
+  rowIndex: string;
   time: Date;
 };

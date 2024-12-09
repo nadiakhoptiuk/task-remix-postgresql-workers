@@ -9,23 +9,22 @@ import { deleteTagById, getTagById } from '~/models/tags.server';
 import { Container } from '~/components/ui-kit/Container/Container';
 import { SimpleUsersList } from '~/components/lists/SimpleUsersList';
 import { DeleteItemForm } from '~/components/forms/DeleteItemForm';
-import { sendEditorLocation } from '~/models/userLocation';
 
 import { ROUTES } from '~/types/enums';
 import { TagType } from '~/types/common.types';
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { tagId } = params;
   invariant(tagId, 'Tag id not found');
 
-  const session = await sessionStorage.getSession(
-    request.headers.get('cookie'),
-  );
-  const loggedUser = session.get('user');
-  await sendEditorLocation(
-    loggedUser.id,
-    `${ROUTES.TAGS}/${params.tagId}/edit`,
-  );
+  // const session = await sessionStorage.getSession(
+  //   request.headers.get('cookie'),
+  // );
+  // const loggedUser = session.get('user');
+  // await sendEditorLocation(
+  //   loggedUser.id,
+  //   `${ROUTES.TAGS}/${params.tagId}/edit`,
+  // );
 
   const tagData = await getTagById(Number(tagId));
 
