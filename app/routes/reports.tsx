@@ -13,7 +13,7 @@ import {
   getAverageDataForDay,
   getTopOrAntitopEmployees,
   getTotalDataByGroups,
-} from '~/models/employeesReports.server';
+} from '~/repository/employeesReports.server';
 import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
 
 import {

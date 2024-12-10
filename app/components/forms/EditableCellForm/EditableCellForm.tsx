@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
 import { format } from 'date-fns';
 import { useFetcher } from '@remix-run/react';
-import { useControlField, ValidatedForm } from 'remix-validated-form';
+import {
+  useControlField,
+  ValidatedForm,
+  useIsSubmitting,
+} from 'remix-validated-form';
 
 import { Input } from '~/components/ui-kit/Input';
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
 
 import { tableCellValidator } from '~/utils/validationSchemas/tableCellValidator';
 import { splitWorkingHours } from '~/utils/tableUtilities/generateHoursForCell';
+import { getSubmitBtnLabel } from '~/utils/uxUtilities/getSubmitBtnLabel';
 
 import {
   DispatchEditableCellFormType,
@@ -19,6 +24,7 @@ export const EditableCellForm: React.FC<
 > = ({ initialValue, userId, userName, date, setEditFormValues, editorId }) => {
   const arrayOfWorkingHours = splitWorkingHours(initialValue);
   const fetcher = useFetcher();
+  const isSubmitting = useIsSubmitting('workhours-form');
 
   const [billableValue, setBillableValue] = useControlField<string>(
     'workhours-form',
@@ -110,8 +116,11 @@ export const EditableCellForm: React.FC<
         />
       </div>
 
-      <SubmitButton className="max-w-[300px] mx-auto block">
-        Update
+      <SubmitButton
+        isSubmitting={isSubmitting}
+        className="max-w-[300px] mx-auto block"
+      >
+        {getSubmitBtnLabel(isSubmitting, 'update')}
       </SubmitButton>
     </ValidatedForm>
   );

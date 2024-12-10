@@ -10,8 +10,8 @@ import invariant from 'tiny-invariant';
 import { CreateOrUpdateTagForm } from '~/components/forms/CreateOrEditTagForm';
 import { Container } from '~/components/ui-kit/Container/Container';
 
-import { getAllEmployeesList } from '~/models/employees.server';
-import { getTagById, updateTag } from '~/models/tags.server';
+import { getAllEmployeesList } from '~/repository/employees.server';
+import { getTagById, updateTag } from '~/repository/tags.server';
 
 import { ROUTES } from '~/types/enums';
 

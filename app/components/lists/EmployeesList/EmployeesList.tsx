@@ -7,7 +7,7 @@ import s from './EmployeesList.module.css';
 
 export const EmployeesList = ({ data }: { data: EmployeeTypeWithId[] }) => {
   return (
-    <ul className="grid grid-cols-1 gap-y-4 min-h-[275px] md:min-h-[295px]">
+    <ul className="grid grid-cols-1 auto-rows-min gap-y-4 min-h-[275px] md:min-h-[295px]">
       {data.map(({ id, name, role }) => {
         return (
           <li key={id} className="h-max">

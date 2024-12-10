@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant';
 import { ImArrowLeft2 } from 'react-icons/im';
 
 import { Prisma } from '@prisma/client';
-import { deleteTagById, getTagById } from '~/models/tags.server';
+import { deleteTagById, getTagById } from '~/repository/tags.server';
 
 import { Container } from '~/components/ui-kit/Container/Container';
 import { SimpleUsersList } from '~/components/lists/SimpleUsersList';

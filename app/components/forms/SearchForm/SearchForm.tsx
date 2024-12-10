@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Form, useNavigation, useSubmit } from '@remix-run/react';
-import classNames from 'classnames';
-import { ImSpinner2 } from 'react-icons/im';
+
+import { BusyIndicator } from '~/components/ui-kit/BusyIndicator';
 
 import { SEARCH_PARAMETER_NAME } from '~/constants/constants';
 import s from './SearchForm.module.css';
@@ -42,13 +42,7 @@ export const SearchForm = ({ query }: { query: string }) => {
         value={queryString}
         onChange={e => setQueryString(e.target.value)}
       />
-      <ImSpinner2
-        aria-hidden
-        className={classNames(
-          'absolute top-0 left-2 ',
-          !searching ? 'hidden' : s.iconLoading,
-        )}
-      />
+      <BusyIndicator isLoading={!!searching} />
     </Form>
   );
 };

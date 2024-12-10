@@ -43,7 +43,7 @@ export async function getTagsList(
 
   const tags = await prisma.tag.findMany({
     where: { name: { contains: query, mode: 'insensitive' } },
-    skip: (actualPage - 1) * PAGINATION_LIMIT,
+    skip: actualPage !== 0 ? (actualPage - 1) * PAGINATION_LIMIT : 0,
     take: PAGINATION_LIMIT,
     select: { id: true, name: true },
     orderBy: [{ name: 'asc' }],

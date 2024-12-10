@@ -6,7 +6,7 @@ import { CreateOrUpdateEmployeeForm } from '~/components/forms/CreateOrEditEmplo
 import { Container } from '~/components/ui-kit/Container/Container';
 import { ROLE_SELECT_OPTIONS } from '~/constants/constants';
 
-import { createNewUser } from '~/models/employees.server';
+import { createNewUser } from '~/repository/employees.server';
 import { ROLES, ROUTES } from '~/types/enums';
 
 export const loader = () => {
@@ -43,14 +43,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return Response.json({ error: 'Invalid role' }, { status: 400 });
   }
 
-  await createNewUser({ name, email, role, password });
+  const createdUser = await createNewUser({ name, email, role, password });
 
-  return redirect(ROUTES.EMPLOYEES);
+  return redirect(`${ROUTES.EMPLOYEES}/${createdUser.id}`);
 };
 
 export default function NewEmployeePage() {
   return (
-    <section className="section bg-ui_lighter h-full">
+    <section className="section bg-ui_lighter">
       <Container>
         <h2 className="text-ui_accent_dark">Create new employee</h2>
 

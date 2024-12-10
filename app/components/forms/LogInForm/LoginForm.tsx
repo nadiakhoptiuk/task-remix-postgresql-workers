@@ -1,4 +1,8 @@
-import { useControlField, ValidatedForm } from 'remix-validated-form';
+import {
+  useControlField,
+  useIsSubmitting,
+  ValidatedForm,
+} from 'remix-validated-form';
 
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
 import { Input } from '~/components/ui-kit/Input';
@@ -14,6 +18,7 @@ export const LoginForm = () => {
     'user-auth-form',
     'password',
   );
+  const isSubmitting = useIsSubmitting('user-auth-form');
 
   return (
     <ValidatedForm
@@ -40,7 +45,9 @@ export const LoginForm = () => {
         placeholder="password"
       />
 
-      <SubmitButton>Log in</SubmitButton>
+      <SubmitButton isSubmitting={isSubmitting}>
+        {isSubmitting ? 'Verifying...' : 'Log in'}
+      </SubmitButton>
     </ValidatedForm>
   );
 };

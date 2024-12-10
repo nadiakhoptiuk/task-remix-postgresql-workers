@@ -10,6 +10,10 @@ export type WithClassName = {
   className?: string;
 };
 
+export type WithIsSubmitting = {
+  isSubmitting?: boolean;
+};
+
 export interface EmployeeLoaderData {
   employeesList: EmployeeTypeWithId[];
   query: string;
@@ -115,11 +119,10 @@ export type BaseItemType = {
   name: string;
 };
 
-export type FormType = {
-  formType: 'create' | 'update';
-};
+export type FormType = 'create' | 'update';
 
 export type TagFormType = {
+  formType: FormType;
   defaultValues?: {
     name: string;
     connectedUsers?: {

@@ -1,0 +1,3 @@
+.disabled {
+  @apply !bg-ui_dark_grey border-ui_dark_grey;
+}

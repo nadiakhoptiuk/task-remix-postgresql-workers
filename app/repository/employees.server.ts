@@ -52,7 +52,7 @@ export async function getEmployeesList(
         mode: 'insensitive',
       },
     },
-    skip: (actualPage - 1) * PAGINATION_LIMIT,
+    skip: actualPage !== 0 ? (actualPage - 1) * PAGINATION_LIMIT : 0,
     take: PAGINATION_LIMIT,
     select: { id: true, name: true, role: true },
     orderBy: [{ role: 'asc' }, { name: 'asc' }],

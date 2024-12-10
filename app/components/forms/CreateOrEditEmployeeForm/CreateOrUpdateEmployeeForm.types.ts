@@ -1,11 +1,11 @@
-import { RoleSelectOption } from '~/types/common.types';
+import { FormType, RoleSelectOption } from '~/types/common.types';
 
-export interface EmployeeFormProps {
-  formType: 'create' | 'update';
+export type EmployeeFormProps = {
+  formType: FormType;
   defaultValues?: {
     name: string;
     email: string;
     role: RoleSelectOption;
     password: string;
   };
-}
+};

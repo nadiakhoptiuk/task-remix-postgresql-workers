@@ -4,8 +4,8 @@ import { ActionFunctionArgs, redirect } from '@remix-run/node';
 import { Container } from '~/components/ui-kit/Container/Container';
 import { CreateOrUpdateTagForm } from '~/components/forms/CreateOrEditTagForm';
 
-import { createNewTag } from '~/models/tags.server';
-import { getAllEmployeesList } from '~/models/employees.server';
+import { createNewTag } from '~/repository/tags.server';
+import { getAllEmployeesList } from '~/repository/employees.server';
 
 import { ROUTES } from '~/types/enums';
 
@@ -50,7 +50,7 @@ export default function NewTagPage() {
   const { users } = useLoaderData<typeof loader>();
 
   return (
-    <section className="section bg-ui_lighter h-full">
+    <section className="section bg-ui_lighter">
       <Container>
         <h2 className="text-ui_accent_dark">Create new Tag</h2>
 

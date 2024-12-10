@@ -11,7 +11,7 @@ import invariant from 'tiny-invariant';
 import { CreateOrUpdateEmployeeForm } from '~/components/forms/CreateOrEditEmployeeForm';
 import { Container } from '~/components/ui-kit/Container/Container';
 
-import { getEmployeeById, updateUserById } from '~/models/employees.server';
+import { getEmployeeById, updateUserById } from '~/repository/employees.server';
 
 import { ROLE_SELECT_OPTIONS } from '~/constants/constants';
 import { ROLES, ROUTES } from '~/types/enums';

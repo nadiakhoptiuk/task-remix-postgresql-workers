@@ -6,7 +6,7 @@ import { EmployeesList } from '~/components/lists/EmployeesList';
 import { SearchForm } from '~/components/forms/SearchForm';
 import { PaginationBar } from '~/components/navigation/PaginationBar';
 
-import { getEmployeesList } from '~/models/employees.server';
+import { getEmployeesList } from '~/repository/employees.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 
 import { ROUTES } from '~/types/enums';
@@ -46,7 +46,7 @@ export default function EmployeesPage() {
 
   return (
     <div className="md:flex h-[calc(100vh-140px)] md:h-[calc(100vh-96px)]">
-      <section className="section flex-1 flex-grow md:border-r-[2px] border-ui_grey ">
+      <section className="section flex-1 flex-grow md:border-r-[2px] border-ui_grey h-screen fixed">
         <Container>
           <h1 className="md:visually-hidden">All Employees</h1>
 
@@ -69,11 +69,13 @@ export default function EmployeesPage() {
             )}
           </div>
 
-          <PaginationBar page={actualPage} pagesCount={pagesCount} />
+          {employeesList.length > 0 && (
+            <PaginationBar page={actualPage} pagesCount={pagesCount} />
+          )}
         </Container>
       </section>
 
-      <div className="flex-1">
+      <div className="flex-1 pl-[510px] overflow-y-auto">
         <Outlet />
       </div>
     </div>

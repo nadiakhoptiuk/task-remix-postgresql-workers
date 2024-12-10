@@ -1,3 +1,4 @@
+import { useNavigation } from '@remix-run/react';
 import { SingleValue } from 'react-select';
 import { useControlField, ValidatedForm } from 'remix-validated-form';
 
@@ -6,6 +7,7 @@ import { Input } from '~/components/ui-kit/Input';
 import { SingleSelect } from '~/components/ui-kit/SingleSelect';
 
 import { createOrEditUserValidator } from '~/utils/validationSchemas/createOrEditEmployeeSchema';
+import { getSubmitBtnLabel } from '~/utils/uxUtilities/getSubmitBtnLabel';
 
 import { ROLE_SELECT_OPTIONS } from '~/constants/constants';
 import { OptionType } from '~/types/common.types';
@@ -31,6 +33,8 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
     'user-form',
     'password',
   );
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === 'submitting';
 
   return (
     <ValidatedForm
@@ -78,7 +82,9 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
         placeholder="password"
       />
 
-      <SubmitButton>{formType === 'create' ? 'Create' : 'Update'}</SubmitButton>
+      <SubmitButton isSubmitting={isSubmitting}>
+        {getSubmitBtnLabel(isSubmitting, formType)}
+      </SubmitButton>
     </ValidatedForm>
   );
 };

@@ -1,4 +1,4 @@
-import { sendUserLocation } from '~/models/userLocation';
+import { sendUserLocation } from '~/repository/userLocation.server';
 
 export async function action({ request }: { request: Request }) {
   const formData = new URLSearchParams(await request.text());

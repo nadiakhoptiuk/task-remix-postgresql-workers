@@ -13,7 +13,7 @@ export const BaseNavList = ({
   baseRoute: (typeof ROUTES)[keyof typeof ROUTES];
 }) => {
   return (
-    <ul className="grid grid-cols-1 gap-y-4 min-h-[275px] md:min-h-[295px]">
+    <ul className="grid grid-cols-1 auto-rows-min gap-y-4 min-h-[275px] md:min-h-[295px]">
       {data.map(({ id, name }) => {
         return (
           <li key={id} className="h-max relative">

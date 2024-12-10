@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 
-import { deleteAllUsersLocations } from '~/models/userLocation';
+import { deleteAllUsersLocations } from '~/repository/userLocation.server';
 
 export const scheduleCleaningLocationTask = cron.schedule(
   '*/5 * * * *',

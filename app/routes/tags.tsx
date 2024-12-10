@@ -6,7 +6,7 @@ import { BaseNavList } from '~/components/lists/BaseNavList';
 import { SearchForm } from '~/components/forms/SearchForm';
 import { PaginationBar } from '~/components/navigation/PaginationBar';
 
-import { getTagsList } from '~/models/tags.server';
+import { getTagsList } from '~/repository/tags.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
 
 import {
@@ -66,11 +66,13 @@ export default function TagsPage() {
             <p>No tags found</p>
           )}
 
-          <PaginationBar page={actualPage} pagesCount={pagesCount} />
+          {tagsList.length > 0 && (
+            <PaginationBar page={actualPage} pagesCount={pagesCount} />
+          )}
         </Container>
       </section>
 
-      <div className="flex-1">
+      <div className="flex-1 pl-[510px] overflow-y-auto">
         <Outlet />
       </div>
     </div>

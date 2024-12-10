@@ -11,7 +11,7 @@ import { ImArrowLeft2 } from 'react-icons/im';
 import { DeleteItemForm } from '~/components/forms/DeleteItemForm';
 import { Container } from '~/components/ui-kit/Container/Container';
 
-import { deleteUserById, getEmployeeById } from '~/models/employees.server';
+import { deleteUserById, getEmployeeById } from '~/repository/employees.server';
 
 import { ROUTES } from '~/types/enums';
 

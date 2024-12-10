@@ -1,4 +1,5 @@
 import { MultiValue } from 'react-select';
+import { useNavigation } from '@remix-run/react';
 import { useControlField, ValidatedForm } from 'remix-validated-form';
 
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
@@ -6,10 +7,11 @@ import { Input } from '~/components/ui-kit/Input';
 import { MultiSelect } from '~/components/ui-kit/MultiSelect';
 
 import { tagValidator } from '~/utils/validationSchemas/tagSchema';
+import { getSubmitBtnLabel } from '~/utils/uxUtilities/getSubmitBtnLabel';
 
-import { FormType, OptionType, TagFormType } from '~/types/common.types';
+import { OptionType, TagFormType } from '~/types/common.types';
 
-export const CreateOrUpdateTagForm: React.FC<TagFormType & FormType> = ({
+export const CreateOrUpdateTagForm: React.FC<TagFormType> = ({
   formType,
   users,
   defaultValues,
@@ -21,6 +23,8 @@ export const CreateOrUpdateTagForm: React.FC<TagFormType & FormType> = ({
   const [usersListValue, setUsersListValue] = useControlField<
     MultiValue<OptionType>
   >('tag-form', 'users');
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === 'submitting';
 
   return (
     <ValidatedForm
@@ -52,7 +56,9 @@ export const CreateOrUpdateTagForm: React.FC<TagFormType & FormType> = ({
         options={users}
       />
 
-      <SubmitButton>{formType === 'create' ? 'Create' : 'Update'}</SubmitButton>
+      <SubmitButton isSubmitting={isSubmitting}>
+        {getSubmitBtnLabel(isSubmitting, formType)}
+      </SubmitButton>
     </ValidatedForm>
   );
 };

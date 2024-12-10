@@ -17,10 +17,10 @@ import { WeekPicker } from '~/components/ui-kit/WeekPicker';
 import { FilterSelect } from '~/components/ui-kit/FilterSelect';
 
 import { getAuthUser } from '~/services/auth.server';
-import { getEmployeesWithDaysList } from '~/models/employees.server';
-import { updateUserWorkHours } from '~/models/employeesWorkhours.server';
+import { getEmployeesWithDaysList } from '~/repository/employees.server';
+import { updateUserWorkHours } from '~/repository/employeesWorkhours.server';
 import { getStartAndEndOfWeek } from '~/utils/getStartAndEndOfWeek';
-import { getAllTagsList } from '~/models/tags.server';
+import { getAllTagsList } from '~/repository/tags.server';
 
 import { HomePageLoaderData } from '~/types/common.types';
 import { ROLES } from '~/types/enums';
@@ -32,7 +32,7 @@ import {
 import {
   deleteCurrentUserLocation,
   getAllActiveEditorsLocation,
-} from '~/models/userLocation';
+} from '~/repository/userLocation.server';
 import { sessionStorage } from '~/services/session.server';
 
 export const meta: MetaFunction = () => {
@@ -120,6 +120,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   try {
     await deleteCurrentUserLocation(loggedUser.id);
+
     await updateUserWorkHours({
       userId: Number(userId),
       date: date,
