@@ -12,7 +12,7 @@ import { RemixServer } from '@remix-run/react';
 import { isbot } from 'isbot';
 import { renderToPipeableStream } from 'react-dom/server';
 
-import { scheduleDeletingUserTask } from './services/autoDeletingUserLocation.server';
+import { scheduleCleaningLocationTask } from './services/scheduleCleaningLocation.server';
 
 const ABORT_DELAY = 5_000;
 
@@ -26,7 +26,7 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // loadContext: AppLoadContext,
 ) {
-  scheduleDeletingUserTask.start();
+  scheduleCleaningLocationTask.start();
 
   return isbot(request.headers.get('user-agent') || '')
     ? handleBotRequest(
