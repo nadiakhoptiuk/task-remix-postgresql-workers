@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 
 import { BarAvgDataType } from '~/types/common.types';
+import { CHARTS_COLORS } from '~/constants/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -46,11 +47,6 @@ export const BarChartByDays = ({ data }: { data: BarAvgDataType[] }) => {
 
   const days = data.map(({ date }) => format(new Date(date), 'EEEE'));
   const labels = ['Billable', 'Not Billable', 'Absent'];
-  const colors = [
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 99, 132, 0.2)',
-  ];
 
   const billableData = data.map(({ billable }) => {
     return billable;
@@ -67,7 +63,7 @@ export const BarChartByDays = ({ data }: { data: BarAvgDataType[] }) => {
   const datasets = labels.map((label, index) => ({
     label: label,
     data: arrayOfData[index],
-    backgroundColor: colors[index],
+    backgroundColor: CHARTS_COLORS[index],
     hoverOffset: 4,
     borderWidth: 2,
   }));

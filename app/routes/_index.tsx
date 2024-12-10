@@ -29,6 +29,11 @@ import {
   START_RANGE_PARAMETER_NAME,
   TAG_FILTER_PARAMETER_NAME,
 } from '~/constants/constants';
+import {
+  deleteCurrentUserLocation,
+  getAllActiveEditorsLocation,
+} from '~/models/userLocation';
+import { sessionStorage } from '~/services/session.server';
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,6 +45,11 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const loggedUser = await getAuthUser(request);
+
+    const activeEditors =
+      loggedUser !== null && loggedUser.role !== ROLES.USER
+        ? await getAllActiveEditorsLocation(loggedUser.id)
+        : [];
 
     const url = new URL(request.url);
     const startParam = url.searchParams.get(START_RANGE_PARAMETER_NAME);
@@ -63,7 +73,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       : [];
 
     return Response.json({
-      user: loggedUser,
+      user: loggedUser ? loggedUser : null,
+      activeEditors: activeEditors.map(({ user: { name }, ...rest }) => ({
+        userName: name,
+        ...rest,
+      })),
       allEmployees,
       start,
       end,
@@ -99,7 +113,13 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
 
+  const session = await sessionStorage.getSession(
+    request.headers.get('cookie'),
+  );
+  const loggedUser = session.get('user');
+
   try {
+    await deleteCurrentUserLocation(loggedUser.id);
     await updateUserWorkHours({
       userId: Number(userId),
       date: date,
@@ -132,26 +152,19 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Index() {
-  const {
-    user: { role: userRole },
-    allEmployees,
-    start,
-    end,
-    tagFIlterParam,
-    allTags,
-  } = useLoaderData<HomePageLoaderData>();
+  const data = useLoaderData<HomePageLoaderData>();
 
   return (
     <section className="section flex justify-center">
       <ResponsiveContainer>
         <h1 className="mb-4">Employees Table</h1>
         <div className="flex max-md:flex-col items-center justify-center gap-y-4 gap-x-8 mx-auto w-fit mb-10">
-          <WeekPicker start={start} end={end} />
+          <WeekPicker start={data.start} end={data.end} />
 
           <FilterSelect
             paramsName={TAG_FILTER_PARAMETER_NAME}
-            value={tagFIlterParam}
-            options={allTags}
+            value={data.tagFIlterParam}
+            options={data.allTags}
             id="tag-filter-select"
             heading="Filter by tag:"
             className="w-auto"
@@ -159,12 +172,14 @@ export default function Index() {
           />
         </div>
 
-        {allEmployees !== null && (
+        {data.allEmployees !== null && (
           <MainEmployeesTable
-            data={allEmployees}
-            isEditable={userRole !== ROLES.USER}
-            start={start}
-            end={end}
+            data={data.allEmployees}
+            activeEditors={data.activeEditors}
+            isEditable={data?.user !== null && data?.user?.role !== ROLES.USER}
+            start={data.start}
+            end={data.end}
+            editorId={data.user.id || null}
           />
         )}
       </ResponsiveContainer>

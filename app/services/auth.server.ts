@@ -70,7 +70,7 @@ authenticator.use(
 export const getAuthUser = async (
   request: Request,
   options?: GetCurrentUserOptions,
-): Promise<SerializedUserType> => {
+): Promise<SerializedUserType | null> => {
   const { failureRedirect, successRedirect } = options || {};
 
   const sessionUser = await authenticator.isAuthenticated(request);
@@ -84,6 +84,8 @@ export const getAuthUser = async (
           'Set-Cookie': await destroySession(session),
         },
       });
+    } else {
+      return null;
     }
   }
 
@@ -111,7 +113,7 @@ export const getAuthUser = async (
 export const getAuthUserOrRedirect = async (
   request: Request,
   failureRedirect: (typeof ROUTES)[keyof typeof ROUTES],
-): Promise<SerializedUserType> => {
+): Promise<SerializedUserType | null> => {
   return await getAuthUser(request, { failureRedirect: failureRedirect });
 };
 
@@ -127,6 +129,9 @@ export const getAuthUserAndVerifyAccessOrRedirect = async (
   const sessionUser = await getAuthUser(request, {
     failureRedirect: failureRedirect,
   });
+  if (!sessionUser) {
+    throw redirect(failureRedirect);
+  }
   verifyUserAccess(sessionUser.role, allowedRoles);
 
   if (!verifyUserAccess) {

@@ -18,6 +18,15 @@ import { ROLES, ROUTES } from '~/types/enums';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.employeeId, 'Employee id not found');
+  // const session = await sessionStorage.getSession(
+  //   request.headers.get('cookie'),
+  // );
+  // const loggedUser = session.get('user');
+  // await sendEditorLocation(
+  //   loggedUser.id,
+  //   `${ROUTES.EMPLOYEES}/${params.employeeId}/edit`,
+  // );
+
   const employeeData = await getEmployeeById(Number(params.employeeId));
 
   if (employeeData !== null) {

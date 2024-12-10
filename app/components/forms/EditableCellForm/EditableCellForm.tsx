@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { format } from 'date-fns';
+import { useFetcher } from '@remix-run/react';
 import { useControlField, ValidatedForm } from 'remix-validated-form';
 
 import { Input } from '~/components/ui-kit/Input';
@@ -8,15 +9,16 @@ import { SubmitButton } from '~/components/ui-kit/SubmitButton';
 import { tableCellValidator } from '~/utils/validationSchemas/tableCellValidator';
 import { splitWorkingHours } from '~/utils/tableUtilities/generateHoursForCell';
 
-import { EditableCellFormType } from './EditableCellForm.types';
+import {
+  DispatchEditableCellFormType,
+  EditableCellFormType,
+} from './EditableCellForm.types';
 
-export const EditableCellForm: React.FC<EditableCellFormType> = ({
-  initialValue,
-  userId,
-  userName,
-  date,
-}) => {
+export const EditableCellForm: React.FC<
+  EditableCellFormType & DispatchEditableCellFormType
+> = ({ initialValue, userId, userName, date, setEditFormValues, editorId }) => {
   const arrayOfWorkingHours = splitWorkingHours(initialValue);
+  const fetcher = useFetcher();
 
   const [billableValue, setBillableValue] = useControlField<string>(
     'workhours-form',
@@ -31,12 +33,25 @@ export const EditableCellForm: React.FC<EditableCellFormType> = ({
     'workdayAbsent',
   );
 
+  useEffect(() => {
+    if (editorId) {
+      fetcher.submit(
+        { rowIndex: userId, columnId: date, editorId },
+        { method: 'POST', action: '/handleUserLocationSend' },
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <ValidatedForm
       method="post"
       id="workhours-form"
       validator={tableCellValidator}
-      className="max-md:w-full md:w-[300px] mx-auto"
+      className="w-full mx-auto"
+      onSubmit={() => {
+        setEditFormValues(null);
+      }}
     >
       <div className="grid grid-cols-1 gap-y-4 gap-x-24 mb-10">
         <label

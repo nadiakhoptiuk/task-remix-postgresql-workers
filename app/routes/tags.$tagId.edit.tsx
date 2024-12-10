@@ -18,6 +18,15 @@ import { ROUTES } from '~/types/enums';
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { tagId } = params;
   invariant(tagId, 'Tag id not found');
+
+  // const session = await sessionStorage.getSession(
+  //   request.headers.get('cookie'),
+  // );
+  // const loggedUser = session.get('user');
+  // await sendEditorLocation(
+  //   loggedUser.id,
+  //   `${ROUTES.TAGS}/${params.tagId}/edit`,
+  // );
   const tagData = await getTagById(Number(tagId));
 
   const usersList = await getAllEmployeesList();

@@ -10,6 +10,7 @@ import {
 } from 'chart.js';
 
 import { TotalDataChartType } from '~/types/common.types';
+import { CHARTS_COLORS } from '~/constants/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -38,16 +39,11 @@ export const PieChart = ({ data }: { data: TotalDataChartType }) => {
   }
 
   const labels = ['Billable', 'Not Billable', 'Absent'];
-  const colors = [
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 99, 132, 0.2)',
-  ];
 
   const chartData = [
     {
       data: Object.values(data),
-      backgroundColor: colors,
+      backgroundColor: CHARTS_COLORS,
       hoverOffset: 4,
       borderWidth: 2,
     },

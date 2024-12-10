@@ -4,6 +4,7 @@ import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/ui-kit/Container/Container';
 import { BaseNavList } from '~/components/lists/BaseNavList';
 import { SearchForm } from '~/components/forms/SearchForm';
+import { PaginationBar } from '~/components/navigation/PaginationBar';
 
 import { getTagsList } from '~/models/tags.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
@@ -15,7 +16,6 @@ import {
 } from '~/constants/constants';
 import { Role, TagsLoaderData } from '~/types/common.types';
 import { ROUTES } from '~/types/enums';
-import { PaginationBar } from '~/components/navigation/PaginationBar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =

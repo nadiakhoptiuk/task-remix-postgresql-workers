@@ -4,6 +4,7 @@ import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { Container } from '~/components/ui-kit/Container/Container';
 import { EmployeesList } from '~/components/lists/EmployeesList';
 import { SearchForm } from '~/components/forms/SearchForm';
+import { PaginationBar } from '~/components/navigation/PaginationBar';
 
 import { getEmployeesList } from '~/models/employees.server';
 import { getAuthUserAndVerifyAccessOrRedirect } from '~/services/auth.server';
@@ -15,7 +16,6 @@ import {
   PAGINATION_PARAMETR_NAME,
   SEARCH_PARAMETER_NAME,
 } from '~/constants/constants';
-import { PaginationBar } from '~/components/navigation/PaginationBar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const pageAllowedRoles: Role[] =

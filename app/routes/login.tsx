@@ -55,9 +55,11 @@ export default function LoginPage() {
   }, [error]);
 
   return (
-    <section className="h-screen section">
+    <section className="section">
       <Container>
-        <h1>Please enter your credentials to log in</h1>
+        <p className="text-center text-xl mb-8">
+          Please enter your credentials to log in
+        </p>
 
         <LoginForm />
       </Container>

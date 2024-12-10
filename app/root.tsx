@@ -15,7 +15,7 @@ import { Header } from './components/layout/Header';
 
 import { getAuthUser } from './services/auth.server';
 
-import { SerializedUserType } from './types/common.types';
+import { RootLoaderData } from './types/common.types';
 
 import './tailwind.css';
 
@@ -34,7 +34,13 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    return await getAuthUser(request);
+    const loggedUser = await getAuthUser(request);
+
+    if (loggedUser === null) {
+      return { user: null, activeEditors: [] };
+    }
+
+    return { user: loggedUser };
   } catch (error) {
     if (error instanceof Response) return error;
     return error;
@@ -42,7 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const data = useLoaderData<SerializedUserType>();
+  const data = useLoaderData<RootLoaderData>();
 
   return (
     <html lang="en">
@@ -54,7 +60,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
 
       <body>
-        <Header userRole={data?.role} />
+        <Header userRole={data?.user?.role} />
         <main className="min-h-full max-md:pt-[82px] md:pt-[91px]">
           {children}
         </main>

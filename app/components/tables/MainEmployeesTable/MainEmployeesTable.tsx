@@ -1,31 +1,81 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useFetcher } from '@remix-run/react';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useMemo } from 'react';
 import { eachDayOfInterval, format } from 'date-fns';
 import { UTCDate } from '@date-fns/utc';
 
+import { Modal } from '~/components/ui-kit/Modal';
+import { EditableCellForm } from '~/components/forms/EditableCellForm';
 import { DefaultCell } from '../DefaultCell';
 
 import { generateHoursForCell } from '~/utils/tableUtilities/generateHoursForCell';
+import { getEditorsAtCell } from '~/utils/tableUtilities/getEditorsAtCell';
 
-import { EmployeeWithWorkdaysData } from '~/types/common.types';
+import {
+  EditorLocationType,
+  EmployeeWithWorkdaysData,
+  OpenModalHandlerParams,
+} from '~/types/common.types';
+import { EditableCellFormType } from '~/components/forms/EditableCellForm/EditableCellForm.types';
 
 export const MainEmployeesTable = ({
   data,
   start,
   end,
   isEditable,
+  activeEditors,
+  editorId,
 }: {
   data: EmployeeWithWorkdaysData[];
-  isEditable: boolean;
   start: string;
   end: string;
+  isEditable: boolean;
+  activeEditors: EditorLocationType[] | [];
+  editorId?: number | null;
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editFormValues, setEditFormValues] =
+    useState<EditableCellFormType | null>(null);
+  const fetcher = useFetcher();
+
   const columnHelper = createColumnHelper<EmployeeWithWorkdaysData>();
+
+  const handleOpenModal = ({
+    initialValue,
+    userId,
+    date,
+    userName,
+  }: OpenModalHandlerParams) => {
+    setEditFormValues({
+      initialValue,
+      userId,
+      date,
+      userName,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setEditFormValues(null);
+    if (editorId) {
+      fetcher.submit(
+        { editorId },
+        { method: 'POST', action: '/handleUserLocationDelete' },
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (editFormValues !== null) {
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
+    }
+  }, [editFormValues]);
 
   const memoizedColumnWorkdaysDef = useMemo(() => {
     const dateArray = eachDayOfInterval({
@@ -44,26 +94,40 @@ export const MainEmployeesTable = ({
           const columnId = info.column.id;
           const userName = info.row.original.name;
           const workdaysArray = info.row.original.workdays;
+          const initialValue = generateHoursForCell(workdaysArray, day);
+
+          const editorsAtCurrentCell =
+            activeEditors.length > 0
+              ? getEditorsAtCell(activeEditors, columnId, rowIndex)
+              : [];
 
           return (
             <DefaultCell
-              initialValue={generateHoursForCell(workdaysArray, day)}
-              rowIndex={rowIndex}
-              userName={userName}
-              columnId={columnId}
+              editorsAtCurrentCell={editorsAtCurrentCell}
+              initialValue={initialValue}
               isEditable={isEditable}
+              handleOpenModal={() =>
+                handleOpenModal({
+                  initialValue,
+                  userId: rowIndex,
+                  date: columnId,
+                  userName: userName,
+                })
+              }
             />
           );
         },
       });
     });
-  }, [columnHelper, end, isEditable, start]);
+  }, [activeEditors, columnHelper, end, isEditable, start]);
 
   const memoizedColumns = useMemo(
     () => [
       columnHelper.accessor('name', {
         header: () => <span>Name</span>,
-        cell: info => <span className="text-nowrap">{info.getValue()}</span>,
+        cell: info => (
+          <span className="text-nowrap px-2 py-2">{info.getValue()}</span>
+        ),
         footer: info => info.column.id,
       }),
       columnHelper.group({
@@ -111,7 +175,7 @@ export const MainEmployeesTable = ({
               {row.getVisibleCells().map(cell => (
                 <td
                   key={cell.id}
-                  className="border-ui_grey border-[1px] px-2 py-2 !w-fit min-h-[90px]"
+                  className="border-ui_grey border-[1px] !w-fit min-h-[90px] relative"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
@@ -120,6 +184,21 @@ export const MainEmployeesTable = ({
           ))}
         </tbody>
       </table>
+
+      {isModalOpen && isEditable && editFormValues && (
+        <Modal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          className="max-md:!py-10"
+          handleCloseModal={handleCloseModal}
+        >
+          <EditableCellForm
+            {...editFormValues}
+            setEditFormValues={setEditFormValues}
+            editorId={editorId}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

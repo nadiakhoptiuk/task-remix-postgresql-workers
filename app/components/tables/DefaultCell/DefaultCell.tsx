@@ -1,47 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
+import classNames from 'classnames';
 
-import { Modal } from '~/components/ui-kit/Modal';
-import { EditableCellForm } from '~/components/forms/EditableCellForm';
+import { DefaultCellType, InitialValueType } from './DefaultCell.types';
+import { EditorLabel } from '~/components/ui-kit/EditorLabel';
 
-import { DefaultCellType } from './DefaultCell.types';
-
-export const DefaultCell: React.FC<DefaultCellType> = ({
+export const DefaultCell: React.FC<DefaultCellType & InitialValueType> = ({
   initialValue,
-  rowIndex,
-  columnId,
-  userName,
+  editorId: _editorId,
+  handleOpenModal,
   isEditable = false,
+  editorsAtCurrentCell,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <>
+      {!isEditable && <span className="px-2 py-2">{initialValue}</span>}
+
       {isEditable && (
         <button
           type="button"
-          onClick={() => setIsModalOpen(true)}
-          className="w-full h-full block text-nowrap"
+          onClick={handleOpenModal}
+          className={classNames(
+            'w-full h-full block text-nowrap px-2 py-2',
+            editorsAtCurrentCell.length > 0 &&
+              'border-[#4bc0c0] border-2 bg-ui_light',
+          )}
         >
           {initialValue}
         </button>
       )}
 
-      {!isEditable && <span>{initialValue}</span>}
-
-      {isModalOpen && isEditable && (
-        <Modal
-          isOpen={isModalOpen}
-          setIsOpen={setIsModalOpen}
-          className="max-md:!py-10"
-        >
-          <EditableCellForm
-            initialValue={initialValue}
-            userId={rowIndex}
-            date={columnId}
-            userName={userName}
-          />
-        </Modal>
-      )}
+      {editorsAtCurrentCell.length > 0 &&
+        editorsAtCurrentCell.map(({ userName, rowIndex }) => (
+          <EditorLabel key={rowIndex} userName={userName} />
+        ))}
     </>
   );
 };

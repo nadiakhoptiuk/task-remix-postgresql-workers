@@ -60,12 +60,17 @@ export interface EmployeeWithWorkdaysData {
 
 export interface HomePageLoaderData {
   user: SerializedUserType;
+  activeEditors: EditorLocationType[] | [];
   allEmployees: EmployeeWithWorkdaysData[];
   start: string;
   end: string;
   tagFIlterParam: string;
   allTags: OptionType[];
 }
+
+export type RootLoaderData = {
+  user: SerializedUserType;
+};
 
 export type TotalDataChartType = {
   billable: number;
@@ -174,4 +179,18 @@ export type existedUser = {
   name: string;
   role: User['role'];
   createdAt: Date;
+};
+
+export type OpenModalHandlerParams = {
+  initialValue: string;
+  userId: number;
+  date: string;
+  userName: string;
+};
+
+export type EditorLocationType = {
+  userName: string;
+  columnId: string;
+  rowIndex: string;
+  time: Date;
 };

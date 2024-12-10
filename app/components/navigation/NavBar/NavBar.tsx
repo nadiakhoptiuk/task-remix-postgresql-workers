@@ -1,9 +1,9 @@
-import { MouseEventHandler } from 'react';
 import { NavLink } from '@remix-run/react';
 import classNames from 'classnames';
 
 import { ROLES } from '~/types/enums';
 import { NAVLINKS as navlinks } from '~/constants/constants';
+
 import s from './NavBar.module.css';
 
 export const NavBar = ({
@@ -15,7 +15,7 @@ export const NavBar = ({
   userRole: (typeof ROLES)[keyof typeof ROLES];
   className?: string;
   isMenu?: boolean;
-  closeMenu?: MouseEventHandler<HTMLAnchorElement> | undefined;
+  closeMenu?: () => void | undefined;
 }) => {
   return (
     <nav className={className}>
@@ -33,7 +33,7 @@ export const NavBar = ({
           if (!isShown) return null;
 
           return (
-            <li key={index} className="h-full">
+            <li key={index} className="h-full relative">
               <NavLink
                 to={route}
                 className={({ isActive }) =>
