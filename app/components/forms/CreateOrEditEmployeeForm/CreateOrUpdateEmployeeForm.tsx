@@ -1,10 +1,13 @@
-import { useNavigation } from '@remix-run/react';
 import { SingleValue } from 'react-select';
-import { useControlField, ValidatedForm } from 'remix-validated-form';
+import {
+  useControlField,
+  useIsSubmitting,
+  ValidatedForm,
+} from 'remix-validated-form';
 
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
-import { Input } from '~/components/ui-kit/Input';
 import { SingleSelect } from '~/components/ui-kit/SingleSelect';
+import { SimpleInput } from '~/components/ui-kit/SimpleInput';
 
 import { createOrEditUserValidator } from '~/utils/validationSchemas/createOrEditEmployeeSchema';
 import { getSubmitBtnLabel } from '~/utils/uxUtilities/getSubmitBtnLabel';
@@ -17,41 +20,22 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
   formType,
   defaultValues,
 }) => {
-  const [nameValue, setNameValue] = useControlField<string>(
-    'user-form',
-    'name',
-  );
-  const [emailValue, setEmailValue] = useControlField<string>(
-    'user-form',
-    'email',
-  );
   const [roleValue, setRoleValue] = useControlField<SingleValue<OptionType>>(
     'user-form',
     'role',
   );
-  const [passwordValue, setPasswordValue] = useControlField<string>(
-    'user-form',
-    'password',
-  );
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === 'submitting';
+
+  const isSubmitting = useIsSubmitting('user-form');
 
   return (
     <ValidatedForm
       validator={createOrEditUserValidator}
       id="user-form"
+      defaultValues={{ name: defaultValues?.name, email: defaultValues?.email }}
       method="post"
       className="grid grid-cols-1 gap-y-8 max-w-[600px] mx-auto"
     >
-      <Input
-        name="name"
-        defaultValue={defaultValues?.name}
-        value={nameValue}
-        setValue={setNameValue}
-        type="text"
-        labelText="Name:"
-        placeholder="John Smith"
-      />
+      <SimpleInput name="name" label="Name:" placeholder="John Smith" />
 
       <SingleSelect
         name="role"
@@ -62,23 +46,12 @@ export const CreateOrUpdateEmployeeForm: React.FC<EmployeeFormProps> = ({
         options={ROLE_SELECT_OPTIONS}
       />
 
-      <Input
-        name="email"
-        defaultValue={defaultValues?.email}
-        value={emailValue}
-        setValue={setEmailValue}
-        type="email"
-        labelText="Email:"
-        placeholder="example@mail"
-      />
+      <SimpleInput name="email" label="Email:" placeholder="example@mail" />
 
-      <Input
+      <SimpleInput
         name="password"
-        defaultValue={defaultValues?.password}
-        value={passwordValue}
-        setValue={setPasswordValue}
-        type="password"
-        labelText="Password:"
+        isPasswordInput
+        label="Password:"
         placeholder="password"
       />
 

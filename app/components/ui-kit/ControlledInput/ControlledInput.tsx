@@ -5,7 +5,7 @@ import { InputProps } from './Input.types';
 
 import s from './Input.module.css';
 
-export const Input: React.FC<InputProps> = ({
+export const ControlledInput: React.FC<InputProps> = ({
   name,
   value,
   setValue,

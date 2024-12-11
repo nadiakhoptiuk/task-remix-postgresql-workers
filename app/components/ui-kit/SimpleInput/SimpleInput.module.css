@@ -1,0 +1,11 @@
+.baseInputWrapper {
+  @apply grid grid-cols-1 gap-y-3 relative;
+}
+
+.baseInput {
+  @apply border-solid border-[1px] border-ui_accent bg-ui_light py-3 px-4 text-ui_dark rounded-md;
+}
+
+.baseLabel {
+  @apply text-lg md:text-xl xl:text-2xl;
+}

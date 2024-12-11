@@ -14,6 +14,10 @@
     "check-lint": "eslint . --ext tsx --ext ts",
     "format": "prettier --write .",
     "prepare": "husky install",
+    "prisma:seed": "prisma db seed",
+    "clean-location": "tsx app/services/scheduleTask.server.ts"
+  },
+  "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {

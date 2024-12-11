@@ -1,23 +1,11 @@
-import {
-  useControlField,
-  useIsSubmitting,
-  ValidatedForm,
-} from 'remix-validated-form';
+import { useIsSubmitting, ValidatedForm } from 'remix-validated-form';
 
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
-import { Input } from '~/components/ui-kit/Input';
 
 import { authUserCredentialsValidator } from '~/utils/validationSchemas/authSchema';
+import { SimpleInput } from '~/components/ui-kit/SimpleInput';
 
 export const LoginForm = () => {
-  const [emailValue, setEmailValue] = useControlField<string>(
-    'user-auth-form',
-    'email',
-  );
-  const [passwordValue, setPasswordValue] = useControlField<string>(
-    'user-auth-form',
-    'password',
-  );
   const isSubmitting = useIsSubmitting('user-auth-form');
 
   return (
@@ -27,21 +15,12 @@ export const LoginForm = () => {
       method="post"
       className="grid grid-cols-1 gap-y-8 max-w-[400px] mx-auto"
     >
-      <Input
-        name="email"
-        type="email"
-        value={emailValue}
-        setValue={setEmailValue}
-        labelText="Email:"
-        placeholder="example@mail"
-      />
+      <SimpleInput name="email" label="Email:" placeholder="example@mail" />
 
-      <Input
+      <SimpleInput
         name="password"
-        value={passwordValue}
-        setValue={setPasswordValue}
-        type="password"
-        labelText="Password:"
+        isPasswordInput
+        label="Password:"
         placeholder="password"
       />
 

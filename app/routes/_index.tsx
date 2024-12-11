@@ -48,7 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     const activeEditors =
       loggedUser !== null && loggedUser.role !== ROLES.USER
-        ? await getAllActiveEditorsLocation(loggedUser.id)
+        ? await getAllActiveEditorsLocation(loggedUser?.id)
         : [];
 
     const url = new URL(request.url);
@@ -180,7 +180,7 @@ export default function Index() {
             isEditable={data?.user !== null && data?.user?.role !== ROLES.USER}
             start={data.start}
             end={data.end}
-            editorId={data.user.id || null}
+            editorId={data.user?.id || null}
           />
         )}
       </ResponsiveContainer>

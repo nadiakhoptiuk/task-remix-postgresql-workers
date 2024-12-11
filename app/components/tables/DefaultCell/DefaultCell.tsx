@@ -13,7 +13,7 @@ export const DefaultCell: React.FC<DefaultCellType & InitialValueType> = ({
 }) => {
   return (
     <>
-      {!isEditable && <span className="px-2 py-2">{initialValue}</span>}
+      {!isEditable && <span className="block px-2 py-2">{initialValue}</span>}
 
       {isEditable && (
         <button

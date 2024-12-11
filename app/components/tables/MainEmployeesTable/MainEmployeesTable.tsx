@@ -146,7 +146,7 @@ export const MainEmployeesTable = ({
   });
 
   return (
-    <div className="overflow-x-auto min-h-[290px]">
+    <div className="overflow-x-auto">
       <table className="relative w-[400px] mx-auto">
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
@@ -175,7 +175,7 @@ export const MainEmployeesTable = ({
               {row.getVisibleCells().map(cell => (
                 <td
                   key={cell.id}
-                  className="border-ui_grey border-[1px] !w-fit min-h-[90px] relative"
+                  className="border-ui_grey border-[1px] !w-fit min-h-[90px] !h-auto relative"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

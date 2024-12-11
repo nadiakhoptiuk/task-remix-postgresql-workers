@@ -1,10 +1,13 @@
 import { MultiValue } from 'react-select';
-import { useNavigation } from '@remix-run/react';
-import { useControlField, ValidatedForm } from 'remix-validated-form';
+import {
+  useControlField,
+  useIsSubmitting,
+  ValidatedForm,
+} from 'remix-validated-form';
 
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
-import { Input } from '~/components/ui-kit/Input';
 import { MultiSelect } from '~/components/ui-kit/MultiSelect';
+import { SimpleInput } from '~/components/ui-kit/SimpleInput';
 
 import { tagValidator } from '~/utils/validationSchemas/tagSchema';
 import { getSubmitBtnLabel } from '~/utils/uxUtilities/getSubmitBtnLabel';
@@ -16,32 +19,20 @@ export const CreateOrUpdateTagForm: React.FC<TagFormType> = ({
   users,
   defaultValues,
 }) => {
-  const [nameValue, setNameValue] = useControlField<string>(
-    'tag-form',
-    'tagName',
-  );
   const [usersListValue, setUsersListValue] = useControlField<
     MultiValue<OptionType>
   >('tag-form', 'users');
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === 'submitting';
+  const isSubmitting = useIsSubmitting('tag-form');
 
   return (
     <ValidatedForm
       validator={tagValidator}
+      defaultValues={{ tagName: defaultValues?.name }}
       id="tag-form"
       method="post"
       className="grid grid-cols-1 gap-y-8 max-w-[600px] mx-auto"
     >
-      <Input
-        name="tagName"
-        value={nameValue}
-        setValue={setNameValue}
-        type="text"
-        defaultValue={defaultValues?.name}
-        labelText="Tag name:"
-        placeholder="Marketing"
-      />
+      <SimpleInput name="tagName" label="Tag name:" placeholder="Marketing" />
 
       <MultiSelect
         name="users"

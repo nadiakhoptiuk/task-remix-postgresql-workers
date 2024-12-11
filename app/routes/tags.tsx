@@ -72,7 +72,7 @@ export default function TagsPage() {
         </Container>
       </section>
 
-      <div className="flex-1 pl-[510px] overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>
     </div>

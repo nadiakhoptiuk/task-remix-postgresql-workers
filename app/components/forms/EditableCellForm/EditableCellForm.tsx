@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
 import { format } from 'date-fns';
 import { useFetcher } from '@remix-run/react';
-import {
-  useControlField,
-  ValidatedForm,
-  useIsSubmitting,
-} from 'remix-validated-form';
+import { ValidatedForm, useIsSubmitting } from 'remix-validated-form';
 
-import { Input } from '~/components/ui-kit/Input';
 import { SubmitButton } from '~/components/ui-kit/SubmitButton';
+import { SimpleInput } from '~/components/ui-kit/SimpleInput';
 
 import { tableCellValidator } from '~/utils/validationSchemas/tableCellValidator';
 import { splitWorkingHours } from '~/utils/tableUtilities/generateHoursForCell';
@@ -26,19 +22,6 @@ export const EditableCellForm: React.FC<
   const fetcher = useFetcher();
   const isSubmitting = useIsSubmitting('workhours-form');
 
-  const [billableValue, setBillableValue] = useControlField<string>(
-    'workhours-form',
-    'workdayBill',
-  );
-  const [notBillableValue, setNotBillableValue] = useControlField<string>(
-    'workhours-form',
-    'workdayNotBill',
-  );
-  const [absentValue, setAbsentValue] = useControlField<string>(
-    'workhours-form',
-    'workdayAbsent',
-  );
-
   useEffect(() => {
     if (editorId) {
       fetcher.submit(
@@ -55,6 +38,11 @@ export const EditableCellForm: React.FC<
       id="workhours-form"
       validator={tableCellValidator}
       className="w-full mx-auto"
+      defaultValues={{
+        workdayBill: arrayOfWorkingHours[0],
+        workdayNotBill: arrayOfWorkingHours[1],
+        workdayAbsent: arrayOfWorkingHours[2],
+      }}
       onSubmit={() => {
         setEditFormValues(null);
       }}
@@ -90,30 +78,9 @@ export const EditableCellForm: React.FC<
       </div>
 
       <div className="w-fit mx-auto grid grid-cols-1 gap-x-8 gap-y-4 mb-8">
-        <Input
-          name="workdayBill"
-          type="text"
-          labelText="Billable hours:"
-          value={billableValue}
-          setValue={setBillableValue}
-          defaultValue={arrayOfWorkingHours[0]}
-        />
-        <Input
-          name="workdayNotBill"
-          type="text"
-          labelText="Not billable hours:"
-          value={notBillableValue}
-          setValue={setNotBillableValue}
-          defaultValue={arrayOfWorkingHours[1]}
-        />
-        <Input
-          name="workdayAbsent"
-          type="text"
-          labelText="Was absent:"
-          value={absentValue}
-          setValue={setAbsentValue}
-          defaultValue={arrayOfWorkingHours[2]}
-        />
+        <SimpleInput name="workdayBill" label="Billable hours:" />
+        <SimpleInput name="workdayNotBill" label="Not billable hours:" />
+        <SimpleInput name="workdayAbsent" label="Was absent:" />
       </div>
 
       <SubmitButton
